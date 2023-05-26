@@ -2,28 +2,34 @@ import React from 'react'
 import FocusMode from './FocusMode';
 import { useEffect, useState } from 'react';
 import "../css/main.css"
-import { getLayout, getSampleImages } from "../lib/NoteInfo";
+import { getLayout } from "../middleware/util";
 import Canvas from './Canvas';
 
-export default function Wall({onMount}) {
+export default function Wall() {
 
-    const defaultLayout = getLayout();
-    const [layout, setLayout] = useState([defaultLayout]);
+    const [array, setArray] = useState();
     const [image, setImage] = useState()
 
-    const setupViewer = async () => {
-        const image = await getSampleImages();
-        console.log(image)
-        setImage(image)
+
+    async function setLayout(name) {
+        const layout = await getLayout(name);
+
+        console.log(layout);
+        setImage(layout.image);
+        setArray(layout.array);
+    }
+
+    function changeLayout(e) {
+        setLayout(e.target.value);
     }
 
     useEffect(() => {
-        setupViewer()
+        setLayout('default')
     }, [])
 
     let focusOn, currentFocus;
 
-    const onDetailsMount = (focusHooks) => {
+    const onFocusMount = (focusHooks) => {
         currentFocus = focusHooks[0]
         focusOn = focusHooks[1];
     }
@@ -33,11 +39,10 @@ export default function Wall({onMount}) {
         if (currentFocus != null) return;
 
         // calculate which note was clicked based on current zoom and extent, look up in layout
-        const row = 0;
-        const col = 0;
+        console.log(array);
 
-        const note = layout[row][col];
-        openNote(note);
+        //const note = layout[row][col];
+        //openNote(note);
     }
 
     function clearFocus() {
@@ -52,13 +57,9 @@ export default function Wall({onMount}) {
         focusOn(note);
     }
 
-    function changeLayout(e) {
-        setLayout(e.target.value);
-    }
-
     return (
         <div className="wall">
-            <FocusMode onMount={onDetailsMount}/>
+            <FocusMode onMount={onFocusMount}/>
             <Canvas image={image}/>
         </div>
     )

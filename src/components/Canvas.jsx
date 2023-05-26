@@ -1,18 +1,17 @@
 import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
 
-export default function Canvas(props) {
+export default function Canvas({ image }) {
 
-    //console.log(props.image)
     const [viewer, setViewer] = useState(null);
 
     useEffect(() => {
-        if (props.image && viewer) {
-            console.log(props.image);
-            viewer.open(props.image.source);
+        if (image && viewer) {
+            console.log(image.dzi)
+            viewer.open(image.dzi);
             console.log(viewer)
         }
-    }, [props.image])
+    }, [viewer, image])
 
     const initViewer = () => {
         viewer && viewer.destroy();
@@ -31,7 +30,6 @@ export default function Canvas(props) {
             })
         )
     }
-
 
     useEffect(()=>{
         initViewer();

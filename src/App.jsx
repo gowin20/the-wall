@@ -1,7 +1,6 @@
 import React from 'react'
 import Header from "./components/Header"
 import Wall from "./components/Wall"
-import { getLayout } from "./lib/NoteInfo";
 
 export default function App() {
     let currentLayout, setLayout;
