@@ -53,8 +53,9 @@ export async function getTest25() {
 
     const response = await fetch(prefixUrl+'layouts/test-25/schema.json');
     const testDZI = await response.json();
-
-    const url = prefixUrl + 'layouts/test-25/output_files/'
+    testDZI.Image.Overlap = 1;
+    console.log(testDZI)
+    const url = prefixUrl + 'layouts/test-25/test-25_files/'
     testDZI.Image.Url = url;
     return testDZI;
 }

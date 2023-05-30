@@ -1,3 +1,4 @@
+import React from 'react'
 import { getNoteDetails } from "../middleware/util";
 import "../css/main.css"
 

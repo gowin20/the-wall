@@ -29,9 +29,16 @@
     font-family: Roboto Condensed, Arial, Helvetica, sans-serif;
 }
 
-.wall {
+#wall {
     width:100%;
-    height:calc(100% - 40px);
+}
+
+.full-height {
+    height:100%;
+}
+
+.with-header-height{
+    height: calc(100% - 40px);
 }
 
 #canvas {
@@ -39,6 +46,30 @@
     height:100%;
     z-index:1;
 }
+
+.overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index: 2;
+    background-color: #171717ee;
+}
+
+.controls {
+    position:absolute;
+    top:60%;
+    right:30%;
+    width:200px;
+    height:200px;
+}
+
+#close {
+    width:40px;
+    height:40px;
+}
+
 .details {
     font-family: Roboto, Arial, sans-serif;
     position:absolute;
