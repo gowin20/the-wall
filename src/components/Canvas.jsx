@@ -5,8 +5,6 @@ export default function Canvas({ image, canvasClick, onMount }) {
 
     const [viewer, setViewer] = useState(null);
     
-    if (viewer) console.log(viewer);
-
     let dX = 0;
     let dY = 0;
     let press;
