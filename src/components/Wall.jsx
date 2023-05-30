@@ -8,19 +8,21 @@ import FocusMode from './FocusMode';
 import Canvas from './Canvas';
 
 export default function Wall() {
-    let viewer, setFocusMode, currentFocus, toggleHeader, headerShown;
+    let setFocusMode, currentFocus, toggleHeader, headerShown;
 
-    const [array, setArray] = useState();
-    const [image, setImage] = useState();
+    const [layout, setLayout] = useState({
+        image:null
+    });
 
-    async function setLayout(name) {
+    const NOTE_SIZE = 2884;
+
+    async function setupLayout(name) {
         const layout = await getLayout(name);
-        setImage(layout.image);
-        setArray(layout.array);
+        setLayout(layout);
     }
 
     useEffect(() => {
-        setLayout('default')
+        setupLayout('default');
     }, [])
 
     function onHeaderMount(hooks) {
@@ -31,14 +33,24 @@ export default function Wall() {
         currentFocus = focusHooks[0];
         setFocusMode = focusHooks[1];
     }
-    const onCanvasMount = (canvasHook) => {
-        viewer = canvasHook;
-    }
 
-    function canvasClicked(e) {
+    function canvasClicked(e,imageCoords) {
         e.preventDefaultAction = true;
-        console.log('current focus: ',currentFocus);
-        noteClicked(e);
+        
+        // collapse header
+        hideHeader();
+
+        // determine which note was clicked based on the clicked location
+        const row = Math.floor(imageCoords.y / NOTE_SIZE);
+        const col = Math.floor(imageCoords.x / NOTE_SIZE);
+
+        const noteUrl = layout.array[row][col];
+        // Open focus mode
+        setFocusMode(noteUrl);
+
+        // TODO
+        // get the center of the note
+        // fly to a preset zoom and location in the layout
     }
 
     function hideHeader() {
@@ -51,25 +63,6 @@ export default function Wall() {
         toggleHeader(true);
         document.getElementById('wall').classList.remove('full-height');
         document.getElementById('wall').classList.add('with-header-height');
-    }
-
-    function noteClicked(e) {
-
-        
-        // collapse header
-        hideHeader();
-
-        
-
-        // calculate which note was clicked based on current zoom and extent, look up in layout
-        //const note = layout[row][col];
-        //openNote(note);
-
-        // get the center of the note
-
-        // fly to a preset zoom and location in the layout
-        setFocusMode(e);
-        // open focus mode for a note
     }
 
     function clearFocus() {
@@ -85,7 +78,7 @@ export default function Wall() {
         <Header onMount={onHeaderMount}/>
         <div id="wall" className="with-header-height">
             <FocusMode onMount={onFocusMount} clearFocus={clearFocus}/>
-            <Canvas image={image} canvasClick={canvasClicked} onMount={onCanvasMount}/>
+            <Canvas image={layout.image} canvasClick={canvasClicked} />
         </div>
         </>
     )

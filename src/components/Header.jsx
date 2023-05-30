@@ -6,7 +6,7 @@ export default function Header({ onMount }) {
     const [shown, show] = useState(true);
     useEffect(() => {
         onMount([shown, show]);
-    }, [shown, show])
+    }, [shown, onMount])
 
     if (shown) return (
         <div className="header">
