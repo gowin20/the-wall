@@ -1,0 +1,131 @@
+/* 
+CSS used in FocusMode
+Breadth-first ordering of elements 
+*/
+
+.overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    z-index: 3;
+    background-color: #171717ee;
+}
+
+.leftSide {
+    position:absolute;
+    top:20%;
+    left:20%;
+    right:50%;
+    height:500px;
+}
+
+.rightSide {
+    position:absolute;
+    top:20%;
+    right:20%;
+    left:50%;
+    height:500px;
+}
+
+.noteImage {
+    height:100%;
+}
+
+.details {
+    font-family: Roboto, Arial, sans-serif;
+    position:absolute;
+    top:0;
+    right:calc(50% - 200px);
+    width:400px;
+    height:300px;
+
+    color:white;
+    z-index: 2;
+
+    display:flex;
+    flex-direction: row;
+
+    margin:0px;
+    padding:0px;
+}
+
+.controls {
+    position:absolute;
+    top:60%;
+    right:calc(50% - 100px);
+    width:200px;
+    height:200px;
+}
+
+
+/* 
+Detail text
+*/
+.detailsContent {
+    margin:auto;
+    padding:auto;
+    text-align:center;
+}
+
+.detailsContent br {
+    margin-top: 10px;
+}
+
+.artist {
+    font-size:16px;
+    font-weight:400
+}
+
+.title {
+    font-size:25px;
+    font-weight:600;
+    font-style:italic;
+}
+
+.placeTime {
+    font-weight:100;
+    font-size:14px;
+
+}
+
+.description {
+    display:inline-block;
+    margin-top:50px;
+    font-size:12px;
+    font-weight:300;
+}
+
+
+/* 
+Individual controls
+*/
+.control {
+    position:absolute;
+}
+
+.up {
+    top:0px;
+    left:calc(50% - 11px);
+}
+
+.close {
+    top: calc(50% - 13px);
+    left:calc(50% - 11px);
+}
+
+.down {
+    bottom:0px;
+    left:calc(50% - 11px);
+}
+
+.left {
+    top:calc(50% - 13px);
+    left:0px;
+}
+
+.right {
+    top:calc(50% - 13px);
+    right:0px;
+}

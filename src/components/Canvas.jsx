@@ -47,7 +47,6 @@ export default function Canvas({ image, canvasClick, onMount }) {
         }
         function onCanvasRelease(e) {
             if (dX < 2 && dY < 2) {
-                console.log('click happening');
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
                 canvasClick(e,imageCoords);
             }

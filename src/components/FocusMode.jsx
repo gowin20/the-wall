@@ -1,6 +1,8 @@
 import Details from "./Details";
 import React, { useEffect, useState } from 'react';
 import Controls from "./Controls";
+import NoteView from "./NoteView";
+import '../css/focusMode.css';
 
 export default function FocusMode({onMount, clearNote, changeNote}) {
 
@@ -13,13 +15,18 @@ export default function FocusMode({onMount, clearNote, changeNote}) {
         onMount([note, setNote]);
     }, [note,onMount])
 
-    const prefixUrl = 'https://the-wall-source.s3.us-west-1.amazonaws.com/notes/initial-test/';
 
     if (note.url) return (
         <div className='overlay'>
-            <img src={prefixUrl+note.url} className='noteImage' alt={note}/>
-            <Details note={note.url}/>
-            <Controls buttons={note.buttons} location={note.location} clearNote={clearNote} changeNote={changeNote}/>          
+            <div className='overlayContents'>
+            <div className='leftSide'>
+                <NoteView noteUrl={note.url}/>
+            </div>            
+            <div className='rightSide'>
+                <Details note={note.url}/>
+                <Controls buttons={note.buttons} location={note.location} clearNote={clearNote} changeNote={changeNote}/>     
+            </div>
+            </div>
         </div>
         )
     else return <></>

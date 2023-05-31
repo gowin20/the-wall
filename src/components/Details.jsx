@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { getNoteDetails } from "../middleware/util";
-import "../css/main.css"
 
 export default function Details({ note }) {
     
@@ -14,25 +13,46 @@ export default function Details({ note }) {
     }
 
     useEffect(() => {
+        console.log(note);
         setupDetails(note);
     }, [note])
     
     if (details) {
-        let author,name,description;
-        if (details.author) author = <h3 className="author">{details.author}</h3>;
-        else author = <h3 className="author">anonymous</h3>
-        if (details.name) name = <span className="name">{details.name}</span>;
-        else name = <span className="name">untitled</span>;
+        let title, placeTime, artist, description;
+        if (details.title) title = <span className="title">{details.title}</span>;
+        else title = <span className='title'>Untitled</span>;
+
+        if (details.date || details.location) {
+            let placeTimeText;
+
+            if (details.date) {
+                if (details.location) {
+                    placeTimeText = <>{details.date}<pre style={{display:'inline'}}> | </pre>{details.location}</>
+                }
+                else {
+                    placeTimeText = <>{details.date}</>;
+                }
+            }
+            else if (details.location) {
+                placeTimeText = <>{details.location}</>;
+            }
+            placeTime = <span className="placeTime">{placeTimeText}</span>;
+        }
+
+        if (details.artist) artist = <span className='artist'>{details.artist}</span>;
+        else artist = <span className='artist'>Anonymous</span>;
+
         if (details.description) description = <span className="description">{details.description}</span>;
-        let title;
-        if (details.date) title = <p className="title">{name}, <span className="date">{details.date}</span></p>;
-        else title = <p className="title">{name}</p>;
-        
+
         return (
             <div className="details">
                 <div className="detailsContent">
-                    {author}
                     {title}
+                    <br></br>
+                    {placeTime}
+                    <br></br>
+                    {artist}
+                    <br className='detailsBreak'></br>
                     {description}
                 </div>                
             </div>

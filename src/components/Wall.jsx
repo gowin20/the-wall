@@ -1,12 +1,9 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-
-import "../css/main.css"
 import { getLayout } from "../middleware/util";
 import Header from "./Header"
 import FocusMode from './FocusMode';
 import Canvas from './Canvas';
-import OpenSeadragon from 'openseadragon';
 
 export default function Wall() {
     let setFocusMode, currentFocus, toggleHeader, headerShown, viewer;
