@@ -39,7 +39,7 @@ Breadth-first ordering of elements
     top:0;
     right:calc(50% - 200px);
     width:400px;
-    height:300px;
+    height:250px;
 
     color:white;
     z-index: 2;
@@ -53,7 +53,7 @@ Breadth-first ordering of elements
 
 .controls {
     position:absolute;
-    top:60%;
+    top:50%;
     right:calc(50% - 100px);
     width:200px;
     height:200px;
@@ -64,7 +64,7 @@ Breadth-first ordering of elements
 Detail text
 */
 .detailsContent {
-    margin:auto;
+    margin:50px auto auto auto;
     padding:auto;
     text-align:center;
 }
