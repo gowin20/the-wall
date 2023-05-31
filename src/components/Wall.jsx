@@ -6,9 +6,10 @@ import { getLayout } from "../middleware/util";
 import Header from "./Header"
 import FocusMode from './FocusMode';
 import Canvas from './Canvas';
+import OpenSeadragon from 'openseadragon';
 
 export default function Wall() {
-    let setFocusMode, currentFocus, toggleHeader, headerShown;
+    let setFocusMode, currentFocus, toggleHeader, headerShown, viewer;
 
     const [layout, setLayout] = useState({
         image:null
@@ -30,6 +31,9 @@ export default function Wall() {
     const onFocusMount = (focusHooks) => {
         currentFocus = focusHooks[0];
         setFocusMode = focusHooks[1];
+    }
+    const onCanvasMount = (viewerHook) => {
+        viewer = viewerHook;
     }
 
     // hide header and adjust canvas height
@@ -56,16 +60,26 @@ export default function Wall() {
         setFocusFromCoords(row,col);
     }
 
+    function disableKeyboardControls(e) {
+        e.preventVerticalPan = true;
+        e.preventHorizontalPan = true;
+    }
+
     function setFocusFromCoords(row,col) {
+        // validate inputs
+        console.log(row,col,layout.props)
+
+        if (row >= layout.props.HEIGHT || row < 0) return;
+        if (col >= layout.props.WIDTH || col < 0) return;
+
         // collapse header
         //hideHeader();
 
-        const noteUrl = layout.array[row][col];
         // Open focus mode
         setFocusMode({
-            url:noteUrl,
-            location:[row,col],
-            buttons:{
+            url: layout.array[row][col],
+            location: [row,col],
+            buttons: {
                 up:(row > 0),
                 down:(row < layout.props.HEIGHT-1),
                 left:(col > 0),
@@ -73,20 +87,28 @@ export default function Wall() {
             }
         });
 
-        // TODO
-        // get the center of the note
-        // fly to a preset zoom and location in the layout
+        // disable keyboard navigation on wall
+        viewer.addHandler('canvas-key',disableKeyboardControls);
+        
+        // pan to the center of the clicked note
+        const horizontalMidpoint = ((col*2+1)/2) * layout.props.NOTE_SIZE;
+        const verticalMidpoint = ((row*2+1)/2) * layout.props.NOTE_SIZE;
+
+        const noteCenter = viewer.viewport.imageToViewportCoordinates(horizontalMidpoint,verticalMidpoint);
+        viewer.viewport.panTo(noteCenter);
     }
 
     function clearFocus() {
         if (currentFocus.url !== null) {
-            console.log('current focus: ', currentFocus)
             setFocusMode({
                 url:null,
                 location:null,
                 buttons:null
             });
             //showHeader();
+
+            // re-enable keyboard navigation
+            viewer.removeHandler('canvas-key',disableKeyboardControls);
         }
     }
 
@@ -95,7 +117,7 @@ export default function Wall() {
         <Header onMount={onHeaderMount}/>
         <div id="wall" className="with-header-height">
             <FocusMode onMount={onFocusMount} clearNote={clearFocus} changeNote={setFocusFromCoords}/>
-            <Canvas image={layout.image} canvasClick={canvasClicked} />
+            <Canvas onMount={onCanvasMount} image={layout.image} canvasClick={canvasClicked} />
         </div>
         </>
     )

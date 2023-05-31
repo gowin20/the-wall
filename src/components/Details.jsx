@@ -16,7 +16,7 @@ export default function Details({ note }) {
     useEffect(() => {
         setupDetails(note);
     }, [note])
-
+    
     if (details) {
         let author,name,description;
         if (details.author) author = <h3 className="author">{details.author}</h3>;

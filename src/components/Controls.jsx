@@ -1,27 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 export default function Controls({buttons, location, clearNote, changeNote}) {
 
-    // TODO disble close button on mobile, otherwise always included 
+    // TODO disble button icons on mobile, otherwise always included 
+    // always enable keyboard and swipe event listeners
 
-    console.log(buttons)
+    useEffect(() => {
+        function keyboardFocus(e) {
+            moveFocus(e.code);
+        }
+        window.addEventListener('keydown', keyboardFocus);
+        return () => {
+            window.removeEventListener('keydown',keyboardFocus);
+        }
+    })
+
+
 
     function moveFocus(direction) {
         switch(direction) {
             case 'up':
+            case 'ArrowUp':
                 changeNote(location[0]-1,location[1]);
                 break;
             case 'down':
+            case 'ArrowDown':
                 changeNote(location[0]+1,location[1]);
                 break;
             case 'left':
+            case 'ArrowLeft':
                 changeNote(location[0],location[1]-1);
                 break;
             case 'right':
+            case 'ArrowRight':
                 changeNote(location[0],location[1]+1);
                 break;
             default:
-                console.log('should never reach here');
                 break;
         }
    }
@@ -48,7 +62,7 @@ export default function Controls({buttons, location, clearNote, changeNote}) {
     const arrowButtons = Object.keys(arrowIcons).map((direction) => {
         return (
             <div key={direction} className={direction + ' control'} onClick={()=> buttons[direction] ? moveFocus(direction) : ''}>
-                <svg xmlns='http://www.w3.org/2000/svg' width='44' height='44' stroke={buttons[direction] ? '#C5C5C5' : '#999999'} viewBox={arrowIcons[direction].viewBox}>
+                <svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' stroke={buttons[direction] ? '#C5C5C5' : '#666'} viewBox={arrowIcons[direction].viewBox}>
                     {arrowIcons[direction].path}
                 </svg>
             </div>
@@ -57,7 +71,7 @@ export default function Controls({buttons, location, clearNote, changeNote}) {
     return (
         <div className='controls'>
             <div className='close control' onClick={()=>clearNote()}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" stroke="#C5C5C5" viewBox="0 0 14 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" stroke="#C5C5C5" viewBox="0 0 14 16">
                     <path d="M1 2L13 14" strokeWidth="2" strokeLinecap="round"/>
                     <path d="M1 14L13 2" strokeWidth="2" strokeLinecap="round"/>
                 </svg>

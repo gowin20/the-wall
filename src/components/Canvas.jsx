@@ -18,6 +18,10 @@ export default function Canvas({ image, canvasClick, onMount }) {
         }
     }, [image]);
 
+    useEffect(()=>{
+        onMount(viewer);
+    },[viewer])
+
     const initViewer = () => {
         viewer && viewer.destroy();
         const thisViewer = OpenSeadragon({
