@@ -6,12 +6,12 @@ export default function Controls({buttons, location, clearNote, changeNote}) {
     // always enable keyboard and swipe event listeners
 
     useEffect(() => {
-        function keyboardFocus(e) {
+        function keyboardEvent(e) {
             moveFocus(e.code);
         }
-        window.addEventListener('keydown', keyboardFocus);
+        window.addEventListener('keydown', keyboardEvent);
         return () => {
-            window.removeEventListener('keydown',keyboardFocus);
+            window.removeEventListener('keydown',keyboardEvent);
         }
     })
 
@@ -35,6 +35,8 @@ export default function Controls({buttons, location, clearNote, changeNote}) {
             case 'ArrowRight':
                 changeNote(location[0],location[1]+1);
                 break;
+            case 'Escape':
+                clearNote();
             default:
                 break;
         }
