@@ -17,14 +17,15 @@ Breadth-first ordering of elements
     position:absolute;
     top:20%;
     left:20%;
-    right:50%;
+    width:30%;
     height:500px;
 }
 
 .rightSide {
     position:absolute;
     top:20%;
-    right:20%;
+
+    width:30%;
     left:50%;
     height:500px;
 }
