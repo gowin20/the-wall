@@ -1,6 +1,27 @@
-// 1. take a pattern of note IDs as input
+/*
+const createLayout;
+Creates a functional layout object of notes and images
+Inputs: 
+* pattern: a 2D array containing Note ObjectIDs
 
-// 2. create layout object
+Output:
+* Uploads a directory of DZI files to AWS S3 bucket
+* Inserts a layout object to Mongo Atlas
+* Returns the ObjectID of the newly inserted layout object
+
+Side effects:
+* Generates large temp files which are deleted upon program termination
+
+*/
+const createLayout = async (pattern,options) => {
+    const layout = {
+        name:options.name,
+        rows:pattern.length,
+        cols:pattern[0].length,
+        NoteSize:288,
+        array:pattern,
+        dzi:null
+    }
 
 // 3. generate stitched image in temp folder
 
@@ -13,9 +34,6 @@
 // 7. insert layout object to mongo atlas
 
 // 8. delete temp files
-
-const createLayout = async (pattern) => {
-
 }
 
 export default createLayout;
