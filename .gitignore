@@ -1,5 +1,6 @@
-# local images (testing only)
+# local files (testing only)
 public/notes
+server/temp
 
 # Logs
 logs
