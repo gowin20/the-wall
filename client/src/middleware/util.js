@@ -1,16 +1,12 @@
-import SampleNotes from "../data/notes/sample-notes-2.json" assert { type: "json" };
-import SmallSampleNotes from "../data/notes/small-sample-notes.json" assert { type: "json" };
-import SampleLayout from "../data/layouts/sample-layout.json" assert { type: "json" };
+import SmallSampleNotes from "../sample-data/small-sample-notes.json" assert { type: "json" };
+import SampleLayout from "../sample-data/sample-layout.json" assert { type: "json" };
 
-let notes = SampleNotes;
+let notes = SmallSampleNotes;
 const prefixUrl = 'https://the-wall-source.s3.us-west-1.amazonaws.com/';
 
 
 export function getAllNotes(props=null) {
-    if (props === "sample") {
-        return SampleNotes;
-    }
-    else if (props === "small-sample") {
+    if (props === "small-sample") {
         return SmallSampleNotes;
     }
 

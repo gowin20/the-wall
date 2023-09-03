@@ -16,12 +16,14 @@ export default function FocusMode({onMount, clearNote, changeNote}) {
     }, [note,onMount])
 
     // please implement redux before coming back to this. remove those silly onMounts
+
+/*
     const url = await getNote();
     async function getNote() {
         if note.id === null return;
     
     }
-    
+  */  
 
     if (note.url) return (
         <div className='overlay'>
