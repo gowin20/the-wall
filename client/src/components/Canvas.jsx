@@ -26,7 +26,7 @@ export default function Canvas({ dzi, canvasClick, onMount }) {
         viewer && viewer.destroy();
         const thisViewer = OpenSeadragon({
             id: 'canvas',
-            prefixUrl: "openseadragon-images/",
+            prefixUrl: "/openseadragon-buttons/",
             tileSources: dzi,
             animationTime: 0.5,
             blendTime: 0.1,
