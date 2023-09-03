@@ -8,7 +8,6 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     let collection = await db.collection('notes');
     let results = await collection.find({}).toArray();
-    console.log(await db.listCollections());
     res.send(results).status(200);
 });
 
