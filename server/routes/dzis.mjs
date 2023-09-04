@@ -6,14 +6,14 @@ const router = express.Router();
 
 // Get a list of all notes
 router.get("/", async (req, res) => {
-    let collection = await db.collection('notes');
+    let collection = await db.collection('dzis');
     let results = await collection.find({}).toArray();
     res.send(results).status(200);
 });
 
 // Get a single note by ID
 router.get("/id/:id", async (req, res) => {
-    let collection = await db.collection('notes');
+    let collection = await db.collection('dzis');
     let query = {_id: new ObjectId(req.params.id)};
     let result = await collection.findOne(query);
   

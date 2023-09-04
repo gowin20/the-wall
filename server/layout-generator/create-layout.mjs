@@ -18,7 +18,7 @@ const createLayout = async (pattern,options) => {
         name:options.name,
         rows:pattern.length,
         cols:pattern[0].length,
-        NoteSize:288,
+        noteImageSize:288,
         array:pattern,
         dzi:null
     }

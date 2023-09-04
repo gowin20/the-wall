@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 });
 
 // Get a single user by ID
-router.get("/:id", async (req, res) => {
+router.get("/id/:id", async (req, res) => {
     let collection = await db.collection('users');
     let query = {_id: new ObjectId(req.params.id)};
     let result = await collection.findOne(query);
@@ -20,6 +20,16 @@ router.get("/:id", async (req, res) => {
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);
   });
+
+// Get all notes created by a user (ID)
+router.get('/id/:id/notes', async (req,res) => {
+  let collection = await db.collection('users');
+  let query = {_id: new ObjectId(req.params.id)};
+  let result = await collection.findOne(query);
+  if (!result) res.send("Not found").status(404);
+  else if (!result.notes) res.send('User has no notes').status(404);
+  else res.send(result.notes).status(200);
+})
 
 
 export default router;

@@ -15,6 +15,7 @@ const makeDefaultLayout = async () => {
     const height = Math.ceil(Math.sqrt(totalNotes/ratio));
     const width = Math.ceil(height*ratio);
 
+    if ((width-2)*height >= totalNotes) width -= 2;
     if ((width-1)*height >= totalNotes) width -= 1;
     if (width*(height-1) >= totalNotes) height -= 1;
 
