@@ -1,7 +1,7 @@
 import React from 'react';
 import Wall from "./wall/Wall";
 import Header from "./Header";
-import './css/main.css';
+import './main.css';
 
 export default function App() {
     return (
