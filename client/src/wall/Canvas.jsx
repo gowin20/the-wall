@@ -1,10 +1,15 @@
 import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { setFocusByPosition } from './wallSlice';
 
-export default function Canvas({ dzi, canvasClick, onMount }) {
+export default function Canvas({ dzi }) {
 
     const [viewer, setViewer] = useState(null);
-    
+    const currentFocus = useSelector((state) => state.wall.focus);
+    const noteImageSize = useSelector((state) => state.wall.layout.noteImageSize);
+    const dispatch = useDispatch();
+
     let dX = 0;
     let dY = 0;
     let press;
@@ -17,10 +22,6 @@ export default function Canvas({ dzi, canvasClick, onMount }) {
             viewer && viewer.destroy();
         }
     }, [dzi]);
-
-    useEffect(()=>{
-        onMount(viewer);
-    },[viewer])
 
     const initViewer = () => {
         viewer && viewer.destroy();
@@ -48,7 +49,7 @@ export default function Canvas({ dzi, canvasClick, onMount }) {
         function onCanvasRelease(e) {
             if (dX < 2 && dY < 2) {
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
-                canvasClick(e,imageCoords);
+                canvasClicked(e,imageCoords);
             }
         }
         function onMouseMove(e) {
@@ -64,6 +65,44 @@ export default function Canvas({ dzi, canvasClick, onMount }) {
         thisViewer.addHandler('canvas-click',onCanvasClick);
         
     }
+
+    function canvasClicked(e,imageCoords) {
+        e.preventDefaultAction = true;
+        
+        // determine which note was clicked based on the clicked location
+        const clickedRow = Math.floor(imageCoords.y / noteImageSize);
+        const clickedCol = Math.floor(imageCoords.x / noteImageSize);
+
+        // Set focus mode when clicked
+        dispatch(setFocusByPosition({
+            row:clickedRow,
+            col:clickedCol
+        }));
+    }
+
+    function disableKeyboardControls(e) {
+        e.preventVerticalPan = true;
+        e.preventHorizontalPan = true;
+    }
+    if (viewer) {
+        if (currentFocus.note == null) { // Focus mode is off
+            // enable keyboard navigation of canvas
+            viewer.removeHandler('canvas-key',disableKeyboardControls);
+        }
+        else { // Focus mode is on
+    
+            // disable keyboard navigation of canvas
+            viewer.addHandler('canvas-key',disableKeyboardControls);
+            
+            // Pan to center of focused note
+            const horizontalMidpoint = ((currentFocus.position.col*2+1)/2) * noteImageSize;
+            const verticalMidpoint = ((currentFocus.position.row*2+1)/2) * noteImageSize;
+    
+            const noteCenter = viewer.viewport.imageToViewportCoordinates(horizontalMidpoint,verticalMidpoint);
+            viewer.viewport.panTo(noteCenter);
+        }
+    }
+
 
     return (
         <div id='canvas'></div>

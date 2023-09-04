@@ -1,7 +1,22 @@
 import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { setFocusByPosition, clearFocus } from './wallSlice';
 
-export default function Controls({buttons, location, clearNote, changeNote}) {
+export default function Controls() {
 
+    // current position on wall
+    const position = useSelector((state) => state.wall.focus.position);
+    const layoutSize = useSelector((state) => ({rows:state.wall.layout.numRows,cols:state.wall.layout.numCols}))
+    const dispatch = useDispatch();
+    
+    // Determine what buttons are disabled based on current position/layout
+    const buttons = {
+        up:(position.row > 0),
+        down:(position.row < layoutSize.rows-1),
+        left:(position.col > 0),
+        right:(position.col < layoutSize.cols-1)
+    }
+    
     // TODO disble button icons on mobile, otherwise always included 
     // always enable keyboard and swipe event listeners
 
@@ -15,28 +30,38 @@ export default function Controls({buttons, location, clearNote, changeNote}) {
         }
     })
 
-
-
     function moveFocus(direction) {
         switch(direction) {
             case 'up':
             case 'ArrowUp':
-                changeNote(location[0]-1,location[1]);
+                dispatch(setFocusByPosition({
+                    row:position.row-1,
+                    col:position.col
+                }));
                 break;
             case 'down':
             case 'ArrowDown':
-                changeNote(location[0]+1,location[1]);
+                dispatch(setFocusByPosition({
+                    row:position.row+1,
+                    col:position.col
+                }));
                 break;
             case 'left':
             case 'ArrowLeft':
-                changeNote(location[0],location[1]-1);
+                dispatch(setFocusByPosition({
+                    row:position.row,
+                    col:position.col-1
+                }));
                 break;
             case 'right':
             case 'ArrowRight':
-                changeNote(location[0],location[1]+1);
+                dispatch(setFocusByPosition({
+                    row:position.row,
+                    col:position.col+1
+                }));
                 break;
             case 'Escape':
-                clearNote();
+                dispatch(clearFocus());
             default:
                 break;
         }
@@ -72,7 +97,7 @@ export default function Controls({buttons, location, clearNote, changeNote}) {
     })
     return (
         <div className='controls'>
-            <div className='close control' onClick={()=>clearNote()}>
+            <div className='close control' onClick={()=>dispatch(clearFocus())}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" stroke="#C5C5C5" viewBox="0 0 14 16">
                     <path d="M1 2L13 14" strokeWidth="2" strokeLinecap="round"/>
                     <path d="M1 14L13 2" strokeWidth="2" strokeLinecap="round"/>

@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import wallReducer from './features/wall/wallSlice';
+import wallReducer from './wall/wallSlice';
 
 export default configureStore({
   reducer: {

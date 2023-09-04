@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getNoteDetails } from "../../middleware/util";
+import { getNoteDetails } from "../middleware/util";
 
 export default function Details({ note }) {
     

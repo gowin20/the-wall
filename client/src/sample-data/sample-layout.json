@@ -1,7 +1,7 @@
 {
     "name":"small-sample",
-    "rows":5,
-    "cols":5,
+    "numRows":5,
+    "numCols":5,
     "noteImageSize":2884,
     "image":null,
     "default":true,
