@@ -1,8 +1,6 @@
 import React from 'react'
-import { Route, Routes } from 'react-router-dom';
-import Wall from "./components/Wall"
+import Wall from "./features/wall/Wall"
 import './css/main.css';
-
 
 export default function App() {
     return (

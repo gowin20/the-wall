@@ -22,8 +22,9 @@ export async function getLayout(name=null) {
     if (name === null || name === 'default') {
         layout = SampleLayout;
         const dzi = await getTest25();
-        layout.dzi = dzi;
+        layout.image = dzi;
     }
+    console.log(layout);
     return layout;
 }
 
@@ -32,7 +33,7 @@ export async function getTest25() {
     const response = await fetch(prefixUrl+'layouts/test-25/schema.json');
     const testDZI = await response.json();
     testDZI.Image.Overlap = 1;
-    const url = prefixUrl + 'layouts/test-25/test-25_files/'
+    const url = 'https://the-wall-source.s3.us-west-1.amazonaws.com/layouts/test-25/test-25_files/'
     testDZI.Image.Url = url;
     return testDZI;
 }

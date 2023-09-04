@@ -2,7 +2,7 @@ import Details from "./Details";
 import React, { useEffect, useState } from 'react';
 import Controls from "./Controls";
 import NoteView from "./NoteView";
-import '../css/focusMode.css';
+import './focusMode.css';
 
 export default function FocusMode({onMount, clearNote, changeNote}) {
 
@@ -16,7 +16,9 @@ export default function FocusMode({onMount, clearNote, changeNote}) {
     }, [note,onMount])
 
     // please implement redux before coming back to this. remove those silly onMounts
-
+    if (note.id) {
+        note.url = id;
+    }
 /*
     const url = await getNote();
     async function getNote() {

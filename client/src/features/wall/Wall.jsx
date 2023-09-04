@@ -1,24 +1,29 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { getLayout } from "../middleware/util";
+import { getLayout } from "../../middleware/util";
 import Header from "./Header"
-import FocusMode from './FocusMode';
+import FocusMode from '../focus-mode/FocusMode';
 import Canvas from './Canvas';
+import { useSelector, useDispatch } from 'react-redux';
+import { setLayout } from './wallSlice';
 
 export default function Wall() {
     let setFocusMode, currentFocus, toggleHeader, headerShown, viewer;
 
-    const [layout, setLayout] = useState({
-        image:null
-    });
-
-    async function setupLayout(name) {
-        const layout = await getLayout(name);
-        setLayout(layout);
-    }
+    const layout = useSelector((state) => state.wall.layout);
+    const dispatch = useDispatch();
+    
+    //const [layout, setLayout] = useState({
+    //    image:null
+    //});
 
     useEffect(() => {
-        setupLayout('default');
+        async function setupLayout(name) {
+            const defaultLayout = await getLayout(name);
+            dispatch(setLayout(defaultLayout));
+        }
+
+        setupLayout('default').catch(console.error);
     }, [])
 
     function onHeaderMount(hooks) {
@@ -51,10 +56,10 @@ export default function Wall() {
         e.preventDefaultAction = true;
         
         // determine which note was clicked based on the clicked location
-        const row = Math.floor(imageCoords.y / layout.props.NOTE_SIZE);
-        const col = Math.floor(imageCoords.x / layout.props.NOTE_SIZE);
+        const clickedRow = Math.floor(imageCoords.y / layout.noteImageSize);
+        const clickedCol = Math.floor(imageCoords.x / layout.noteImageSize);
 
-        setFocusFromCoords(row,col);
+        setFocusFromCoords(clickedRow,clickedCol);
     }
 
     function disableKeyboardControls(e) {
@@ -64,23 +69,23 @@ export default function Wall() {
 
     function setFocusFromCoords(row,col) {
         // validate inputs
-        console.log(row,col,layout.props)
+        console.log(row,col,layout)
 
-        if (row >= layout.props.HEIGHT || row < 0) return;
-        if (col >= layout.props.WIDTH || col < 0) return;
+        if (row >= layout.numRows || row < 0) return;
+        if (col >= layout.numCols || col < 0) return;
 
         // collapse header
         //hideHeader();
 
         // Open focus mode
         setFocusMode({
-            url: layout.array[row][col],
+            id: layout.array[row][col],
             location: [row,col],
             buttons: {
                 up:(row > 0),
-                down:(row < layout.props.HEIGHT-1),
+                down:(row < layout.numRows-1),
                 left:(col > 0),
-                right:(col < layout.props.WIDTH-1)
+                right:(col < layout.numCols-1)
             }
         });
 
@@ -88,8 +93,8 @@ export default function Wall() {
         viewer.addHandler('canvas-key',disableKeyboardControls);
         
         // pan to the center of the clicked note
-        const horizontalMidpoint = ((col*2+1)/2) * layout.props.NOTE_SIZE;
-        const verticalMidpoint = ((row*2+1)/2) * layout.props.NOTE_SIZE;
+        const horizontalMidpoint = ((col*2+1)/2) * layout.noteImageSize;
+        const verticalMidpoint = ((row*2+1)/2) * layout.noteImageSize;
 
         const noteCenter = viewer.viewport.imageToViewportCoordinates(horizontalMidpoint,verticalMidpoint);
         viewer.viewport.panTo(noteCenter);
@@ -114,7 +119,7 @@ export default function Wall() {
         <Header onMount={onHeaderMount}/>
         <div id="wall" className="with-header-height">
             <FocusMode onMount={onFocusMount} clearNote={clearFocus} changeNote={setFocusFromCoords}/>
-            <Canvas onMount={onCanvasMount} dzi={layout.dzi} canvasClick={canvasClicked} />
+            <Canvas onMount={onCanvasMount} dzi={layout.image} canvasClick={canvasClicked} />
         </div>
         </>
     )

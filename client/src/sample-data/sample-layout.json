@@ -1,12 +1,10 @@
 {
-    "image":{
-        "name":"small-sample"
-    },
-    "props":{
-        "WIDTH":5,
-        "HEIGHT":5,
-        "NOTE_SIZE":2884
-    },
+    "name":"small-sample",
+    "rows":5,
+    "cols":5,
+    "noteImageSize":2884,
+    "image":null,
+    "default":true,
     "array": 
         [["20230507_203852.jpg","bloom.jpg","green-profile.jpg","hipplant.jpg","thathurts.jpg"],
         ["20230507_205751.jpg","20230507_205808.jpg","20230507_205822.jpg","20230507_205838.jpg","20230507_205846.jpg"],
