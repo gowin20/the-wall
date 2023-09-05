@@ -2,8 +2,9 @@ import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setFocusByPosition } from './wallSlice';
+import { getZoomableImage } from '../api/wall';
 
-export default function Canvas({ dzi }) {
+export default function Canvas({ sourceId }) {
 
     const [viewer, setViewer] = useState(null);
     const currentFocus = useSelector((state) => state.wall.focus);
@@ -15,20 +16,27 @@ export default function Canvas({ dzi }) {
     let press;
 
     useEffect(()=>{
-        if (dzi) {
-            initViewer();
+
+        async function setupCanvas() {
+            const tileSource = await getZoomableImage(sourceId);
+            console.log(tileSource);
+            initViewer(tileSource);
+        }
+
+        if (sourceId) {
+            setupCanvas();
         }
         return () => {
             viewer && viewer.destroy();
         }
-    }, [dzi]);
+    }, [sourceId]);
 
-    const initViewer = () => {
+    const initViewer = (tileSource) => {
         viewer && viewer.destroy();
         const thisViewer = OpenSeadragon({
             id: 'canvas',
             prefixUrl: "/openseadragon-buttons/",
-            tileSources: dzi,
+            tileSources: tileSource,
             animationTime: 0.5,
             blendTime: 0.1,
             constrainDuringPan: true,

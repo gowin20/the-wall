@@ -10,7 +10,10 @@ export const wallSlice = createSlice({
         },
         focus: {
             note:null, // note ID
-            position:null // {row:Int, col:Int}
+            position:{
+                row:null,
+                col:null
+            } // {row:Int, col:Int}
         }
     },
     reducers: {
@@ -33,8 +36,11 @@ export const wallSlice = createSlice({
             // Derive current note from layout position
             state.focus.note = state.layout.array[state.focus.position.row][state.focus.position.col];
         },
-        clearFocus: (state,action) => {
-            state.focus.position = null;
+        clearFocus: (state) => {
+            state.focus.position = {
+                row:null,
+                col:null
+            };
             state.focus.note = null;
         }
     }

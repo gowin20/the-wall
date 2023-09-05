@@ -1,26 +1,40 @@
 import React, { useState, useEffect } from 'react'
-import { getNoteDetails } from "../middleware/util";
+import { getUserById } from '../api/user';
 
 export default function Details({ note }) {
     
     if (!note) return <></>;
 
-    const [details, setDetails] = useState(null);
-
-    async function setupDetails(note) {
-        const noteInfo = await getNoteDetails(note);
-        setDetails(noteInfo);
-    }
+    const [details,setDetails] = useState(null);
 
     useEffect(() => {
-        console.log(note);
-        setupDetails(note);
-    }, [note])
+        async function initDetails() {
+            let user;
+            if (note.creator) {
+                // fetch user
+                user = await getUserById(note.creator);
+            }
+
+            setDetails({
+                creator:user ? user.name : 'Unknown',
+                title: note.title ? note.title : 'Untitled',
+                date: note.date ? note.date : null,
+                location: note.location ? note.location : null,
+                description:note.details ? note.details : null
+            })
+        }
+
+        if (note) {
+            initDetails();
+        }
+    },[note])
     
     if (details) {
-        let title, placeTime, artist, description;
-        if (details.title) title = <span className="title">{details.title}</span>;
-        else title = <span className='title'>Untitled</span>;
+        let placeTime, description;
+
+        const creator = <span className='artist'>{details.creator}</span>;
+        const title = <span className="title">{details.title}</span>;
+
 
         if (details.date || details.location) {
             let placeTimeText;
@@ -39,9 +53,6 @@ export default function Details({ note }) {
             placeTime = <span className="placeTime">{placeTimeText}</span>;
         }
 
-        if (details.artist) artist = <span className='artist'>{details.artist}</span>;
-        else artist = <span className='artist'>Anonymous</span>;
-
         if (details.description) description = <span className="description">{details.description}</span>;
 
         return (
@@ -51,7 +62,7 @@ export default function Details({ note }) {
                     <br></br>
                     {placeTime}
                     <br></br>
-                    {artist}
+                    {creator}
                     <br className='detailsBreak'></br>
                     {description}
                 </div>                

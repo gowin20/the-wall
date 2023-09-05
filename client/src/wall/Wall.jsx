@@ -1,10 +1,12 @@
 import React from 'react'
 import { useEffect, useState } from 'react';
-import { getLayout } from "../middleware/util";
+
 import FocusMode from './FocusMode';
 import Canvas from './Canvas';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLayout } from './wallSlice';
+import { getDefaultLayout } from '../api/wall';
+
 
 export default function Wall() {
 
@@ -16,18 +18,18 @@ export default function Wall() {
     //});
 
     useEffect(() => {
-        async function setupLayout(name) {
-            const defaultLayout = await getLayout(name);
+        async function setupLayout() {
+            const defaultLayout = await getDefaultLayout();
             dispatch(setLayout(defaultLayout));
         }
 
-        setupLayout('default').catch(console.error);
+        setupLayout().catch(console.error);
     }, [])
 
     return (
         <div id="wall" className="with-header-height">
             <FocusMode />
-            <Canvas dzi={layout.image} />
+            <Canvas sourceId={layout.image} />
         </div>
     )
 
