@@ -1,6 +1,6 @@
 # local files (testing only)
 public/notes
-server/temp
+server/layout-generator/temp
 
 # Logs
 logs

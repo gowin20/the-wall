@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "install":"concurrently \"cd client && npm ci\" \"cd server && npm ci\"",
     "start": "concurrently \"cd client && npm run client:start\" \"cd server && npm run server:start\"",
     "dev": "concurrently \"cd client && npm run client:dev\" \"cd server && npm run server:dev\"",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0"

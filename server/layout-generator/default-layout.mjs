@@ -1,13 +1,25 @@
-import db from "../db/conn.mjs";
 import createLayout from "./create-layout.mjs";
+import db from "../db/conn.mjs";
 
-const makeDefaultLayout = async () => {
+const makeDefaultLayout = async (options) => {
+
+    let pattern;
+    if (!options.fromDisk) pattern = await makeRandomPattern();
+    else {console.log('using existing pattern.')}
+    // 3. call createLayout with pattern
+    createLayout(pattern, {
+        name:'test-1015',
+        saveFile:options.saveFile,
+        fromDisk:options.fromDisk
+    });
+}
+
+const makeRandomPattern = async () => {
 
     // 1. list all note objects in 'notes' atlas collection
     let collection = await db.collection('notes');
-    let allNotes = await collection.find({}).toArray();
-
-    // 2. create random 2d array of note ids
+    let allNotes = await collection.find({}).toArray();    
+// Create random 2d array of note ids
     // 16/9 aspect ratio
     let totalNotes = allNotes.length;
 
@@ -40,10 +52,12 @@ const makeDefaultLayout = async () => {
         pattern.push(thisRow);
     }
 
-    console.log('pattern complete. width:',pattern[0].length,'height:',pattern.length);
+    console.log('new pattern generated. width:',pattern[0].length,'height:',pattern.length);
 
-    // 3. call createLayout with pattern
-    //createLayout(pattern);
+    return pattern;
 }
 
-makeDefaultLayout();
+makeDefaultLayout({
+    saveFile:true,
+    fromDisk:true
+});
