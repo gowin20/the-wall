@@ -2,12 +2,13 @@ import sharp from "sharp";
 import * as fs from 'fs';
 import db from "../db/conn.mjs";
 import fetch from 'node-fetch';
+import { ObjectId } from "mongodb";
 
-const createStitchedImage = async (pattern,options) => {
+const createStitchedImage = async (layout,options) => {
     // Transpose 2D array to list of image objects w/ offsets
-    let notesToStitch;
-
-    if (options.fromDisk) {
+    
+    /*
+    if (options.fromDiskDev) {
         const data = fs.readFileSync('./layout-generator/temp/stitch-order.json', 'utf8');
         const file = await JSON.parse(data);
         notesToStitch = file.order;
@@ -20,31 +21,65 @@ const createStitchedImage = async (pattern,options) => {
         console.log(notesToStitch)
         console.log('successfully read stitch order from disk.')
     }
-    else notesToStitch = await parsePattern(pattern,{
-        noteImageSize:options.noteImageSize,
-        saveFile:options.saveFile
-    });
+    */
+    const noteImageSize = layout.noteImageSize;
 
-    console.log('pattern: ',notesToStitch);
-
-    // Generate stitched image in temp folder
-    await sharp({
+    // Generate large blank image in temp folder
+    let canvas = await sharp({
         create: {
-            width:options.noteImageSize*options.numCols,
-            height:options.noteImageSize*options.numRows,
+            width:noteImageSize*layout.numCols,
+            height:noteImageSize*layout.numRows,
             channels: 4,
             background: { r: 0, g: 0, b: 0, alpha: 0 }
         }
-    })
-    .composite(notesToStitch)
-    .tiff()
-    .toFile('./layout-generator/temp/stitched-temp.tiff', (err, info) => {
-        console.log('Stitched image results: ',err,info);
-    });
-    return 1;
+    }).tiff().toBuffer();
+
+    let collection = await db.collection('notes');
+    console.log('Beginning stitched image generation...');
+    let y=0;
+    let totalDone=0;
+    const totalNotes = layout.array.length * layout.array[0].length;
+    for (const row of layout.array) {
+        let x=0;
+        for (const noteID of row) {
+            try {
+                const noteObj = await collection.findOne({_id:new ObjectId(noteID)});
+
+                const image = await fetch(noteObj.orig);
+                const imageBuffer = await image.buffer();
+                const b64 = await sharp(imageBuffer).resize({width:noteImageSize}).jpeg().toBuffer();
+                
+                const thisNote = {
+                    input: b64,
+                    top:y*noteImageSize,
+                    left:x*noteImageSize
+                };
+                canvas = await sharp(canvas).composite([thisNote]).tiff().toBuffer();
+                console.log(`[${totalDone}/${totalNotes}] ${noteObj.thumb} added...`);
+
+                x+=1;
+                totalDone+=1;
+            }
+            catch (e) {
+                console.error(e);
+            }
+        }
+        y+=1;
+    }
+    
+
+    console.log('Pattern fully stitched.');
+
+    if (options.saveFile) {
+        await sharp(canvas).toFile(`./layout-generator/temp/${layout.name}-stitched.tiff`, (err, info) => {
+            console.log('Stitched image results: ',err,info);
+        });
+    }
+
+    return canvas;
 }
 
-const parsePattern = async (pattern,options) => {
+const createImage = async (pattern,options) => {
     let collection = await db.collection('notes');
     const notesToStitch = [];
     let y=0;

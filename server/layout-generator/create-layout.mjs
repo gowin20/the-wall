@@ -19,17 +19,23 @@ Side effects:
 */
 const createLayout = async (pattern,options) => {
 
+    const totalSteps = 3;
+
     if (pattern == null) {
 
         if (options.fromDisk) {
+            console.log(`[1/${totalSteps}] Initializing layout from disk.`)
             const data = fs.readFileSync('./layout-generator/temp/layout.json');
             pattern = await JSON.parse(data).array;
-            console.log('successfully read existing pattern from disk.');
+            console.log(`[1/${totalSteps}] Initializing read pattern from disk.`)
         }
         else {
             console.error('Error: a pattern is required to generate a layout.');
             return;
         }
+    }
+    else {
+        console.log(`[1/${totalSteps}] Initializing layout from provided pattern.`)
     }
     // Initialize layout object
     const layout = {
@@ -40,31 +46,29 @@ const createLayout = async (pattern,options) => {
         array:pattern,
         dzi:null
     }
-    console.log('layout initialized')
-
-    await createStitchedImage(pattern,{
-        noteImageSize:layout.noteImageSize,
-        numRows:layout.numRows,
-        numCols:layout.numCols,
+    console.log(`[1/${totalSteps} DONE] Successfully initialized layout with pattern.`)
+    console.log(`[2/${totalSteps}] Creating stitched image`)
+    const stitchedTiff= await createStitchedImage(layout,{
         fromDisk:options.fromDisk,
         saveFile:options.saveFile
     })
-    console.log('stitched image (prob) created');
-
+    console.log(`[2/${totalSteps} DONE] Stitched image created.`);
+    console.log(`[3/${totalSteps}] Generating DZI`)
+    const DZI_IMAGE = stitchedTiff || `./layout-generator/temp/${layout.name}-stitched.tiff`
     // Generate dzi directory in temp folder
-    await sharp('./layout-generator/temp/stitched-temp.tiff')
+    await sharp(DZI_IMAGE)
     .jpeg()
     .tile({
         size:576
     })
-    .toFile('./layout-generator/temp/dzi-output.dz', (err, info) => {
+    .toFile(`./layout-generator/temp/${layout.name}-dzi.dz`, (err, info) => {
         console.log(err,info)
     })
     
     if (options.saveFile) {
-        await fs.writeFileSync('./layout-generator/temp/layout.json', JSON.stringify(layout));
+        await fs.writeFileSync(`./layout-generator/temp/${layout.name}-layout.json`, JSON.stringify(layout));
     }
-    console.log('process complete. file saved.')
+    console.log('[3/3 DONE] Process complete. file saved.')
 
     // 5. upload all dzi files to s3
 

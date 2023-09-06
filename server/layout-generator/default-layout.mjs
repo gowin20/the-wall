@@ -7,15 +7,16 @@ const makeDefaultLayout = async (options) => {
     if (!options.fromDisk) pattern = await makeRandomPattern();
     else {console.log('using existing pattern.')}
     // 3. call createLayout with pattern
+    console.log('Beginning layout creation...')
     createLayout(pattern, {
-        name:'test-1015',
+        name:options.name,
         saveFile:options.saveFile,
         fromDisk:options.fromDisk
     });
 }
 
 const makeRandomPattern = async () => {
-
+    console.log('Creating random pattern...')
     // 1. list all note objects in 'notes' atlas collection
     let collection = await db.collection('notes');
     let allNotes = await collection.find({}).toArray();    
@@ -23,9 +24,11 @@ const makeRandomPattern = async () => {
     // 16/9 aspect ratio
     let totalNotes = allNotes.length;
 
-    const ratio = 16/9;
-    const height = Math.ceil(Math.sqrt(totalNotes/ratio));
-    const width = Math.ceil(height*ratio);
+// 320 / 111
+
+    const ratio = 320/111;
+    let height = Math.ceil(Math.sqrt(totalNotes/ratio));
+    let width = Math.ceil(height*ratio);
 
     if ((width-2)*height >= totalNotes) width -= 2;
     if ((width-1)*height >= totalNotes) width -= 1;
@@ -52,12 +55,12 @@ const makeRandomPattern = async () => {
         pattern.push(thisRow);
     }
 
-    console.log('new pattern generated. width:',pattern[0].length,'height:',pattern.length);
+    console.log(`New pattern generated.\nWidth:${pattern[0].length}\nHeight: ${pattern.length}`);
 
     return pattern;
 }
 
 makeDefaultLayout({
     saveFile:true,
-    fromDisk:true
+    name:'stitched-1015-2'
 });
