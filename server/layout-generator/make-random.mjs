@@ -1,32 +1,24 @@
-import createLayout from "./create-layout.mjs";
 import db from "../db/conn.mjs";
 
-const makeDefaultLayout = async (options) => {
+export const makeRandomPattern = async (notes, options) => {
 
-    let pattern;
-    if (!options.fromDisk) pattern = await makeRandomPattern();
-    else {console.log('using existing pattern.')}
-    // 3. call createLayout with pattern
-    console.log('Beginning layout creation...')
-    createLayout(pattern, {
-        name:options.name,
-        saveFile:options.saveFile,
-        fromDisk:options.fromDisk
-    });
-}
-
-const makeRandomPattern = async () => {
     console.log('Creating random pattern...')
-    // 1. list all note objects in 'notes' atlas collection
-    let collection = await db.collection('notes');
-    let allNotes = await collection.find({}).toArray();    
+
+    if (!notes) {
+        // 1. list all note objects in 'notes' atlas collection
+        console.log('No notes provided. Using all available notes by default.')
+        const collection = await db.collection('notes');
+        const allNoteIDs = (await collection.find({}).toArray()).map(note => note._id);
+        notes = allNoteIDs;
+    }
+
 // Create random 2d array of note ids
     // 16/9 aspect ratio
-    let totalNotes = allNotes.length;
+    let totalNotes = notes.length;
 
 // 320 / 111
 
-    const ratio = 320/111;
+    const ratio = options.ratio ? options.ratio : 16/9;
     let height = Math.ceil(Math.sqrt(totalNotes/ratio));
     let width = Math.ceil(height*ratio);
 
@@ -49,18 +41,26 @@ const makeRandomPattern = async () => {
                 i = Math.floor(Math.random()*totalNotes);
             } while (usedNotes.has(i));
     
-            thisRow.push(allNotes[i]._id)
+            thisRow.push(notes[i])
             usedNotes.add(i);
         }
         pattern.push(thisRow);
     }
 
     console.log(`New pattern generated.\nWidth:${pattern[0].length}\nHeight: ${pattern.length}`);
-
     return pattern;
 }
 
-makeDefaultLayout({
-    saveFile:true,
-    name:'stitched-1015-2'
-});
+export const getRandomNotes = async (count) => {
+    const noteIDs = [];
+
+    const collection = await db.collection('notes');
+
+    const randomNotes = collection.aggregate([{$sample: {size:count}}]);
+
+    for await (const noteObj of randomNotes) {
+        noteIDs.push(noteObj._id);
+    }
+
+    return noteIDs;
+}

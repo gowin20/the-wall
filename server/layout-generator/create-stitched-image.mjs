@@ -3,12 +3,13 @@ import * as fs from 'fs';
 import db from "../db/conn.mjs";
 import fetch from 'node-fetch';
 import { ObjectId } from "mongodb";
+import { TEMP_DIR } from "./create-layout.mjs";
 
 const createStitchedImage = async (layout,options) => {
     // Transpose 2D array to list of image objects w/ offsets
     
     /*
-    if (options.fromDiskDev) {
+    if (options.fromDisk) {
         const data = fs.readFileSync('./layout-generator/temp/stitch-order.json', 'utf8');
         const file = await JSON.parse(data);
         notesToStitch = file.order;
@@ -22,6 +23,7 @@ const createStitchedImage = async (layout,options) => {
         console.log('successfully read stitch order from disk.')
     }
     */
+   
     const noteImageSize = layout.noteImageSize;
 
     // Generate large blank image in temp folder
@@ -71,7 +73,8 @@ const createStitchedImage = async (layout,options) => {
     console.log('Pattern fully stitched.');
 
     if (options.saveFile) {
-        await sharp(canvas).toFile(`./layout-generator/temp/${layout.name}-stitched.tiff`, (err, info) => {
+        const LAYOUT_DIR = TEMP_DIR+layout.name;
+        await sharp(canvas).toFile(`${LAYOUT_DIR}/${layout.name}-stitched.tiff`, (err, info) => {
             console.log('Stitched image results: ',err,info);
         });
     }
@@ -79,7 +82,7 @@ const createStitchedImage = async (layout,options) => {
     return canvas;
 }
 
-const createImage = async (pattern,options) => {
+const createImageBuffer = async (pattern,options) => {
     let collection = await db.collection('notes');
     const notesToStitch = [];
     let y=0;

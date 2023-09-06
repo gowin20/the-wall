@@ -17,15 +17,19 @@ Side effects:
 * Generates large temp files which are deleted upon program termination
 
 */
+export const TEMP_DIR = `./layout-generator/temp/`;
+
 const createLayout = async (pattern,options) => {
 
     const totalSteps = 3;
+
+    const LAYOUT_DIR = TEMP_DIR+options.name;
 
     if (pattern == null) {
 
         if (options.fromDisk) {
             console.log(`[1/${totalSteps}] Initializing layout from disk.`)
-            const data = fs.readFileSync('./layout-generator/temp/layout.json');
+            const data = fs.readFileSync(`${LAYOUT_DIR}/layout.json`);
             pattern = await JSON.parse(data).array;
             console.log(`[1/${totalSteps}] Initializing read pattern from disk.`)
         }
@@ -37,6 +41,7 @@ const createLayout = async (pattern,options) => {
     else {
         console.log(`[1/${totalSteps}] Initializing layout from provided pattern.`)
     }
+
     // Initialize layout object
     const layout = {
         name:options.name,
@@ -46,27 +51,33 @@ const createLayout = async (pattern,options) => {
         array:pattern,
         dzi:null
     }
+
+    if (options.saveFiles) {
+        if (!fs.existsSync(`${LAYOUT_DIR}/`)) fs.mkdirSync(`${LAYOUT_DIR}/`);
+    }
+
+
     console.log(`[1/${totalSteps} DONE] Successfully initialized layout with pattern.`)
     console.log(`[2/${totalSteps}] Creating stitched image`)
     const stitchedTiff= await createStitchedImage(layout,{
         fromDisk:options.fromDisk,
-        saveFile:options.saveFile
+        saveFile:options.saveFiles
     })
     console.log(`[2/${totalSteps} DONE] Stitched image created.`);
     console.log(`[3/${totalSteps}] Generating DZI`)
-    const DZI_IMAGE = stitchedTiff || `./layout-generator/temp/${layout.name}-stitched.tiff`
+    const DZI_IMAGE = stitchedTiff || `${LAYOUT_DIR}/${layout.name}-stitched.tiff`
     // Generate dzi directory in temp folder
-    await sharp(DZI_IMAGE)
+    const dzi = await sharp(DZI_IMAGE)
     .jpeg()
     .tile({
         size:576
     })
-    .toFile(`./layout-generator/temp/${layout.name}-dzi.dz`, (err, info) => {
+    .toFile(`${LAYOUT_DIR}/${layout.name}-dzi.dz`, (err, info) => {
         console.log(err,info)
     })
     
-    if (options.saveFile) {
-        await fs.writeFileSync(`./layout-generator/temp/${layout.name}-layout.json`, JSON.stringify(layout));
+    if (options.saveFiles) {
+        await fs.writeFileSync(`${LAYOUT_DIR}/layout.json`, JSON.stringify(layout));
     }
     console.log('[3/3 DONE] Process complete. file saved.')
 

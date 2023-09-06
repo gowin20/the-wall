@@ -29,6 +29,8 @@ router.get('/default', async (req, res) => {
 
     if (!result) res.send('Not found').status(404);
     else res.send(result).status(200);
-})
+});
+
+// TODO add routes for /generate/default and /generate/custom
 
 export default router;
