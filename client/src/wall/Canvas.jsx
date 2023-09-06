@@ -44,6 +44,7 @@ export default function Canvas({ sourceId }) {
             navigatorPosition:   "BOTTOM_RIGHT",
             maxZoomPixelRatio: 2,
             minZoomLevel: 1,
+            maxZoomLevel:7,
             visibilityRatio: 1,
             zoomPerScroll: 2
         })

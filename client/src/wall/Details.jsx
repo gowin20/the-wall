@@ -32,8 +32,8 @@ export default function Details({ note }) {
     if (details) {
         let placeTime, description;
 
-        const creator = <span className='artist'>{details.creator}</span>;
-        const title = <span className="title">{details.title}</span>;
+        const creator = <span className='title'>{details.creator}</span>;
+        const title = <span className="artist">{details.title}</span>;
 
 
         if (details.date || details.location) {
@@ -58,11 +58,11 @@ export default function Details({ note }) {
         return (
             <div className="details">
                 <div className="detailsContent">
-                    {title}
+                    {creator}
                     <br></br>
                     {placeTime}
                     <br></br>
-                    {creator}
+                    {title}
                     <br className='detailsBreak'></br>
                     {description}
                 </div>                
