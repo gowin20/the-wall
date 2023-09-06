@@ -1,6 +1,7 @@
 import express from "express";
 import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
+import { getUserByID } from "../db/get-users.mjs";
 
 const router = express.Router();
 
@@ -13,9 +14,7 @@ router.get("/", async (req, res) => {
 
 // Get a single user by ID
 router.get("/id/:id", async (req, res) => {
-    let collection = await db.collection('users');
-    let query = {_id: new ObjectId(req.params.id)};
-    let result = await collection.findOne(query);
+    const result = await getUserByID(req.params.id);
   
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);

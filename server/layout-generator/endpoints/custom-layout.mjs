@@ -1,5 +1,6 @@
 import createLayout from "../create-layout.mjs";
-import {makeRandomPattern, getRandomNoteIDs} from "../make-random.mjs";
+import {makeRandomPattern} from "../make-random.mjs";
+import { getRandomNotes } from "../../db/get-notes.mjs";
 
 const makeCustomLayout = async (notes,options) => {
 
@@ -15,16 +16,19 @@ const makeCustomLayout = async (notes,options) => {
 
     // 3. call createLayout with pattern
     console.log('Beginning layout generation...')
-    createLayout(pattern, {
+    await createLayout(pattern, {
         name:options.name,
         saveFiles:options.saveFiles,
         fromDisk:options.fromDisk
     });
+    return 1
 }
+export default makeCustomLayout;
 
-const layoutNotes = await getRandomNoteIDs(20);
 
-makeCustomLayout(layoutNotes,{
+const layoutNoteIDs = (await getRandomNotes(20)).map(note => note._id);
+
+makeCustomLayout(layoutNoteIDs,{
     name:'custom-2x10',
     rows:2,
     cols:10,

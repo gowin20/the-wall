@@ -56,18 +56,3 @@ export const makeRandomPattern = async (notes, options) => {
     console.log(`New pattern generated.\nWidth:${pattern[0].length}\nHeight: ${pattern.length}`);
     return pattern;
 }
-
-// Get a set number of random note IDs
-export const getRandomNoteIDs = async (count) => {
-    const noteIDs = [];
-
-    const collection = await db.collection('notes');
-
-    const randomNotes = collection.aggregate([{$sample: {size:count}}]);
-
-    for await (const noteObj of randomNotes) {
-        noteIDs.push(noteObj._id);
-    }
-
-    return noteIDs;
-}

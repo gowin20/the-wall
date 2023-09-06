@@ -85,6 +85,7 @@ const createLayout = async (pattern,options) => {
     // 7. insert layout object to mongo atlas
 
     // 8. delete temp files
+    process.exit();
 }
 
 export default createLayout;

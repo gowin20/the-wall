@@ -3,19 +3,19 @@ import { makeRandomPattern } from "../make-random.mjs";
 
 const makeDefaultLayout = async (options) => {
 
-    let pattern;
-    if (!options.fromDisk) pattern = await makeRandomPattern(null,{
+    const pattern = await makeRandomPattern(null,{
         ratio:320/111
     });
-    else {console.log('using existing pattern.')}
-    // 3. call createLayout with pattern
+    
     console.log('Beginning layout generation...')
-    createLayout(pattern, {
+    await createLayout(pattern, {
         name:options.name,
         saveFiles:options.saveFiles,
         fromDisk:options.fromDisk
     });
+    return 1;
 }
+export default makeDefaultLayout;
 
 makeDefaultLayout({
     saveFiles:true,
