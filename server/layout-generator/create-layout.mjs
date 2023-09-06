@@ -2,6 +2,7 @@
 import sharp from "sharp";
 import * as fs from 'fs';
 import createStitchedImage from "./create-stitched-image.mjs";
+import createDZI from "./create-dzi.mjs";
 /*
 const createLayout;
 Creates a functional layout object of notes and images
@@ -22,16 +23,16 @@ export const TEMP_DIR = `./layout-generator/temp/`;
 const createLayout = async (pattern,options) => {
 
     const totalSteps = 3;
-
+    console.log(`[STEP 1/${totalSteps}] Initializing layout...`);
     const LAYOUT_DIR = TEMP_DIR+options.name;
 
     if (pattern == null) {
 
         if (options.fromDisk) {
-            console.log(`[1/${totalSteps}] Initializing layout from disk.`)
+            console.log(`[STEP 1/${totalSteps}] Initializing layout from disk.`)
             const data = fs.readFileSync(`${LAYOUT_DIR}/layout.json`);
             pattern = await JSON.parse(data).array;
-            console.log(`[1/${totalSteps}] Initializing read pattern from disk.`)
+            console.log(`[STEP 1/${totalSteps}] Initializing read pattern from disk.`)
         }
         else {
             console.error('Error: a pattern is required to generate a layout.');
@@ -39,7 +40,7 @@ const createLayout = async (pattern,options) => {
         }
     }
     else {
-        console.log(`[1/${totalSteps}] Initializing layout from provided pattern.`)
+        console.log(`[STEP 1/${totalSteps}] Initializing layout from provided pattern.`)
     }
 
     // Initialize layout object
@@ -55,31 +56,27 @@ const createLayout = async (pattern,options) => {
     if (options.saveFiles) {
         if (!fs.existsSync(`${LAYOUT_DIR}/`)) fs.mkdirSync(`${LAYOUT_DIR}/`);
     }
+    console.log(`[STEP 1/${totalSteps} DONE] Successfully initialized layout with pattern.`);
 
 
-    console.log(`[1/${totalSteps} DONE] Successfully initialized layout with pattern.`)
-    console.log(`[2/${totalSteps}] Creating stitched image`)
+    console.log(`[STEP 2/${totalSteps}] Creating stitched image`)
     const stitchedTiff= await createStitchedImage(layout,{
         fromDisk:options.fromDisk,
         saveFile:options.saveFiles
     })
-    console.log(`[2/${totalSteps} DONE] Stitched image created.`);
-    console.log(`[3/${totalSteps}] Generating DZI`)
-    const DZI_IMAGE = stitchedTiff || `${LAYOUT_DIR}/${layout.name}-stitched.tiff`
-    // Generate dzi directory in temp folder
-    const dzi = await sharp(DZI_IMAGE)
-    .jpeg()
-    .tile({
-        size:576
-    })
-    .toFile(`${LAYOUT_DIR}/${layout.name}-dzi.dz`, (err, info) => {
-        console.log(err,info)
-    })
+    console.log(`[STEP 2/${totalSteps} DONE] Stitched image created.`);
+
+
+    console.log(`[STEP 3/${totalSteps}] Generating DZI`)
+    const dzi = await createDZI(stitchedTiff, {
+        name:layout.name,
+        saveFile:options.saveFiles
+    });
     
     if (options.saveFiles) {
         await fs.writeFileSync(`${LAYOUT_DIR}/layout.json`, JSON.stringify(layout));
     }
-    console.log('[3/3 DONE] Process complete. file saved.')
+    console.log(`[STEP 3/${totalSteps} DONE] DZI generated. ${options.saveFiles ? `Files saved to ${LAYOUT_DIR}.` : ''}`)
 
     // 5. upload all dzi files to s3
 

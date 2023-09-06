@@ -1,5 +1,6 @@
 import db from "../db/conn.mjs";
 
+// Create random 2d array of note ids
 export const makeRandomPattern = async (notes, options) => {
 
     console.log('Creating random pattern...')
@@ -12,19 +13,24 @@ export const makeRandomPattern = async (notes, options) => {
         notes = allNoteIDs;
     }
 
-// Create random 2d array of note ids
-    // 16/9 aspect ratio
-    let totalNotes = notes.length;
+    const totalNotes = notes.length;
 
-// 320 / 111
+    let width, height;
+    if (options.rows && options.cols) { // Use number of rows and cols if available
+        width = options.cols;
+        height = options.rows;
+    }
+    else { // Otherwise use a ratio instead (Default 16:9)
+        const ratio = options.ratio ? options.ratio : 16/9;
+        height = Math.ceil(Math.sqrt(totalNotes/ratio));
+        width = Math.ceil(height*ratio);
+    
+        if ((width-2)*height >= totalNotes) width -= 2;
+        if ((width-1)*height >= totalNotes) width -= 1;
+        if (width*(height-1) >= totalNotes) height -= 1;
+    }
 
-    const ratio = options.ratio ? options.ratio : 16/9;
-    let height = Math.ceil(Math.sqrt(totalNotes/ratio));
-    let width = Math.ceil(height*ratio);
 
-    if ((width-2)*height >= totalNotes) width -= 2;
-    if ((width-1)*height >= totalNotes) width -= 1;
-    if (width*(height-1) >= totalNotes) height -= 1;
 
     const pattern = [];
     const usedNotes = new Set();
@@ -51,7 +57,8 @@ export const makeRandomPattern = async (notes, options) => {
     return pattern;
 }
 
-export const getRandomNotes = async (count) => {
+// Get a set number of random note IDs
+export const getRandomNoteIDs = async (count) => {
     const noteIDs = [];
 
     const collection = await db.collection('notes');

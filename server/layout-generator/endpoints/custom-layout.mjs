@@ -1,5 +1,5 @@
 import createLayout from "../create-layout.mjs";
-import {makeRandomPattern, getRandomNotes} from "../make-random.mjs";
+import {makeRandomPattern, getRandomNoteIDs} from "../make-random.mjs";
 
 const makeCustomLayout = async (notes,options) => {
 
@@ -8,7 +8,9 @@ const makeCustomLayout = async (notes,options) => {
     }
 
     const pattern = await makeRandomPattern(notes, {
-        ratio: options.ratio
+        ratio: options.ratio,
+        rows:options.rows,
+        cols:options.cols
     });
 
     // 3. call createLayout with pattern
@@ -20,10 +22,11 @@ const makeCustomLayout = async (notes,options) => {
     });
 }
 
-const layoutNotes = await getRandomNotes(10);
+const layoutNotes = await getRandomNoteIDs(20);
 
 makeCustomLayout(layoutNotes,{
     name:'custom-2x10',
-    ratio:2/10,
+    rows:2,
+    cols:10,
     saveFiles:true,
 });

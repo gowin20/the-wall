@@ -1,15 +1,20 @@
 import sharp from "sharp";
+import { TEMP_DIR } from "./create-layout.mjs";
 
-const input = './public/wall-images/out.tiff';
-
-sharp(input)
+const createDZI = async (tiff,options) => {
+  const LAYOUT_DIR = TEMP_DIR + options.name;
+  const DZI_IMAGE = tiff || `${LAYOUT_DIR}/${options.name}-stitched.tiff`
+  // Generate dzi directory in temp folder
+  const dzi = await sharp(DZI_IMAGE)
   .jpeg()
   .tile({
-    size: 512
+      size:576
   })
-  .toFile('./public/wall-images/test-25.dz', function(err, info) {
-    console.log(err);
-    console.log(info);
-    // output.dzi is the Deep Zoom XML definition
-    // output_files contains 512x512 tiles grouped by zoom level
-  });
+  .toFile(`${LAYOUT_DIR}/${options.name}-dzi.dz`, (err, info) => {
+      console.log(err,info)
+  })
+
+  return dzi;
+}
+
+export default createDZI;
