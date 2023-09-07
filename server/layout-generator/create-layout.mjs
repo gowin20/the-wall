@@ -1,5 +1,3 @@
-//import db from "../db/conn.mjs";
-import sharp from "sharp";
 import * as fs from 'fs';
 import createStitchedImage from "./create-stitched-image.mjs";
 import createDZI from "./create-dzi.mjs";

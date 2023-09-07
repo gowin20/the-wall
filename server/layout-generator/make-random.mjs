@@ -1,4 +1,4 @@
-import db from "../db/conn.mjs";
+import { getAllNotes } from "../db/get-notes.mjs";
 
 // Create random 2d array of note ids
 export const makeRandomPattern = async (notes, options) => {
@@ -6,10 +6,9 @@ export const makeRandomPattern = async (notes, options) => {
     console.log('Creating random pattern...')
 
     if (!notes) {
-        // 1. list all note objects in 'notes' atlas collection
+        // If no notes provided, use all notes in Atlas
         console.log('No notes provided. Using all available notes by default.')
-        const collection = await db.collection('notes');
-        const allNoteIDs = (await collection.find({}).toArray()).map(note => note._id);
+        const allNoteIDs = (await getAllNotes()).map(note => note._id);
         notes = allNoteIDs;
     }
 

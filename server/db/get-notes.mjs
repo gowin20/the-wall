@@ -1,20 +1,25 @@
 import db from "./conn.mjs"
+import { ObjectId } from "mongodb";
+
 // A collection of functions returning notes
+export const getNoteById = async (noteID) => {
+    let collection = await db.collection('notes');
+    let query = {_id: new ObjectId(noteID)};
+    let result = await collection.findOne(query);
+    return result;
+}
+
+export const getAllNotes = async (noteID) => {
+    let collection = await db.collection('notes');
+    let results = await collection.find({}).toArray();
+    return results;
+}
+
 
 export const getNotesByUser = async (userID) => {
-    const notes = []
-
     const noteColl = db.collection('notes');
-
-    const res = noteColl.find( {
-        creator:userID
-    })
-
-    for await (const note of res) {
-        notes.push(note);
-    }
-    
-    return notes
+    const notes = noteColl.find({creator:userID}).toArray();
+    return notes; 
 }
 
 // Get a set number of random note IDs

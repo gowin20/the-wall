@@ -1,14 +1,12 @@
 import express from "express";
-import db from "../db/conn.mjs";
-import { ObjectId } from "mongodb";
-import { getUserByID } from "../db/get-users.mjs";
+import { getAllUsers, getUserByID } from "../db/get-users.mjs";
+import { getNotesByUser } from "../db/get-notes.mjs";
 
 const router = express.Router();
 
 // Get a list of all users
 router.get("/", async (req, res) => {
-    let collection = await db.collection('users');
-    let results = await collection.find({}).toArray();
+    const results = await getAllUsers();
     res.send(results).status(200);
 });
 
@@ -22,12 +20,10 @@ router.get("/id/:id", async (req, res) => {
 
 // Get all notes created by a user (ID)
 router.get('/id/:id/notes', async (req,res) => {
-  let collection = await db.collection('users');
-  let query = {_id: new ObjectId(req.params.id)};
-  let result = await collection.findOne(query);
+  const result = await getNotesByUser(req.params.id);
+
   if (!result) res.send("Not found").status(404);
-  else if (!result.notes) res.send('User has no notes').status(404);
-  else res.send(result.notes).status(200);
+  else res.send(result).status(200);
 })
 
 
