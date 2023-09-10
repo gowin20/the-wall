@@ -1,1 +1,0 @@
-this folder contains the output of image files
