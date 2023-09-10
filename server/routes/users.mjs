@@ -1,6 +1,6 @@
 import express from "express";
-import { getAllUsers, getUserByID } from "../db/users.mjs";
-import { getNotesByUser } from "../db/notes.mjs";
+import { getAllUsers, getUserByID } from "../db/crud-users.mjs";
+import { getNotesByUser } from "../db/crud-notes.mjs";
 
 const router = express.Router();
 

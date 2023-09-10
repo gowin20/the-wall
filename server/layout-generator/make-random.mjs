@@ -3,6 +3,7 @@ import { getAllNotes } from "../db/crud-notes.mjs";
 // Create random 2d array of note ids
 export const makeRandomPattern = async (notes, options) => {
 
+    console.log(notes,options);
     console.log('Creating random pattern...')
 
     if (!notes) throw new Error('No notes provided to \'makeRandomPattern()\'');

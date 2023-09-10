@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllNotes,getNoteById } from "../db/notes.mjs";
+import { getAllNotes,getNoteById } from "../db/crud-notes.mjs";
 
 const router = express.Router();
 

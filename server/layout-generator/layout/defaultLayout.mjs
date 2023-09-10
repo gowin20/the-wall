@@ -1,7 +1,7 @@
-import { makeRandomPattern } from "./make-random.mjs";
-import { Layout } from "./layout/layout.mjs";
-import { getAllNotes } from "../db/crud-notes.mjs";
-import { insertLayout } from "../db/crud-layouts.mjs";
+import { makeRandomPattern } from "../make-random.mjs";
+import { Layout } from "./layout.mjs";
+import { getAllNotes } from "../../db/crud-notes.mjs";
+import { insertLayout } from "../../db/crud-layouts.mjs";
 
 
 class DefaultLayout extends Layout {

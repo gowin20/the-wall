@@ -1,9 +1,10 @@
 import * as fs from 'fs';
 import sharp from "sharp";
 import fetch from 'node-fetch';
-import createDZI from "../image/create-dzi.mjs";
+import createDZI from "../image/dzi.mjs";
 import { getLayoutById, insertLayout } from '../../db/crud-layouts.mjs';
 import { getNoteById } from "../../db/crud-notes.mjs";
+import dzi from '../image/dzi.mjs';
 
 
 /*
@@ -146,11 +147,13 @@ export class Layout {
 
 
         console.log(`[STEP 2/${totalSteps}] Generating DZI`);
-        const dzi = await createDZI(stitchedTiff, {
+        const image = dzi({
             name:this.name,
-            saveFile:saveFiles
-        });
-        console.log(`[STEP 2/${totalSteps} DONE] DZI generated. ${saveFiles ? `Files saved to ${LAYOUT_DIR}.` : ''}`)
+            saveFiles:saveFiles
+        })
+        image.init(stitchedTiff,() => {
+            console.log(`[STEP 2/${totalSteps} DONE] DZI generated. ${saveFiles ? `Files saved to ${LAYOUT_DIR}.` : ''}`)
+        })
 
         // 5. upload all dzi files to s3
 
