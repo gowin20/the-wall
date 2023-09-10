@@ -22,3 +22,25 @@ export const getDefaultLayout = async () => {
 
     return result;
 }
+
+export const insertLayout = async (layout) => {
+
+    const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
+    const errorHeader = 'INSERT ERROR: ';
+    // all layout objects must have:
+
+    // `name` prop (string)
+    // `noteImageSize` prop: size of each note on grid in pixels, default 288
+    // `array` prop (2D array containing note IDs)
+    // `image` prop pointing to valid S3 image folder
+
+    if (!layout) {
+        console.error(`${errorHeader}No layout object provided.`);
+    }
+    else if (!layout.name) {
+        console.error(`${errorHeader}No layout name provided.`);
+    }
+
+    // TODO
+    return;
+}

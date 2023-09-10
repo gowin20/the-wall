@@ -1,7 +1,6 @@
-import { listNotes } from "../query-s3.mjs";
-import { ObjectId } from "mongodb";
-import db from './conn.mjs';
-import * as fs from 'fs';
+import { listFolder } from "./s3.mjs";
+import { insertFakeUser } from "./crud-users.mjs";
+import { insertNote } from "./crud-notes.mjs";
 
 const creators = {
     'go':'George Owen',
@@ -63,60 +62,42 @@ const tags = {
 }
 const prefix = 'notes/orig/';
 const origURL = 'https://the-wall-source.s3.us-west-1.amazonaws.com/notes/orig/';
-const thumbURL = 'https://the-wall-source.s3.us-west-1.amazonaws.com/notes/96ppi/';
-
-const userObjects = {};
-
 
 export const createObjectsFromS3 = async (options) => {
     const saveFile = options.saveFile || false;
 
-    const notes = await listNotes({
+    const notes = await listFolder({
         saveFile:saveFile,
         folder:prefix
     });
 
     // Create list of note objects
-    const noteObjectList = [];
+    const noteIdList = [];
     for (const note of notes) {
-        noteObjectList.push(createNoteObject(note));
+        noteIdList.push(await parseNote(note));
     }
 
-    // Create list of user objects
-    const userObjectList = []
-    Object.keys(userObjects).forEach(user => {
-        userObjectList.push(userObjects[user]);
-    })
+    console.log(noteIdList.length,'notes were inserted.');
 
-    const output = {
-        notes: noteObjectList,
-        users: userObjectList
-    }
-    if (saveFile) fs.writeFileSync('../temp/parsed-output.json',JSON.stringify(output));
-    return output;
+    return noteIdList;
 }
 
-const createUserObject = (nameAbbr) => {
+const initUserObject = async (nameAbbr) => {
+    let insertedUserId;
     if (Object.keys(creators).includes(nameAbbr)) {
-        const name = creators[nameAbbr];
-        if (!Object.keys(userObjects).includes(name)) {
-            userObjects[name] = {
-                _id:new ObjectId(), // manually generate ObjectID to reference in NoteObjects
-                name:name,
-                registered:false
-            }
-        }
-        return userObjects[name]._id.toHexString();
+        insertedUserId = await insertFakeUser({name:creators[nameAbbr]});        
     }
     else {
-        return null;
+        insertedUserId = await insertFakeUser({name:'Unknown'});
     }
+    return insertedUserId;
 }
 
-const createNoteObject = (path) => {
+const parseNote = async (path) => {
     
     // get name of file without extension
     const noteName = path.substring(prefix.length,path.length-4);
+    const extension = path.substring(path.length-4,path.length);
 
     // split name into components
     const components = noteName.split('_');
@@ -137,40 +118,19 @@ const createNoteObject = (path) => {
         // Info section
         info = (Object.keys(tags).includes(components[3])) ? tags[components[3]] : null;
     }
+    const creatorId = await initUserObject(nameAbbr);
 
     const noteObject = {
-        orig:origURL + noteName + '.tif',
-        thumb:thumbURL + noteName + '_thumb.jpeg',
-        creator: createUserObject(nameAbbr),
+        url:origURL + noteName + extension,
+        creator: creatorId,
         title:null,
         details:info,
         location:place,
         date:dateAbbr
     }
 
-    return noteObject;
-}
+    // insert note
+    const insertedNoteId = await insertNote(noteObject);
 
-
-// don't run this again
-const insertDBObjects = async () => {
-
-    const objects = await createObjectsFromS3({});
-    console.log('Parsed objects from S3');
-
-    const users = objects.users;
-    const userCollection = db.collection('users');
-    //already ran this
-    //const userResult = await userCollection.insertMany(users, {ordered:true});
-    console.log(`${userResult.insertedCount} users were inserted`)
-
-    const notes = objects.notes;
-    const noteCollection = db.collection('notes');
-    
-    //already ran this
-    //const noteResult = await noteCollection.insertMany(notes, {ordered:true});
-    console.log(`${noteResult.insertedCount} notes were inserted`)
-
-    console.log('done.');
-    return;
+    return insertedNoteId;
 }

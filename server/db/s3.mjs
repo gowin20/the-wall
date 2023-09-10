@@ -9,11 +9,11 @@ const client = new S3Client({
   region:'us-west-1'
 });
 
-export const listNotes = async (options) => {
+export const listFolder = async (folder,options) => {
 
   const command = new ListObjectsV2Command({
     Bucket: "the-wall-source",
-    Prefix: options.folder,
+    Prefix: folder,
     // The default and maximum number of keys returned is 1000.
   });
 
@@ -39,3 +39,19 @@ export const listNotes = async (options) => {
     console.error(err);
   }
 };
+
+export const uploadNote = async (path,options) => {
+  // TODO
+}
+
+export const uploadNotesBulk = async (path,options) => {
+  // TODO
+}
+
+export const uploadLayout = async (path,options) => {
+  // TODO
+}
+
+export const deleteNote = async (path,options) => {
+  // TODO
+}

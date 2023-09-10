@@ -1,5 +1,5 @@
 import sharp from "sharp";
-import { TEMP_DIR } from "./create-layout.mjs";
+import { TEMP_DIR } from "../layout/layout.mjs";
 
 const createDZI = async (tiff,options) => {
   const LAYOUT_DIR = TEMP_DIR + options.name;

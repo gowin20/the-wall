@@ -1,6 +1,6 @@
 import express from "express";
-import { getAllUsers, getUserByID } from "../db/get-users.mjs";
-import { getNotesByUser } from "../db/get-notes.mjs";
+import { getAllUsers, getUserByID } from "../db/users.mjs";
+import { getNotesByUser } from "../db/notes.mjs";
 
 const router = express.Router();
 
@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
 // Get a single user by ID
 router.get("/id/:id", async (req, res) => {
     const result = await getUserByID(req.params.id);
-  
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);
   });

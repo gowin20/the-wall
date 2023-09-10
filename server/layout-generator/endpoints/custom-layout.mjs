@@ -25,6 +25,19 @@ const makeCustomLayout = async (notes,options) => {
 }
 export default makeCustomLayout;
 
+/*
+            if (options.fromDisk) {
+                console.log(`[STEP 1/${totalSteps}] Initializing layout from disk.`)
+                const data = fs.readFileSync(`${LAYOUT_DIR}/layout.json`);
+                pattern = await JSON.parse(data).array;
+                console.log(`[STEP 1/${totalSteps}] Initializing read pattern from disk.`)
+            }
+            else {
+                throw new Error('A pattern is required to generate a layout.');
+                return;
+            }
+
+*/
 
 const layoutNoteIDs = (await getRandomNotes(20)).map(note => note._id);
 

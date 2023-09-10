@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllNotes,getNoteById } from "../db/get-notes.mjs";
+import { getAllNotes,getNoteById } from "../db/notes.mjs";
 
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
 
 // Get a single note by ID
 router.get("/id/:id", async (req, res) => {
-    const results = await getNoteById(req.params.id);  
+    const result = await getNoteById(req.params.id);  
     if (!result) res.send("Not found").status(404);
     else res.send(result).status(200);
   });

@@ -1,7 +1,7 @@
 import express from "express";
 import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
-import { getAllLayouts, getDefaultLayout, getLayoutById } from "../db/get-layouts.mjs";
+import { getAllLayouts, getDefaultLayout, getLayoutById } from "../db/crud-layouts.mjs";
 
 const router = express.Router();
 

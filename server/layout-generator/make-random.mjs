@@ -1,16 +1,11 @@
-import { getAllNotes } from "../db/get-notes.mjs";
+import { getAllNotes } from "../db/crud-notes.mjs";
 
 // Create random 2d array of note ids
 export const makeRandomPattern = async (notes, options) => {
 
     console.log('Creating random pattern...')
 
-    if (!notes) {
-        // If no notes provided, use all notes in Atlas
-        console.log('No notes provided. Using all available notes by default.')
-        const allNoteIDs = (await getAllNotes()).map(note => note._id);
-        notes = allNoteIDs;
-    }
+    if (!notes) throw new Error('No notes provided to \'makeRandomPattern()\'');
 
     const totalNotes = notes.length;
 
@@ -18,6 +13,7 @@ export const makeRandomPattern = async (notes, options) => {
     if (options.rows && options.cols) { // Use number of rows and cols if available
         width = options.cols;
         height = options.rows;
+        // TODO edge case of "more notes than available space in layout"
     }
     else { // Otherwise use a ratio instead (Default 16:9)
         const ratio = options.ratio ? options.ratio : 16/9;
@@ -28,8 +24,6 @@ export const makeRandomPattern = async (notes, options) => {
         if ((width-1)*height >= totalNotes) width -= 1;
         if (width*(height-1) >= totalNotes) height -= 1;
     }
-
-
 
     const pattern = [];
     const usedNotes = new Set();
