@@ -1,11 +1,9 @@
 import * as fs from 'fs';
 import sharp from "sharp";
 import fetch from 'node-fetch';
-import createDZI from "../image/dzi.mjs";
 import { getLayoutById, insertLayout } from '../../db/crud-layouts.mjs';
 import { getNoteById } from "../../db/crud-notes.mjs";
 import dzi from '../image/dzi.mjs';
-
 
 /*
 const createLayout;
