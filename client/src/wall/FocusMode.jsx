@@ -26,16 +26,15 @@ export default function FocusMode() {
         }
     },[noteID])
 
-    console.log('focused note:',note);
     if (note) return (
         <div className='overlay'>
             <div className='overlayContents'>
             <div className='leftSide'>
-                <NoteView noteUrl={note.thumb}/>
+                <NoteView noteUrl={note.orig}/>
             </div>            
             <div className='rightSide'>
                 <Details note={note}/>
-                <Controls />     
+                <Controls hidden={true} />     
             </div>
             </div>
         </div>

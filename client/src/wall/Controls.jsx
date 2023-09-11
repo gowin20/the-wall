@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFocusByPosition, clearFocus } from './wallSlice';
 
-export default function Controls() {
+export default function Controls(props) {
 
     // current position on wall
     const position = useSelector((state) => state.wall.focus.position);
@@ -65,6 +65,10 @@ export default function Controls() {
             default:
                 break;
         }
+   }
+
+   if (props.hidden) {
+    return <></>
    }
     
     const arrowIcons = {

@@ -34,18 +34,18 @@ export default function Canvas({ sourceId }) {
     const initViewer = (tileSource) => {
         viewer && viewer.destroy();
         const thisViewer = OpenSeadragon({
-            id: 'canvas',
+            id: 'wallCanvas',
             prefixUrl: "/openseadragon-buttons/",
             tileSources: tileSource,
             animationTime: 0.5,
             blendTime: 0.1,
-            constrainDuringPan: true,
             showNavigator:  true,
             navigatorPosition:   "BOTTOM_RIGHT",
             maxZoomPixelRatio: 2,
             minZoomLevel: 1,
             maxZoomLevel:7,
             visibilityRatio: 1,
+            constrainDuringPan: true,
             zoomPerScroll: 2
         })
         setViewer(thisViewer);
@@ -56,7 +56,8 @@ export default function Canvas({ sourceId }) {
             dY = 0;
         }
         function onCanvasRelease(e) {
-            if (dX < 2 && dY < 2) {
+            console.log(dX,dY)
+            if (Math.abs(dX) < 2 && Math.abs(dY) < 2) {
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
                 canvasClicked(e,imageCoords);
             }
@@ -114,6 +115,6 @@ export default function Canvas({ sourceId }) {
 
 
     return (
-        <div id='canvas'></div>
+        <div id='wallCanvas'></div>
     )
 }

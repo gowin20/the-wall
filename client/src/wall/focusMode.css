@@ -30,7 +30,23 @@ Breadth-first ordering of elements
 }
 
 .noteImage {
+    aspect-ratio : 1 / 1;
     height:100%;
+}
+
+.loadingNote {
+    width:100%;
+    height:100%;
+    position:absolute;
+    top:0;
+    left:0;
+}
+
+.loadingNoteAnimation {
+    width:20%;
+    position:absolute;
+    top:calc(40% - 5px);
+    left:calc(40% - 5px);
 }
 
 .details {
