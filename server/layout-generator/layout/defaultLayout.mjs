@@ -8,7 +8,8 @@ class DefaultLayout extends Layout {
     async init(options) {
         if (options.setDefault) this.default = true;
 
-        this.initializeLayout(options);
+        await this.initializeLayout(options);
+        callback.bind(this)();
     }
     async getPattern(options) {
         const allNoteIds = (await getAllNotes()).map(note=>note._id);

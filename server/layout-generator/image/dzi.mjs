@@ -28,6 +28,10 @@ class DZI extends Image {
     
     return dzi;
   }
+
+  async toJson(xml) {
+
+  }
 }
 
 const dzi = (options) => {

@@ -22,12 +22,15 @@ const makeCustomLayout = async (noteIds,options) => {
     })
 }
 
-if (process.argv.length !== 3) {
+if (process.argv.length < 3) {
     console.error('Test requires an argument! default or user');
     process.exit(1);
 }
 
 if (process.argv[2] === 'default') {
+
+    // 1015 notes takes 76 minutes to run
+    // AKA 1.269 hours or 1hr16min
     await makeDefaultLayout({
         saveFiles:true,
         name:'stitched-1015-3',
@@ -37,15 +40,23 @@ if (process.argv[2] === 'default') {
 }
 
 if (process.argv[2] === 'user') {
-    /*
-    Armin Taheri: 64f3db0f831d677c80b17259
-    George Owen: 64f3db0f831d677c80b1725f
-    Oliver Melgrove: 64f3db0f831d677c80b1726e
-    Shreya Chatterjee: 64f3db0f831d677c80b1726f
-    Keegan Sarnecki: 64f3db0f831d677c80b17263
-    */
+
+    if (process.argv.length <= 3) {
+        console.error('Must provide a user first name');
+        process.exit(1);
+    }
+
+    const people = {
+        'Armin':'64f3db0f831d677c80b17259',
+        'George':'64f3db0f831d677c80b1725f',
+        'Oliver':'64f3db0f831d677c80b1726e',
+        'Shreya':'64f3db0f831d677c80b1726f',
+        'Mia':''
+    }
+
+    const ID = people[process.argv[3]]
     await makeUserLayout({
-        userId:'64f3db0f831d677c80b1725f',
+        userId:ID,
         saveFiles:true,
         generate:true
     })

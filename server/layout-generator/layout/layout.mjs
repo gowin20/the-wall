@@ -171,6 +171,11 @@ export class Layout {
         
         const noteImageSize = this.noteImageSize;
 
+        console.log('Beginning stitched image generation...');
+        let y=0;
+        let totalDone=0;
+        const totalNotes = this.numRows * this.numCols;
+
         // Generate large blank image in temp folder
         let canvas = await sharp({
             create: {
@@ -181,13 +186,10 @@ export class Layout {
             }
         }).tiff().toBuffer();
 
-        console.log('Beginning stitched image generation...');
-        let y=0;
-        let totalDone=0;
-        const totalNotes = this.numRows * this.numCols;
         for (const row of this.array) {
             let x=0;
             for (const noteId of row) {
+                // Every 10 times this runs is approx. 45s
                 try {
                     const noteObj = await getNoteById(noteId);
 
@@ -201,7 +203,7 @@ export class Layout {
                         left:x*noteImageSize
                     };
                     canvas = await sharp(canvas).composite([thisNote]).tiff().toBuffer();
-                    console.log(`[${totalDone}/${totalNotes}] ${noteObj.thumb} added...`);
+                    console.log(`[${totalDone}/${totalNotes}] ${noteObj.orig} added...`);
 
                     x+=1;
                     totalDone+=1;
@@ -212,7 +214,6 @@ export class Layout {
             }
             y+=1;
         }
-        
 
         console.log('Pattern fully stitched.');
 
