@@ -177,7 +177,7 @@ export class Layout {
                 width:this.noteImageSize*this.numCols,
                 height:this.noteImageSize*this.numRows,
                 channels: 4,
-                background: { r: 0, g: 0, b: 0, alpha: 0 }
+                background: { r: 48, g: 48, b: 48, alpha: 0 } // #303030 - same as site background
             }
         }).tiff().toBuffer();
 

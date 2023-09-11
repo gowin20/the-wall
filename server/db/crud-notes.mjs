@@ -11,6 +11,14 @@ export const getNoteById = async (noteID) => {
     return result;
 }
 
+export const getNoteByOrigUrl = async (noteUrl) => {
+    let collection = db.collection('notes');
+    let query = {orig: noteUrl};
+    let result = await collection.findOne(query);
+
+    return result;
+}
+
 export const getAllNotes = async (noteID) => {
     let collection = db.collection('notes');
     let results = await collection.find({}).toArray();
@@ -86,4 +94,14 @@ export const insertNote = async (noteObj) => {
 export const insertNotesBulk = async (notes) => {
     // TODO (not really necessary though)
     return;
+}
+
+
+export const updateNote = async (id,info) => {
+
+    const updateInfo = {
+        $set: {
+
+        }
+    }
 }

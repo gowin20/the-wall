@@ -13,7 +13,9 @@ class DefaultLayout extends Layout {
     async getPattern(options) {
         const allNoteIds = (await getAllNotes()).map(note=>note._id);
 
-        const ASPECT_RATIO = options.ratio || 320/111
+        const ASPECT_RATIO = options.ratio || 320/146
+
+        // 1920/878: size when full screen in firefox on standard resolution monitor
 
         const pattern = await makeRandomPattern(allNoteIds,{
             ratio:ASPECT_RATIO

@@ -23,7 +23,7 @@ export const getDefaultLayout = async () => {
     return result;
 }
 
-export const insertLayout = async (layout) => {
+export const insertLayout = async (layoutObj) => {
 
     const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
     const errorHeader = 'INSERT ERROR: ';
@@ -34,7 +34,7 @@ export const insertLayout = async (layout) => {
     // `array` prop (2D array containing note IDs)
     // `image` prop pointing to valid S3 image folder
 
-    if (!layout) {
+    if (!layoutObj) {
         console.error(`${errorHeader}No layout object provided.`);
     }
     else if (!layout.name) {
