@@ -91,6 +91,24 @@ export const insertNote = async (noteObj) => {
     return result;
 }
 
+export const addThumbnail = async (id,thumbnailName,url) => {
+    const note = await getNoteById(id);
+    const updateThumbs = {
+        $set: {
+            thumbnails: {
+                ...note.thumbnails,
+                [thumbnailName]:url
+            }
+        }
+    }
+    const notes = db.collection('notes');
+    const result = notes.updateOne({_id:new ObjectId(id)}, updateThumbs);
+
+    if (result.matchedCount == 0) throw new Error('Invalid note ID.');
+
+    return result;
+}
+
 export const insertNotesBulk = async (notes) => {
     // TODO (not really necessary though)
     return;

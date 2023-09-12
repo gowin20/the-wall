@@ -1,41 +1,40 @@
 import sharp from "sharp";
 import { TEMP_DIR } from "../layout/layout.mjs";
-import { Image } from "./image.mjs";
+import { LayoutImage } from "./layoutImage.mjs";
 
-class DZI extends Image {
-  constructor(options) {
-    super();
-    this.name = `${options.name}-dzi`;
-    this.path = TEMP_DIR + options.name;
+export class DZI extends LayoutImage {
+  constructor(layout) {
+    super(layout);
+    this.name = `${layout.name}-dzi`;
+    this.path = TEMP_DIR + this.layout.name;
   }
 
-  async init(tiff,callback) {
-    await this.createDZI(tiff);
+  async init(options,callback) {
+    await this.generate(options.saveFiles);
     callback.bind(this)();
   }
 
-  async createDZI(tiff) {
-    const DZI_IMAGE = tiff;
-    // Generate dzi directory in temp folder
-    const dzi = await sharp(DZI_IMAGE)
-    .jpeg()
-    .tile({
-        size:576
-    })
-    .toFile(`${this.path}/${this.name}.dz`, (err, info) => {
-        console.log(err,info)
-    })
-    
-    return dzi;
+  async generate(saveFiles) {   
+    throw new Error('Method generate of DZI does not currently work, use class DZIFromStitch instead.');
+
+    // TODO create a DZI from a 2D pattern of notes :)
   }
 
   async toJson(xml) {
+    // TODO implement this to create a DB object
+  }
 
+  async insert() {
+    const infoObject = await this.toJson();
+  }
+
+  async uploadToS3() {
+    // TODO recursively crawl through temp directory and upload all images 
   }
 }
 
-const dzi = (options) => {
-  return new DZI(options);
+const dzi = (layout) => {
+  return new DZI(layout);
 }
 
 export default dzi;

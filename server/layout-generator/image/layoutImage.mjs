@@ -1,7 +1,10 @@
 
-export class Image {
-    constructor() {
+export class LayoutImage {
+    constructor(layout) {
+        if (!layout) throw new Error('Layout images must be created based on a layout.');
 
+        this.layout = layout;
+        this.thumbnailName = `s-${this.layout.noteImageSize}px`;
     }
 
     async encrypt() {
@@ -13,7 +16,6 @@ export class Image {
     }
 
     async uploadToS3() {
-        // TODO probably write here
         throw new Error('Method \'toS3\' must be implemented.');
     }
 

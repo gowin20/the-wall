@@ -46,6 +46,6 @@ export const makeRandomPattern = async (notes, options) => {
         pattern.push(thisRow);
     }
 
-    console.log(`New pattern generated.\nWidth:${pattern[0].length}\nHeight: ${pattern.length}`);
+    console.log(`Width:${pattern[0].length}\nHeight: ${pattern.length}`);
     return pattern;
 }

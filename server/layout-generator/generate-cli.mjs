@@ -58,7 +58,8 @@ if (process.argv[2] === 'user') {
     await makeUserLayout({
         userId:ID,
         saveFiles:true,
-        generate:true
+        generate:true,
+        //noteImageSize:5
     })
 
     process.exit(0);
