@@ -48,34 +48,17 @@ export const listFolder = async (folder,options) => {
 
 // Key: folder/in/bucket/
 
+
+/*
+
+Folder manupulation
+
+*/
+
 async function createFolder(Key) {
   const command = new PutObjectCommand({
     Bucket: BUCKET, 
     Key: Key
-  });
-  return await client.send(command);
-}
-
-export async function uploadImage(key,data) {
-
-  const command = new PutObjectCommand({
-    Bucket: BUCKET,
-    Key: key,
-    Body: data,
-    Tagging: "public=yes"
-  });
-  const result = await client.send(command);
-
-  if (result.$metadata.httpStatusCode !== 200) throw new Error(`Error uploading note: ${result}`);
-
-  // return a formatted URL pointing to image;
-  return S3_ADDRESS+key;
-}
-
-export async function deleteItem(Key) {
-  const command = new DeleteObjectCommand({ 
-    Bucket:BUCKET, 
-    Key:Key 
   });
   return await client.send(command);
 }
@@ -111,18 +94,47 @@ export async function deleteFolder(Key) {
   return await client.send(command);
 }
 
+/*
+
+Image upload / delete
+
+*/
+
+export async function uploadImage(key,data) {
+
+  const command = new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: key,
+    Body: data,
+    Tagging: "public=yes"
+  });
+  const result = await client.send(command);
+
+  if (result.$metadata.httpStatusCode !== 200) throw new Error(`Error uploading note: ${result}`);
+
+  // return a formatted URL pointing to image;
+  return S3_ADDRESS+key;
+}
+
+export async function deleteItem(Key) {
+  const command = new DeleteObjectCommand({ 
+    Bucket:BUCKET, 
+    Key:Key 
+  });
+  return await client.send(command);
+}
+
+// used for DZIs
 export async function emptyDirectory(dir) {
   // Prevent disaster from occurring
-  if (Key === '/notes' || Key === '/layout') {
+  if (Key === 'notes/' || Key === 'layouts/') {
     throw new Error('Cannot delete contents of root directories');
   }
 
-  const listParams = {
+  const listedObjects = await s3.listObjectsV2({
     Bucket: BUCKET,
     Prefix: dir
-  };
-
-  const listedObjects = await s3.listObjectsV2(listParams).promise();
+  }).promise();
 
   if (listedObjects.Contents.length === 0) return;
 
