@@ -48,9 +48,8 @@ class DZIFromStitch extends DZI {
         .jpeg()
         .tile({
             size:this.TileSize
-        })
-        .toFile(this.outputFolder, (err, info) => {
-            console.log(err,info)
+        }).toFile(this.outputFolder, (err, info) => {
+            //console.log(err,info)
         })
 
         // TODO delete temp files (from DZI)
@@ -59,7 +58,9 @@ class DZIFromStitch extends DZI {
     }
 
     async uploadToS3() {
-        // Crawl through the output folder and recursively upload all dirs
+        console.log('[START] Beginning DZI upload to S3...')
+
+        // This is currently  needed in order for sharp.toFile to finish resolving. TODO implement "util.promisify" around sharp.toFile and remove this 5-second delay.
         await new Promise((resolve) => {
             setTimeout(resolve,5000)
         })
@@ -70,20 +71,23 @@ class DZIFromStitch extends DZI {
 
         const readFiles = util.promisify(dir.files);
         const files = await readFiles(prefix);
-
+        const total_files = files.length;
+        let count=0;
         for (const file of files) {
             const nameArray = file.split('\\').slice(-2);
 
             if (nameArray[1] === 'vips-properties.xml') continue;
 
             const s3FileKey = `${S3_FOLDER}${nameArray[0]}/${nameArray[1]}`;
-            console.log(s3FileKey);
             await uploadImage(s3FileKey,fs.createReadStream(file))
+
+            count += 1;
+            console.log(`[${count}/${total_files}] Uploaded ${s3FileKey}...`);
         }
-        console.log('Successfully uploaded DZI to S3.')
+        console.log('[DONE] Successfully uploaded DZI to S3.')
 
         if (!this.saveFiles) {
-            fs.rmdirSync(this.tempFolder, {
+            fs.rmSync(this.tempFolder, {
                 recursive:true
             }, (err) => {
                 console.log(err);

@@ -1,6 +1,6 @@
 import sharp from "sharp";
 import { LayoutImage } from "./layoutImage.mjs";
-import { insertDzi } from "../../db/crud-dzis.mjs";
+import { getDziIdByName, insertDzi } from "../../db/crud-dzis.mjs";
 
 export class DZI extends LayoutImage {
   constructor(layout) {
@@ -37,7 +37,7 @@ export class DZI extends LayoutImage {
     // TODO create a DZI from a 2D pattern of notes :)
   }
 
-  async toJson() {
+  toJson() {
     // TODO implement this to create a DB object
     return {
       _id:this._id,
@@ -58,12 +58,16 @@ export class DZI extends LayoutImage {
 
   async insert() {
 
-    console.log('[Mongo] Inserting DZI...');
-    const dziObj = await this.toJson();
+    console.log('[DB] Inserting DZI...');
 
-    this._id = insertDzi(dziObj);
+    const dziObj = this.toJson();
+    this._id = await insertDzi(dziObj);
 
-    console.log(`[Mongo] Successfully inserted new DZI at ${this._id}`);
+    if (!this._id) {
+      this._id = await getDziIdByName(dziObj.name);
+    }
+
+    console.log(`[DB DONE] Successfully inserted new DZI at ${this._id}`);
 
     return this._id;
   }

@@ -15,6 +15,14 @@ export const getLayoutById = async (layoutId) => {
     return result;
 }
 
+export const getLayoutIdByName = async (layoutName) => {
+    const collection = await db.collection('layouts');
+    const result = await collection.findOne({name:layoutName});
+
+    if (!result) throw new Error('Invalid layout name.');
+    return result._id;
+}
+
 export const getDefaultLayout = async () => {
     let collection = await db.collection('layouts');
     let query = {default:true};
@@ -43,10 +51,16 @@ export const insertLayout = async (layoutObj) => {
 
     const collection = await db.collection('layouts');
 
-    layoutObj._id = new ObjectId();
+    //layoutObj._id = new ObjectId();
+    delete layoutObj._id;
 
-    await collection.insertOne(layoutObj);
+    const result = await collection.updateOne({name:layoutObj.name},{
+        $set: {
+            ...layoutObj
+        }},
+        {upsert:true}
+    );
 
     // TODO
-    return layoutObj._id;
+    return result.upsertedId;
 }

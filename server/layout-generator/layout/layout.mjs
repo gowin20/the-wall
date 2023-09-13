@@ -233,10 +233,10 @@ export class Layout {
 
         // Insert layout object to mongo atlas
         if (this.shouldInsert) {
-            console.log(`Uploading layout files to S3 and MongoDB...`);
             // Upload image files to S3
+            console.log('[BEGIN S3 UPLOAD]');
             const imageUrl = await imageObj.uploadToS3();
-            console.log(`[DONE] ${imageUrl}`);
+            console.log(`[S3 DONE] ${imageUrl}`);
             // Insert image object into DB and retrieve ObjectId
             const imageId = await imageObj.insert();
 

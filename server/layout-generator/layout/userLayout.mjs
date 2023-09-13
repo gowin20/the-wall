@@ -1,7 +1,7 @@
 import {getNotesByUser} from "../../db/crud-notes.mjs";
 import {getUserByID, updateUserLayout} from "../../db/crud-users.mjs";
 import { Layout } from "./layout.mjs";
-import { insertLayout } from "../../db/crud-layouts.mjs";
+import { getLayoutIdByName, insertLayout } from "../../db/crud-layouts.mjs";
 
 /*
 
@@ -32,9 +32,11 @@ class UserLayout extends Layout {
         // TODO
         // insert layout to layouts collection
         // await this.insertLayoutObject();
-        
+        console.log('[DB] Inserting layout...')
         this._id = await insertLayout(this.toJson())
-        console.log(`Successfully inserted new layout at ${this._id}.`);
+
+        if (!this._id) this._id = await getLayoutIdByName(this.name);
+        console.log(`[DB DONE] Successfully inserted new layout at ${this._id}.`);
         // add layout to associated user
         await updateUserLayout(this.userId,this._id);
         //await insertLayout()
