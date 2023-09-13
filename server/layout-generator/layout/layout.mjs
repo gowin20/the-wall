@@ -1,8 +1,5 @@
 import * as fs from 'fs';
-import sharp from "sharp";
-import fetch from 'node-fetch';
 import { getLayoutById, insertLayout } from '../../db/crud-layouts.mjs';
-import { getNoteById } from "../../db/crud-notes.mjs";
 import dzi from '../image/dzi.mjs';
 import stitchedImage from '../image/stitchedImage.mjs';
 import dziFromStitch from '../image/dziFromStitch.mjs';
@@ -46,8 +43,10 @@ export class Layout {
         else {
             await this.fromOptions(options);
         }
+
+        const generate = (options.generate === undefined ? true : options.generate);
         
-        if (options.generate) {
+        if (generate) {
             // Generates zoomable image, adds to S3, and adds URL to layout object
             await this.createLayoutImage(options.saveFiles,true);
         }
@@ -71,6 +70,23 @@ export class Layout {
         return;
     }
 
+    /*
+    {
+        _id: the ObjectID of a layout in MongoDB. If true, ignores all other options except 'generate' and 'insert'
+        generate: determines whether or not to generate an image (default true)
+        insert: whether or not to upload layout files to S3 and MongoDB (default false)
+        
+        name: name of layout and output files. Required.
+        noteImageSize: determines the size in pixels of each note in the layout (default 288)
+        array: a 2D array determining layout order. If null, creates a random layout order
+        numRows: number of rows in the random layout. Cannot pass when passing array
+        numCols: number of columns in the random layout. Cannot pass when passing array
+        ratio: the aspect ratio of the random layout. Cannot pass with array, numRows, or numCols
+        saveFiles: whether or not to write layout files to disk (default false)
+        outputType: the type of LayoutImage used to generate a layout (default DZIFromStitch)
+    }
+
+    */
     async fromOptions(options) {
         
         if (!this.name && !options.name) {
@@ -88,10 +104,16 @@ export class Layout {
             if (options.ratio) throw new Error('Cannot set aspect ratio of layout when a pattern is provided.');
         }
         else {
-            this.array = await this.getPattern({
+
+            if ((options.numRows || options.numCols) && options.ratio) throw new Error('Cannot pass both numRows\/numCols and ratio.');
+            if (!this.noteIds) throw new Error('No note IDs passed for random pattern generation.');
+
+            const ASPECT_RATIO = this.ratio || options.ratio || 9/16;
+            
+            this.array = await this.makeRandomPattern({
                 rows:options.numRows,
                 cols:options.numCols,
-                ratio:options.ratio
+                ratio:ASPECT_RATIO
             });
         }
 
@@ -101,8 +123,8 @@ export class Layout {
         this.saveFiles = options.saveFiles || false;
         this.shouldInsert = options.insert || false;
 
-        if (!options.outputType) this.outputType = 'DZIfromStitch';
-        else if (options.outputType == 'stitch' || options.outputType == 'DZIfromStitch' || options.outputType == 'DZI') this.outputType = options.outputType;
+        if (!options.outputType) this.outputType = 'DZIFromStitch';
+        else if (options.outputType == 'stitch' || options.outputType == 'DZIFromStitch' || options.outputType == 'DZI') this.outputType = options.outputType;
         else throw new Error('Invalid input to param `outputType`.')
 
         console.log('Successfully initialized layout from options.')
@@ -126,18 +148,53 @@ export class Layout {
         throw new Error('Method \'insert()\' must be implemented.');
     }
 
-    async getPattern() {
-        throw new Error('Method \'getPattern()\' must be implemented.');
-        // this method must return a valid 2D layout array to work properly:
-    }
+    async makeRandomPattern(options) {
 
-    async patchImage() {
-        // TODO implement this: uploading a single note to an existing layout
-        // will need to implement 'DZI' class 'generate' and 'update' methods
-    }
-
-    async uploadLayout(path,options) {
-        // TODO
+        console.log('Creating random pattern...')
+    
+        if (!this.noteIds) throw new Error('No notes provided to \'makeRandomPattern()\'');
+    
+        const totalNotes = this.noteIds.length;
+    
+        let width, height;
+        if (options.rows && options.cols) { // Use number of rows and cols if available
+            width = options.cols;
+            height = options.rows;
+            // TODO edge case of "more notes than available space in layout"
+        }
+        else { // Otherwise use a ratio instead (Default 16:9)
+            const ratio = options.ratio ? options.ratio : 16/9;
+            height = Math.ceil(Math.sqrt(totalNotes/ratio));
+            width = Math.ceil(height*ratio);
+        
+            if ((width-2)*height >= totalNotes) width -= 2;
+            if ((width-1)*height >= totalNotes) width -= 1;
+            if (width*(height-1) >= totalNotes) height -= 1;
+        }
+    
+        const pattern = [];
+        const usedNotes = new Set();
+    
+        for (let row=0;row<height;row++) {
+            const thisRow = [];
+            for (let col=0;col<width;col++) {
+                if (usedNotes.size >= totalNotes) {
+                    break;
+                }
+       
+                let i;
+                do {
+                    i = Math.floor(Math.random()*totalNotes);
+                } while (usedNotes.has(i));
+        
+                thisRow.push(this.noteIds[i])
+                usedNotes.add(i);
+            }
+            pattern.push(thisRow);
+        }
+    
+        console.log(`Width:${pattern[0].length}\nHeight: ${pattern.length}`);
+        return pattern;
     }
 
     async createLayoutImage() {
@@ -155,28 +212,36 @@ export class Layout {
 
         switch (this.outputType) {
             case 'DZI':
-                imageObj = await this.createDzi();
+                throw new Error('DZI has not been implemented');
+                imageObj = await dzi(this.toJson());
                 break;
-            case 'DZIfromStitch':
-                imageObj = await this.createDziFromStitch();
+            case 'DZIFromStitch':
+                console.log('[START] Creating DZI and stitched image...')
+                imageObj = await dziFromStitch(this.toJson());
                 break;
             case 'stitch':
-                imageObj = await this.createStitchedImage();
+                console.log(`[START] Creating stitched image...`);
+                imageObj = await stitchedImage(this.toJson());
                 break;
             default:
                 throw new Error('Invalid output format provided to createLayoutImage')
         }
 
-        // Upload image files to S3
-        await imageObj.uploadToS3();
-        // Insert image object into DB and retrieve ObjectId
-        const imageId = await imageObj.insert();
-
-        // 6. update layout object with dzi metadata and S3 URL
-        this.image = imageId;
+        await imageObj.init({saveFiles:this.saveFiles}, (imageObj) => {
+            console.log(`[DONE] Layout image generated. ${this.saveFiles ? `Files saved to ${this.LAYOUT_DIR}.` : ''}`)
+        })
 
         // Insert layout object to mongo atlas
         if (this.shouldInsert) {
+            console.log(`Uploading layout files to S3 and MongoDB...`);
+            // Upload image files to S3
+            await imageObj.uploadToS3();
+            // Insert image object into DB and retrieve ObjectId
+            const imageId = await imageObj.insert();
+
+            // 6. update layout object with dzi metadata and S3 URL
+            this.image = imageId;
+
             await this.insert();
         }
 
@@ -188,38 +253,12 @@ export class Layout {
         }    
     }
 
-    async createStitchedImage() {
-
-        console.log(`[START] Creating stitched image...`);
-
-        const imageObj = await stitchedImage(this.toJson());
-        await imageObj.init({saveFile:this.saveFiles}, (stitch) => {
-
-        });
-        console.log(`[DONE] Stitched image created.`);
-
-        return imageObj;
+    async patchImage() {
+        // TODO implement this: uploading a single note to an existing layout
+        // will need to implement 'DZI' class 'generate' and 'update' methods
     }
 
-    async createDzi() {
-        throw new Error('DZI has not been implemented');
-        // TODO implement dzi generation without stitched image
-        const imageObj = await dzi(this.toJson());
-        await imageObj.init({saveFiles:this.saveFiles},() => {
-            console.log(`[DONE] DZI generated. ${this.saveFiles ? `Files saved to ${this.LAYOUT_DIR}.` : ''}`)
-        })
-        return imageObj;
+    async uploadLayout(path,options) {
+        // TODO
     }
-
-    async createDziFromStitch() {
-        
-        console.log('[START] Creating DZI and stitched image...')
-
-        const imageObj = await dziFromStitch(this.toJson());
-        await imageObj.init({saveFiles:this.saveFiles}, (dzi) => {
-            console.log(`[DONE] DZI generated. ${this.saveFiles ? `Files saved to ${this.LAYOUT_DIR}.` : ''}`)
-        })
-        return imageObj;
-    }
-
 }

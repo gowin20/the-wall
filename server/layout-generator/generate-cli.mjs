@@ -5,21 +5,15 @@ import { getRandomNotes } from "../db/crud-notes.mjs";
 
 const makeUserLayout = async (options) => {
     const layout = userLayout();
-    await layout.init(options,()=>{
-        console.log('Callback!');
-    })
+    await layout.init(options,()=>{});
 }
 
 const makeDefaultLayout = async (options) => {
-    await defaultLayout().init(options, ()=> {
-        console.log('YEAH WOOHOO!');
-    })
+    await defaultLayout().init(options, ()=>{});
 }
 
 const makeCustomLayout = async (noteIds,options) => {
-    await customLayout().init(noteIds,options,()=>{
-        console.log('Custom callback function.');
-    })
+    await customLayout().init(noteIds,options,()=>{});
 }
 
 if (process.argv.length < 3) {
@@ -34,7 +28,6 @@ if (process.argv[2] === 'default') {
     await makeDefaultLayout({
         saveFiles:true,
         name:'stitched-1015-3',
-        generate:true
     });
     process.exit(0);
 }
@@ -58,7 +51,6 @@ if (process.argv[2] === 'user') {
     await makeUserLayout({
         userId:ID,
         saveFiles:true,
-        generate:true,
         //noteImageSize:5
     })
 
@@ -67,16 +59,17 @@ if (process.argv[2] === 'user') {
 
 if (process.argv[2] === 'custom') {
 
-    const NUM_NOTES = 20
-
+    // deprecated
+    const NUM_NOTES = 20;
     const layoutNoteIDs = (await getRandomNotes(NUM_NOTES)).map(note => note._id);
 
-    await makeCustomLayout(layoutNoteIDs,{
-        name:'custom-2x10',
-        numRows:2,
-        numCols:10,
+    await makeCustomLayout(null,{
+        name:'custom-50notes',
+        randomNotes:true,
+        numNotes:50,
+        numRows:50,
+        numCols:1,
         saveFiles:true,
-        generate:true
     });
 
     process.exit(0);

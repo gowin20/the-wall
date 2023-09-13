@@ -1,27 +1,29 @@
-import {makeRandomPattern} from "../make-random.mjs";
 import { Layout } from "./layout.mjs";
 import { insertLayout } from "../../db/crud-layouts.mjs";
+import { getRandomNotes } from "../../db/crud-notes.mjs";
 
 class CustomLayout extends Layout {
 
     async init(noteIds, options, callback) {
-        if (!noteIds) throw new Error('A list of note IDs is required to initialize a CustomLayout.');
+        if (!noteIds && !options.randomNotes) throw new Error('A list of note IDs is required to initialize a CustomLayout.');
 
-        this.noteIds = noteIds;
+        if (noteIds && options.randomNotes) throw new Error('Cannot set \'randomNotes\' flag when providing a list of note IDs.')
+
+        if (options.randomNotes) {
+
+            if (!options.numNotes) throw new Error('Must provide a number of notes when using \'randomNotes\'.');
+
+            this.noteIds = (await getRandomNotes(options.numNotes)).map(note => note._id);
+        }
+        else {
+            this.noteIds = noteIds;
+        }
 
         await this.initializeLayout(options);
+
         callback.bind(this)();
     }
-    async getPattern(options) {
-        const ASPECT_RATIO = options.ratio || 9/16;
 
-        const pattern = await makeRandomPattern(this.noteIds, {
-            cols:options.numCols,
-            rows:options.numRows,
-            ratio:ASPECT_RATIO
-        })
-        return pattern;
-    }
     async insert() {
         // TODO
         // insert layout to layouts collection
