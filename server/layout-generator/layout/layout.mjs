@@ -235,7 +235,8 @@ export class Layout {
         if (this.shouldInsert) {
             console.log(`Uploading layout files to S3 and MongoDB...`);
             // Upload image files to S3
-            await imageObj.uploadToS3();
+            const imageUrl = await imageObj.uploadToS3();
+            console.log(`[DONE] ${imageUrl}`);
             // Insert image object into DB and retrieve ObjectId
             const imageId = await imageObj.insert();
 

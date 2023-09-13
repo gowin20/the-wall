@@ -1,6 +1,7 @@
 import {getNotesByUser} from "../../db/crud-notes.mjs";
-import {getUserByID} from "../../db/crud-users.mjs";
+import {getUserByID, updateUserLayout} from "../../db/crud-users.mjs";
 import { Layout } from "./layout.mjs";
+import { insertLayout } from "../../db/crud-layouts.mjs";
 
 /*
 
@@ -21,7 +22,7 @@ class UserLayout extends Layout {
 
         if (!user) throw new Error('Invalid user ID.');
 
-        this.name = user.name+'-test';
+        this.name = user.name.replace(' ', '-')+'--test';
         this.noteIds = (await getNotesByUser(this.userId)).map(note => note._id);
 
         await this.initializeLayout(options);
@@ -31,9 +32,12 @@ class UserLayout extends Layout {
         // TODO
         // insert layout to layouts collection
         // await this.insertLayoutObject();
-
+        
+        this._id = await insertLayout(this.toJson())
+        console.log(`Successfully inserted new layout at ${this._id}.`);
         // add layout to associated user
-        console.log('Check me out! we got here :)');
+        await updateUserLayout(this.userId,this._id);
+        //await insertLayout()
         return;
     }
 }

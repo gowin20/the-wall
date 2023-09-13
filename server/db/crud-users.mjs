@@ -39,6 +39,17 @@ export const changePassword = async (userID,newPassword) => {
     // TODO
 }
 
+export const updateUserLayout = async (userId, layoutId) => {
+    const collection = db.collection('users');
+
+    const result = await collection.updateOne({_id:new ObjectId(userId)}, {
+        $set:{
+            layout:new ObjectId(layoutId)
+    }})
+    console.log(`Updated ${result.modifiedCount} user records.`);
+    return;
+}
+
 // Inserts a "fake user" - someone who is credited as a note creator, but has not registered for an account
 // Returns a user ID
 export const insertFakeUser = async (userInfo) => {

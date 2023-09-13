@@ -5,18 +5,32 @@ import { TEMP_DIR } from "../layout/layout.mjs";
 import dir from 'node-dir';
 import { uploadImage, createFolderIfNotExist } from "../../db/s3.mjs";
 import fs from 'fs';
+import util from 'util';
 
 class DZIFromStitch extends DZI {
     // input: a StitchedImage
     async init(options,callback) {
+
+        this.setInfo();
+
         this.saveFiles = options.saveFiles;
+
+        if (options.saveFiles) {
+            this.outputFolder = `${TEMP_DIR}${this.layout.name}/${this.name}`
+        }
+        else {
+            this.tempFolder = `${TEMP_DIR}dzi-temp/`;
+            
+            if (fs.existsSync(this.tempFolder)) fs.rmSync(this.tempFolder,{recursive:true})
+            fs.mkdirSync(this.tempFolder);
+            this.outputFolder = this.tempFolder+this.name;
+        }
+
         await this.generate();
         callback.bind(this)();
     }
     
     async generate() {
-
-        this.outputFolder = this.saveFiles ? `${TEMP_DIR}${this.layout.name}/${this.name}` : `${TEMP_DIR}dzi-temp/${this.name}`;
 
         const totalSteps = 2;
         console.log(`[STEP 1/${totalSteps}] Creating stitched image`);
@@ -33,7 +47,7 @@ class DZIFromStitch extends DZI {
         const dzi = await sharp(imageBuffer)
         .jpeg()
         .tile({
-            size:this.layout.noteImageSize*2
+            size:this.TileSize
         })
         .toFile(this.outputFolder, (err, info) => {
             console.log(err,info)
@@ -54,29 +68,31 @@ class DZIFromStitch extends DZI {
         const S3_FOLDER = `layouts/${this.name}/`;
         await createFolderIfNotExist(S3_FOLDER);
 
-        dir.files(prefix, async function(err, files) { 
-            if (err) throw err;
-            for (const file of files) {
-                const nameArray = file.split('\\').slice(-2);
+        const readFiles = util.promisify(dir.files);
+        const files = await readFiles(prefix);
 
-                if (nameArray[1] === 'vips-properties.xml') continue;
+        for (const file of files) {
+            const nameArray = file.split('\\').slice(-2);
 
-                const s3FileKey = `${S3_FOLDER}${nameArray[0]}/${nameArray[1]}`;
-                console.log(s3FileKey);
-                await uploadImage(s3FileKey,fs.createReadStream(file))
-            }
-        });
+            if (nameArray[1] === 'vips-properties.xml') continue;
+
+            const s3FileKey = `${S3_FOLDER}${nameArray[0]}/${nameArray[1]}`;
+            console.log(s3FileKey);
+            await uploadImage(s3FileKey,fs.createReadStream(file))
+        }
         console.log('Successfully uploaded DZI to S3.')
 
         if (!this.saveFiles) {
-            fs.rmdir(prefix, {
+            fs.rmdirSync(this.tempFolder, {
                 recursive:true
             }, (err) => {
+                console.log(err);
                 console.log(`Deleted temp directory ${prefix}`);
             })
         }
 
-
+        this.Url = process.env.S3_PREFIX + S3_FOLDER;
+        return this.Url;
     }
 }
 

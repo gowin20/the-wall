@@ -35,12 +35,18 @@ export const insertLayout = async (layoutObj) => {
     // `image` prop pointing to valid S3 image folder
 
     if (!layoutObj) {
-        console.error(`${errorHeader}No layout object provided.`);
+        throw new Error(`No layout object provided.`);
     }
-    else if (!layout.name) {
-        console.error(`${errorHeader}No layout name provided.`);
+    else if (!layoutObj.name) {
+        throw new Error(`No layout name provided.`);
     }
 
+    const collection = await db.collection('layouts');
+
+    layoutObj._id = new ObjectId();
+
+    await collection.insertOne(layoutObj);
+
     // TODO
-    return;
+    return layoutObj._id;
 }
