@@ -25,12 +25,11 @@ export default function FocusMode() {
             setNote(null);
         }
     },[noteID])
-
     if (note) return (
         <div className='overlay'>
             <div className='overlayContents'>
             <div className='leftSide'>
-                <NoteView noteUrl={note.orig}/>
+                <NoteView tilesId={note.tiles}/>
             </div>            
             <div className='rightSide'>
                 <Details note={note}/>

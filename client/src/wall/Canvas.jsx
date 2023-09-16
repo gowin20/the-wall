@@ -19,7 +19,6 @@ export default function Canvas({ sourceId }) {
 
         async function setupCanvas() {
             const tileSource = await getZoomableImage(sourceId);
-            console.log(tileSource);
             initViewer(tileSource);
         }
 
@@ -56,7 +55,6 @@ export default function Canvas({ sourceId }) {
             dY = 0;
         }
         function onCanvasRelease(e) {
-            console.log(dX,dY)
             if (Math.abs(dX) < 2 && Math.abs(dY) < 2) {
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
                 canvasClicked(e,imageCoords);

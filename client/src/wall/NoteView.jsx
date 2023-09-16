@@ -1,21 +1,34 @@
 import React, { useEffect,useState } from 'react';
 import OpenSeadragon from 'openseadragon';
+import { getZoomableImage } from '../api/wall';
 
-export default function NoteView({noteUrl}) {
-
-    if (!noteUrl) return <></>;
+export default function NoteView({tilesId}) {
+    console.log(tilesId)
+    if (!tilesId) {
+        //throw new Error('No tiles available for selected note.')
+        return <></>
+    };
     const [viewer, setViewer] = useState(null);
     const [loaded,setLoaded] = useState(false);
 
     useEffect(() => {
-        initViewer();
+
+        async function setupNoteView() {
+            const tileSource = await getZoomableImage(tilesId);
+            console.log(tileSource);
+            initViewer(tileSource);
+        }
+
+        if (tilesId) {
+            setupNoteView();
+        }
 
         return () => {
             viewer && viewer.destroy();
         }
-    },[noteUrl])
+    },[tilesId])
 
-    const initViewer = () => {
+    const initViewer = (tileSource) => {
         viewer && viewer.destroy();
         setLoaded(false);
         const thisViewer = OpenSeadragon({
@@ -24,12 +37,7 @@ export default function NoteView({noteUrl}) {
             constrainDuringPan: true,
             visibilityRatio:1,
             minZoomLevel:1,
-            tileSources:{
-                type:'image',
-                url:noteUrl,
-                crossOriginPolicy: 'Anonymous',
-                ajaxWithCredentials: false
-            }
+            tileSources:tileSource
         })
         setViewer(thisViewer);
 
