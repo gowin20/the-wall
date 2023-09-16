@@ -25,6 +25,7 @@ class CustomLayout extends Layout {
     }
 
     async insert() {
+        throw new Error('DB does not support custom layouts.')
         // TODO
         // insert layout to layouts collection
         // await insertLayout(layoutObj);
@@ -33,7 +34,6 @@ class CustomLayout extends Layout {
         // await this.image.insert();
 
         // don't do anything else
-        console.log('Check me out! we got here CUSTOM :)');
     }
 }
 

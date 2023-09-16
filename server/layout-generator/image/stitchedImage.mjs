@@ -26,15 +26,7 @@ class StitchedImage extends LayoutImage {
         let totalDone=0;
         const totalNotes = this.layout.numRows * this.layout.numCols;
 
-        // Generate large blank image in temp folder
-        let canvas = await sharp({
-            create: {
-                width:noteImageSize*this.layout.numCols,
-                height:noteImageSize*this.layout.numRows,
-                channels: 4,
-                background: { r: 48, g: 48, b: 48, alpha: 0 } // #303030 - same as site background
-            }
-        }).tiff().toBuffer();
+        const buffs = [];
 
         for (const row of this.layout.array) {
             let x=0;
@@ -61,8 +53,9 @@ class StitchedImage extends LayoutImage {
                         top:y*noteImageSize,
                         left:x*noteImageSize
                     };
-                    canvas = await sharp(canvas).composite([thisNote]).tiff().toBuffer();
-                    console.log(`[${totalDone}/${totalNotes}] ${noteObj.thumbnails[thumbnailName]} added...`);
+                    
+                    buffs.push(thisNote);
+                    console.log(`[${totalDone}/${totalNotes}] ${noteObj.thumbnails[thumbnailName]} fetched...`);
 
                     x+=1;
                     totalDone+=1;
@@ -74,24 +67,34 @@ class StitchedImage extends LayoutImage {
             y+=1;
         }
 
+        console.log('All fetched. Stitching all notes...')
+        // Generate large blank image in temp folder
+        let canvas = await sharp({
+            create: {
+                width:noteImageSize*this.layout.numCols,
+                height:noteImageSize*this.layout.numRows,
+                channels: 4,
+                background: { r: 48, g: 48, b: 48, alpha: 1 } // #303030 - same as site background
+            }
+        }).composite(buffs).tiff().toBuffer();
+
         console.log('Pattern fully stitched.');
 
         if (saveFile) {
-            const e = await sharp(canvas).toFile(`${this.LOCAL_DIR}${this.name}.tiff`, (err, info) => {
-                console.log('Stitched image results: ',info);
-            });
+            const res = await sharp(canvas).toFile(`${this.LOCAL_DIR}${this.name}.tiff`);
+            console.log(`Resulting image: ${res}`)
         }
         this.buffer = canvas;
     }
 
     async insert() {
-        return;
         throw new Error('Database does not currently support stitched images.')
+        return;
     }
 
     async uploadToS3() {
-        return;
         throw new Error('S3 bucket does not currently support stitched images.');
+        return;        
     }
 
     getBuffer() {

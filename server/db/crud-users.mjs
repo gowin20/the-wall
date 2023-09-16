@@ -1,7 +1,7 @@
 import db from "./conn.mjs"
 import { ObjectId } from "mongodb";
 
-export const getAllUsers = async (id) => {
+export const getAllUsers = async () => {
     const collection = db.collection('users');
     let results = await collection.find({}).toArray();
     return results;

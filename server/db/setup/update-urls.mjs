@@ -3,11 +3,26 @@ import { getNoteByOrigUrl } from '../crud-notes.mjs';
 import db from '../conn.mjs'
 
 
+const setTileSize = async () => {
+    const query = {"Image.TileSize":450};
+
+    const collection = db.collection('dzis');
+    const updateDoc = {
+        $set: {
+            "Image.TileSize":225
+        }
+    }
+
+    const result = await collection.updateMany(query, updateDoc);
+    console.log(`Updated ${result.modifiedCount} documents.`)
+    return result;
+}
+
+
 const renameTifToPng = async () => {
     const INPUT_DIR = process.env.LOCAL_UPLOADED_NOTES;
     const filenames = fs.readdirSync(INPUT_DIR);
 
-    console.log(filenames.length);
     const collection = db.collection('notes');
 
     filenames.forEach(async file => {
@@ -32,3 +47,5 @@ const renameTifToPng = async () => {
         console.log(result.matchedCount+' docs found, updated '+result.modifiedCount+' docs.');
     })
 }
+
+await setTileSize();

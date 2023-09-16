@@ -4,7 +4,7 @@ import { insertLayout, removeDefaultLayout } from "../../db/crud-layouts.mjs";
 
 
 class DefaultLayout extends Layout {
-    async init(options) {
+    async init(options,callback) {
         if (options.setDefault) this.default = true;
 
         this.noteIds = (await getAllNotes()).map(note=>note._id);
@@ -19,6 +19,7 @@ class DefaultLayout extends Layout {
         const defaultLayout = this.toJson();
         if (this.default) {
             // TODO remove previous default layout
+            console.log('Setting this layout as default...')
             await removeDefaultLayout();
             defaultLayout.default = true;
         }

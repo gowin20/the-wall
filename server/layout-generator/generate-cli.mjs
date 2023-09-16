@@ -38,6 +38,8 @@ if (process.argv[2] === 'default') {
     // SHOULD BE FASTER NOW!
     const defaultOptions = {
         saveFiles:true,
+        insert:true,
+        setDefault:true,
         name:process.argv[3],
     };
 

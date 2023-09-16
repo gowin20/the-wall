@@ -36,7 +36,6 @@ class Note {
 
       if (options.orig) this.orig = options.orig;
       else throw new Error('No original image provided for Note.');
-
       this.name = this.orig.substring((S3_URL+'orig/').length,this.orig.length-4);
       this.dirName = FOLDER_PREFIX + this.name +'/';
 
@@ -166,7 +165,7 @@ class Note {
 
       console.log('CREATING NOTE '+this.name);
       await this.uploadOrigToS3();
-      await this.createThumbnail(288,false);
+      await this.createThumbnail(288,false); // Default thumbnail size
       await this.buildTiles();
       await this.insert();
 

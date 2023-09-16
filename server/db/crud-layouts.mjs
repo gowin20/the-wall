@@ -39,7 +39,7 @@ export const removeDefaultLayout = async () => {
             default:false
         }
     });
-
+    console.log(`Removed ${result.modifiedCount} other default layouts.`)
     return result.modifiedCount;
 }
 

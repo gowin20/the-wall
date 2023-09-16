@@ -73,6 +73,7 @@ export class DZI extends LayoutImage {
 
   async uploadToS3() {
     // This method will simply upload a list of buffers from memory. See 'dziFromStitch' for a program that crawls a directory
+    throw new Error('DZI upload from buffer not supported, use class \'DZIFromStitch\' instead.');
   }
 }
 

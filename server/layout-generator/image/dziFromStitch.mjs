@@ -48,9 +48,7 @@ class DZIFromStitch extends DZI {
         .jpeg()
         .tile({
             size:this.TileSize
-        }).toFile(this.outputFolder, (err, info) => {
-            //console.log(err,info)
-        })
+        }).toFile(this.outputFolder);
 
         // TODO delete temp files (from DZI)
         

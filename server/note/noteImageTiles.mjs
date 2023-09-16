@@ -64,7 +64,7 @@ class NoteImageTiles {
         const dzi = await sharp(imageBuffer)
         .jpeg()
         .tile({
-            size:225
+            size:this.TileSize
         }).toFile(this.outputFolder, (err, info) => {
             //console.log(err,info)
         })
@@ -94,7 +94,6 @@ class NoteImageTiles {
 
     async insert() {
         // Inserts DZI
-        console.log(this.toJson())
         this._id = await insertOrUpdateDzi(this.toJson());
         return this._id;
     }

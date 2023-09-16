@@ -19,7 +19,7 @@ export const getNoteByOrigUrl = async (noteUrl) => {
     return result;
 }
 
-export const getAllNotes = async (noteID) => {
+export const getAllNotes = async () => {
     let collection = db.collection('notes');
     let results = await collection.find({}).toArray();
     return results;
@@ -53,8 +53,6 @@ export const updateNote = async (noteObj) => {
     if (!noteObj._id) throw new Error('Cannot update DB note without a valid ObjectID');
 
     const {_id, ...noteInfo} = noteObj;
-    console.log('id',_id);
-    console.log(noteInfo);
     const result = await collection.updateOne({_id:new ObjectId(_id)}, {
         $set: {
             ...noteInfo
