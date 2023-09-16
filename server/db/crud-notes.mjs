@@ -73,10 +73,10 @@ export const insertNewNote = async (noteObj) => {
     if (!noteObj) {
         console.error(`${errorHeader}No note provided.`);
     }
-    else if (!noteObj.URL) {
+    else if (!noteObj.orig) {
         console.error(`${errorHeader}No image URL.`);
     }
-    else if (!S3_URL.test(noteObj.URL)) {
+    else if (!S3_URL.test(noteObj.orig)) {
         console.error(`${errorHeader}Invalid S3 URL.`);
     }
     else if (!noteObj.creatorId) {

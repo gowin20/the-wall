@@ -1,10 +1,10 @@
 import fs from 'fs';
-import { getNoteByOrigUrl } from './crud-notes.mjs';
-import db from './conn.mjs'
+import { getNoteByOrigUrl } from '../crud-notes.mjs';
+import db from '../conn.mjs'
 
 
 const renameTifToPng = async () => {
-    const INPUT_DIR = '../../images/notes/2-staged/';
+    const INPUT_DIR = process.env.LOCAL_UPLOADED_NOTES;
     const filenames = fs.readdirSync(INPUT_DIR);
 
     console.log(filenames.length);

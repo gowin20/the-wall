@@ -85,7 +85,10 @@ class Note {
 
     async createThumbnail(size, update) {
 
-      if (this.thumbnailExists(size)) return;
+      if (this.thumbnailExists(size)) {
+        console.log(`Thumbnail of size ${size} already exists for ${this._id}.`)
+        return;
+      };
 
       console.log('Creating thumbnail...')
 
@@ -133,8 +136,10 @@ class Note {
     async buildTiles() {
 
       // If tiles already exist, return
-      if (this.tiles) return this.tiles;
-
+      if (this.tiles) {
+        console.log('Note tiles already built for '+this._id);
+        return this.tiles;
+      }
       this.tiles = await noteImageTiles(this).create();
       return this.tiles;
     }
@@ -159,6 +164,7 @@ class Note {
     async create() {
       if (!this.orig) throw new Error('An image is required to create a note.');
 
+      console.log('CREATING NOTE '+this.name);
       await this.uploadOrigToS3();
       await this.createThumbnail(288,false);
       await this.buildTiles();
@@ -168,8 +174,8 @@ class Note {
     }
 }
 
-const note = (id) => {
-  return new Note(id);
+const note = () => {
+  return new Note();
 }
 
 export default note;

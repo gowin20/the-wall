@@ -17,7 +17,7 @@ const client = new S3Client({
 const BUCKET = 'the-wall-source';
 const S3_ADDRESS = 'https://the-wall-source.s3.us-west-1.amazonaws.com/';
 
-export const listFolder = async (folder,options) => {
+export const listFolder = async (folder) => {
 
   const command = new ListObjectsV2Command({
     Bucket: BUCKET,
@@ -39,9 +39,6 @@ export const listFolder = async (folder,options) => {
       command.input.ContinuationToken = NextContinuationToken;
     }
 
-    if (options.saveFile) {
-      fs.writeFileSync('../temp/s3-output.json',JSON.stringify(noteList));
-    }
     return noteList.notes;
   } catch (err) {
     console.error(err);

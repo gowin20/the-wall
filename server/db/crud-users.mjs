@@ -25,9 +25,9 @@ export const getUsersByName = async (name) => {
 
 
 // Returns a user with a specific username (all usernames are unique!)
-export const getUserByUsername = async (username) => {
+export const getUserByName = async (name) => {
     const collection = db.collection('users');
-    const result = await collection.findOne({username:username});
+    const result = await collection.findOne({name:name});
     return result;
 }
 
@@ -52,28 +52,32 @@ export const updateUserLayout = async (userId, layoutId) => {
 
 // Inserts a "fake user" - someone who is credited as a note creator, but has not registered for an account
 // Returns a user ID
-export const insertFakeUser = async (userInfo) => {
+export const insertFakeUser = async (name) => {
 
     const collection = db.collection('users');
 
-    let result;
-    const userExists = await getUserByUsername(userInfo.username);
+    const userExists = await getUserByName(name);
     if (userExists) {
         // A user by this name already exists. Return their info
-        console.log('Found existing user:',userExists);
+        //console.log('Found existing user:',userExists);
         return userExists._id;
     }
 
     const regex = /\ /g;
+
+    const username = name.replace(regex,'-');
     const userObj = {
-        _id: new ObjectId(),
-        name: userInfo.name,
-        username: userInfo.name.replace(regex,'-'),
+        name: name,
+        username: username,
         registered:false
     }
-    console.log('Inserting new user:',userObj);
-    result = await collection.insertOne(userObj);
-    return result.insertedId;
+    //console.log('Updating user:',userObj);
+    const result = await collection.updateOne({username:username}, {
+        $set: {
+            ...userObj
+        }
+    }, {upsert:true});
+    return result.upsertedId;
 }
 
 export const insertUser = async (userInfo) => {
