@@ -31,6 +31,18 @@ export const getDefaultLayout = async () => {
     return result;
 }
 
+export const removeDefaultLayout = async () => {
+    const collection = await db.collection('layouts');
+
+    const result = await collection.updateMany({default:true},{
+        $set: {
+            default:false
+        }
+    });
+
+    return result.modifiedCount;
+}
+
 export const insertLayout = async (layoutObj) => {
 
     const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');

@@ -8,7 +8,9 @@ const people = {
     'Oliver':'64f3db0f831d677c80b1726e',
     'Shreya':'64f3db0f831d677c80b1726f',
     'Fionna':'64f3db0f831d677c80b1725e',
-    'Margo':'64f3db0f831d677c80b17267'
+    'Margo':'64f3db0f831d677c80b17267',
+    'Athya':'64f3db0f831d677c80b1725a',
+    'Unknown':'64f3db0f831d677c80b1726c'
 }
 
 if (process.argv.length < 3) {
@@ -77,9 +79,9 @@ if (process.argv[2] === 'custom') {
     const customOptions = {
         name:process.argv[3],
         randomNotes:true,
-        numNotes:50,
-        numRows:50,
-        numCols:1,
+        numNotes:20,
+        numRows:1,
+        numCols:20,
         saveFiles:true,
     }
 

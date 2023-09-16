@@ -47,8 +47,24 @@ export const getRandomNotes = async (count) => {
     return notes;
 }
 
+export const updateNote = async (noteObj) => {
+    const collection = db.collection('notes');
 
-export const insertNote = async (noteObj) => {
+    if (!noteObj._id) throw new Error('Cannot update DB note without a valid ObjectID');
+
+    const {_id, ...noteInfo} = noteObj;
+    console.log('id',_id);
+    console.log(noteInfo);
+    const result = await collection.updateOne({_id:new ObjectId(_id)}, {
+        $set: {
+            ...noteInfo
+        }
+    })
+
+    console.log(`Updated Atlas note: ${result}`);
+}
+
+export const insertNewNote = async (noteObj) => {
     const collection = db.collection('notes');
 
     const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
@@ -70,23 +86,8 @@ export const insertNote = async (noteObj) => {
         console.error(`${errorHeader}Invalid creator ID.`);
     }
 
-
-    // create a well-formatted note object from input
-    const validNoteObj = {
-        _id: new ObjectId(),
-        orig: noteObj.URL,
-        creatorId: noteObj.creatorId,
-        title: noteObj.title,
-        description: noteObj.description,
-        location: noteObj.location,
-        date: noteObj.date
-    }
-
-
-    // if URL already exists in system, update existing note
-    console.log(noteObj._id);
-    const result = await collection.insertOne(validNoteObj);
-    console.log('Successfully inserted note: ',result.insertedId);
+    const result = await collection.insertOne(noteObj);
+    console.log('Successfully inserted NEW note: ',result.insertedId);
 
     return result;
 }
@@ -112,14 +113,4 @@ export const addThumbnail = async (id,thumbnailName,url) => {
 export const insertNotesBulk = async (notes) => {
     // TODO (not really necessary though)
     return;
-}
-
-
-export const updateNote = async (id,info) => {
-
-    const updateInfo = {
-        $set: {
-
-        }
-    }
 }

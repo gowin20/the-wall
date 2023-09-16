@@ -1,5 +1,5 @@
-import note from "../note.mjs";
-import { TEMP_DIR } from "../layout/layout.mjs";
+import note from "../../note/note.mjs";
+import { TEMP_LAYOUT_DIR } from "../layout/layout.mjs";
 import { LayoutImage } from "./layoutImage.mjs";
 import sharp from "sharp";
 import fetch from 'node-fetch';
@@ -9,7 +9,7 @@ class StitchedImage extends LayoutImage {
     constructor(layout) {
         super(layout);
         this.name = `${layout.name}-stitch`;
-        this.LOCAL_DIR = TEMP_DIR+layout.name+'/';
+        this.LOCAL_DIR = TEMP_LAYOUT_DIR+layout.name+'/';
     }
 
     async init(options,callback) {
@@ -44,19 +44,16 @@ class StitchedImage extends LayoutImage {
                     const noteObj = note();
                     await noteObj.fromId(noteId);
                     
-                    if (!noteObj.thumbnailExists(thumbnailName)) {
+                    
+                    if (!noteObj.thumbnailExists(noteImageSize)) {
                         console.log(`Size ${noteImageSize} thumbnail of ${noteObj.orig} does not exist, creating it...`)
-                        await noteObj.createThumbnail(thumbnailName,noteImageSize);
+                        await noteObj.createThumbnail(noteImageSize,true);
 
                         await noteObj.fromId(noteId);
-                        //console.log(`Using NEW thumbnail ${noteObj.thumbnails[thumbnailName]}...`);
-                    }
-                    else {
-                        //console.log(`Using existing thumbnail ${noteObj.thumbnails[thumbnailName]}...`);
                     }
                     
-                    const thumbnailImage = await fetch(noteObj.thumbnails[thumbnailName]);
-                    //console.log(thumbnailImage);
+                    const thumbnailImage = await fetch(noteObj.getThumbnail(noteImageSize));
+
                     const imageBuffer = await thumbnailImage.buffer();
                     
                     const thisNote = {

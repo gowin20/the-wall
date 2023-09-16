@@ -1,6 +1,6 @@
 import sharp from "sharp";
 import { LayoutImage } from "./layoutImage.mjs";
-import { getDziIdByName, insertDzi } from "../../db/crud-dzis.mjs";
+import { getDziIdByName, insertOrUpdateDzi } from "../../db/crud-dzis.mjs";
 
 export class DZI extends LayoutImage {
   constructor(layout) {
@@ -34,11 +34,10 @@ export class DZI extends LayoutImage {
   async generate(saveFiles) {   
     throw new Error('Method generate of DZI does not currently work, use class DZIFromStitch instead.');
 
-    // TODO create a DZI from a 2D pattern of notes :)
+    // TODO create a DZI procedurally from a 2D pattern of notes :)
   }
 
   toJson() {
-    // TODO implement this to create a DB object
     return {
       _id:this._id,
       name:this.name,
@@ -61,7 +60,7 @@ export class DZI extends LayoutImage {
     console.log('[DB] Inserting DZI...');
 
     const dziObj = this.toJson();
-    this._id = await insertDzi(dziObj);
+    this._id = await insertOrUpdateDzi(dziObj);
 
     if (!this._id) {
       this._id = await getDziIdByName(dziObj.name);

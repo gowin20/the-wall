@@ -19,7 +19,7 @@ Side effects:
 * Generates large temp files which are deleted upon program termination
 
 */
-export const TEMP_DIR = `./layout-generator/temp/`;
+export const TEMP_LAYOUT_DIR = `./layout-generator/temp/`;
 
 export class Layout {
     constructor(layoutId) {
@@ -140,7 +140,7 @@ export class Layout {
             numRows:this.numRows,
             numCols:this.numCols,
             array: this.array,
-            image: this.image,
+            image: this.image
         };
     }
 
@@ -200,7 +200,7 @@ export class Layout {
     async createLayoutImage() {
         console.log('Generating layout image...');
 
-        this.LAYOUT_DIR = TEMP_DIR+this.name;
+        this.LAYOUT_DIR = TEMP_LAYOUT_DIR+this.name;
         
 
         if (this.saveFiles && !fs.existsSync(`${this.LAYOUT_DIR}/`)) {
@@ -236,14 +236,15 @@ export class Layout {
             // Upload image files to S3
             console.log('[BEGIN S3 UPLOAD]');
             const imageUrl = await imageObj.uploadToS3();
-            console.log(`[S3 DONE] ${imageUrl}`);
+            console.log(`Successfully uploaded DZI to ${imageUrl}`);
             // Insert image object into DB and retrieve ObjectId
             const imageId = await imageObj.insert();
 
             // 6. update layout object with dzi metadata and S3 URL
             this.image = imageId;
 
-            await this.insert();
+            const resId = await this.insert();
+            console.log(`Successfully inserted layout to Atlas with ID ${resId}.`)
         }
 
         // Save layout JSON to disk

@@ -2,6 +2,7 @@
 public/notes
 server/layout-generator/temp
 server/temp
+server/note/temp
 .env
 server/.env
 client/.env

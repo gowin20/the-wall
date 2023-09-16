@@ -40,7 +40,7 @@ class UserLayout extends Layout {
         // add layout to associated user
         await updateUserLayout(this.userId,this._id);
         //await insertLayout()
-        return;
+        return this._id;
     }
 }
 

@@ -1,6 +1,6 @@
 import { Layout } from "./layout.mjs";
 import { getAllNotes } from "../../db/crud-notes.mjs";
-import { insertLayout } from "../../db/crud-layouts.mjs";
+import { insertLayout, removeDefaultLayout } from "../../db/crud-layouts.mjs";
 
 
 class DefaultLayout extends Layout {
@@ -16,14 +16,15 @@ class DefaultLayout extends Layout {
 
     async insert() {
 
-        const layoutObj = this.toDbObj();
+        const defaultLayout = this.toJson();
+        if (this.default) {
+            // TODO remove previous default layout
+            await removeDefaultLayout();
+            defaultLayout.default = true;
+        }
 
-        layoutObj.default = this.setDefault;
-
-        //TODO remove previous default layout
-        //await insertLayout(layoutObj);
-
-        console.log('Check me out! we got here DEFAULT EDITION!! :)');
+        this._id = await insertLayout(defaultLayout);
+        return this._id;
     }
 }
 

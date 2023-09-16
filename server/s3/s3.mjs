@@ -6,7 +6,9 @@ import {
     HeadObjectCommand,
     DeleteObjectCommand
   } from "@aws-sdk/client-s3";
-import * as fs from 'fs';
+import fs from 'fs';
+import dir from 'node-dir';
+import util from 'util';
 
 const client = new S3Client({
   region:'us-west-1'
@@ -60,7 +62,9 @@ async function createFolder(Key) {
     Bucket: BUCKET, 
     Key: Key
   });
-  return await client.send(command);
+  const res = await client.send(command);
+  console.log(`Created new S3 folder: ${Key}`);
+  return res;
 }
 
 async function existsFolder(Key) {
@@ -150,4 +154,30 @@ export async function emptyDirectory(dir) {
   await s3.deleteObjects(deleteParams).promise();
 
   if (listedObjects.IsTruncated) await emptyS3Directory(bucket, dir);
+}
+
+export const uploadDziFolder = async (localPath,s3Path) => {
+    console.log('[START] Beginning DZI upload to S3...')
+
+    await createFolderIfNotExist(s3Path);
+
+    const readFiles = util.promisify(dir.files);
+    const files = await readFiles(localPath);
+    const total_files = files.length;
+    let count=0;
+    for (const file of files) {
+        const nameArray = file.split('\\').slice(-2);
+
+        if (nameArray[1] === 'vips-properties.xml') continue;
+
+        const s3FileKey = `${s3Path}${nameArray[0]}/${nameArray[1]}`;
+        await uploadImage(s3FileKey,fs.createReadStream(file))
+
+        count += 1;
+        console.log(`[${count}/${total_files}] Uploaded ${s3FileKey}...`);
+    }
+    console.log('[DONE] Successfully uploaded DZI to S3.')
+
+    const Url = process.env.S3_PREFIX + s3Path;
+    return Url;
 }

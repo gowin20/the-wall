@@ -1,9 +1,9 @@
 import { DZI } from "./dzi.mjs";
 import sharp from "sharp";
 import stitchedImage from "./stitchedImage.mjs";
-import { TEMP_DIR } from "../layout/layout.mjs";
+import { TEMP_LAYOUT_DIR } from "../layout/layout.mjs";
 import dir from 'node-dir';
-import { uploadImage, createFolderIfNotExist } from "../../db/s3.mjs";
+import { uploadImage, createFolderIfNotExist, uploadDziFolder } from "../../s3/s3.mjs";
 import fs from 'fs';
 import util from 'util';
 
@@ -16,10 +16,10 @@ class DZIFromStitch extends DZI {
         this.saveFiles = options.saveFiles;
 
         if (options.saveFiles) {
-            this.outputFolder = `${TEMP_DIR}${this.layout.name}/${this.name}`
+            this.outputFolder = `${TEMP_LAYOUT_DIR}${this.layout.name}/${this.name}`
         }
         else {
-            this.tempFolder = `${TEMP_DIR}dzi-temp/`;
+            this.tempFolder = `${TEMP_LAYOUT_DIR}dzi-temp/`;
             
             if (fs.existsSync(this.tempFolder)) fs.rmSync(this.tempFolder,{recursive:true})
             fs.mkdirSync(this.tempFolder);
@@ -65,27 +65,12 @@ class DZIFromStitch extends DZI {
             setTimeout(resolve,5000)
         })
 
-        const prefix = this.outputFolder+'_files';
+        const localPath = this.outputFolder+'_files';
         const S3_FOLDER = `layouts/${this.name}/`;
-        await createFolderIfNotExist(S3_FOLDER);
 
-        const readFiles = util.promisify(dir.files);
-        const files = await readFiles(prefix);
-        const total_files = files.length;
-        let count=0;
-        for (const file of files) {
-            const nameArray = file.split('\\').slice(-2);
+        this.Url = await uploadDziFolder(localPath,S3_FOLDER);
 
-            if (nameArray[1] === 'vips-properties.xml') continue;
-
-            const s3FileKey = `${S3_FOLDER}${nameArray[0]}/${nameArray[1]}`;
-            await uploadImage(s3FileKey,fs.createReadStream(file))
-
-            count += 1;
-            console.log(`[${count}/${total_files}] Uploaded ${s3FileKey}...`);
-        }
-        console.log('[DONE] Successfully uploaded DZI to S3.')
-
+        // remove local files
         if (!this.saveFiles) {
             fs.rmSync(this.tempFolder, {
                 recursive:true
@@ -95,7 +80,7 @@ class DZIFromStitch extends DZI {
             })
         }
 
-        this.Url = process.env.S3_PREFIX + S3_FOLDER;
+        //this.Url = process.env.S3_PREFIX + S3_FOLDER;
         return this.Url;
     }
 }
