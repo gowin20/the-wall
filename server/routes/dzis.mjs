@@ -11,7 +11,7 @@ router.get("/", async (req, res) => {
     res.send(results).status(200);
 });
 
-// Get a single note by ID
+// Get a DZI by ID
 router.get("/id/:id", async (req, res) => {
     let collection = await db.collection('dzis');
     let query = {_id: new ObjectId(req.params.id)};

@@ -11,8 +11,8 @@ export const TEMP_NOTE_DIR = './note/temp/';
 class Note {
     constructor() {}
 
+    // Initializes a note from an Atlas "note" collection ID. Assumes the note has already been "created" (this.create()) at some point
     async fromId(id) {
-      //if (this._id) throw new Error('Note already initialized, cannot initialize from database.');
 
       this._id = id;
 
@@ -20,7 +20,7 @@ class Note {
       if (!noteObj) throw new Error(`Cannot find note of ID ${this._id} in database`);
 
       this.setInfo(noteObj);
-
+      this.created = true;
       return this;
     }
 
@@ -163,12 +163,13 @@ class Note {
     async create() {
       if (!this.orig) throw new Error('An image is required to create a note.');
 
-      console.log('CREATING NOTE '+this.name);
+      
       await this.uploadOrigToS3();
       await this.createThumbnail(288,false); // Default thumbnail size
       await this.buildTiles();
       await this.insert();
-
+      console.log(`Successfully created note ${this.name} (${this._id}.)`);
+      this.created = true;
       return this._id;
     }
 }
