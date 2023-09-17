@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getUserById } from '../api/user';
+import { getUserById } from '../../api/user';
 
 export default function Details({ note }) {
     

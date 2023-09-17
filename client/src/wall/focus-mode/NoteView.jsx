@@ -1,6 +1,6 @@
 import React, { useEffect,useState } from 'react';
 import OpenSeadragon from 'openseadragon';
-import { getZoomableImage } from '../api/wall';
+import { getZoomableImage } from '../../api/wall';
 
 export default function NoteView({tilesId}) {
     console.log(tilesId)
@@ -48,6 +48,7 @@ export default function NoteView({tilesId}) {
                 setLoaded(true);
             }
             else {
+                // TODO disable keyboard arrow keys until image is fully loaded
                 image.addOnceHandler('fully-loaded-change',() => setLoaded(true))
             }
         })

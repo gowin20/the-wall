@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFocusByPosition, clearFocus } from './wallSlice';
+import { setFocusByPosition, clearFocus } from '../wallSlice';
 
 export default function Controls(props) {
 

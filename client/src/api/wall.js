@@ -1,4 +1,4 @@
-import {SERVER_DOMAIN} from './main.js';
+import {SERVER_DOMAIN} from './api.js';
 
 export const getDefaultLayout = async () => {
     const response = await fetch(SERVER_DOMAIN+'/layouts/default');

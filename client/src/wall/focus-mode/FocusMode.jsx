@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Controls from "./Controls";
 import NoteView from "./NoteView";
-import { getNote } from "../api/wall";
+import { getNote } from "../../api/wall";
 import './focusMode.css';
 
 
