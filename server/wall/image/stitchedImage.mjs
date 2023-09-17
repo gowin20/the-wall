@@ -1,4 +1,4 @@
-import note from "../../note/note.mjs";
+import note from "../note.mjs";
 import { TEMP_LAYOUT_DIR } from "../layout/layout.mjs";
 import { LayoutImage } from "./layoutImage.mjs";
 import sharp from "sharp";

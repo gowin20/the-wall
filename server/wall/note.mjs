@@ -1,12 +1,11 @@
 import fetch from 'node-fetch';
-import { getNoteById, addThumbnail, updateNote, insertNewNote } from '../db/crud-notes.mjs';
 import sharp from 'sharp';
+import { getNoteById, addThumbnail, updateNote, insertNewNote } from '../db/crud-notes.mjs';
 import { createFolderIfNotExist, uploadImage } from '../s3/s3.mjs';
 import noteImageTiles from './noteImageTiles.mjs';
 
 const S3_URL = 'https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/';
 const FOLDER_PREFIX = 'notes/all/';
-export const TEMP_NOTE_DIR = './note/temp/';
 
 class Note {
     constructor() {}

@@ -1,14 +1,16 @@
-import { TEMP_NOTE_DIR } from './note.mjs';
 import fetch from 'node-fetch';
-import { uploadDziFolder } from "../s3/s3.mjs";
 import imageSize from 'image-size';
 import fs from 'fs';
 import sharp from 'sharp';
+import { uploadDziFolder } from "../s3/s3.mjs";
 import { insertOrUpdateDzi } from '../db/crud-dzis.mjs';
+
+const TEMP_NOTE_DIR = './note/temp/';
 
 class NoteImageTiles {
     constructor(note) {
 
+        if (!note.name) throw new Error('Note needs a name to generate tiles.');
         // Properties related to DZI
         this.origUrl = note.orig;
         this.name = note.name;
@@ -65,18 +67,12 @@ class NoteImageTiles {
         .jpeg()
         .tile({
             size:this.TileSize
-        }).toFile(this.outputFolder, (err, info) => {
-            //console.log(err,info)
-        })
+        }).toFile(this.outputFolder);
         
         return dzi;
     }
     
     async uploadToS3() {
-        // This is currently  needed in order for sharp.toFile to finish resolving. TODO implement "util.promisify" around sharp.toFile and remove this 5-second delay.
-        await new Promise((resolve) => {
-            setTimeout(resolve,5000)
-        })
 
         const localPath = this.outputFolder+'_files/';
         const S3_FOLDER = this.s3DirName+'tiles/';

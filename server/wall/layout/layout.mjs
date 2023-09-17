@@ -19,7 +19,7 @@ Side effects:
 * Generates large temp files which are deleted upon program termination
 
 */
-export const TEMP_LAYOUT_DIR = `./layout-generator/temp/`;
+export const TEMP_LAYOUT_DIR = `./wall/temp/`;
 
 export class Layout {
     constructor(layoutId) {

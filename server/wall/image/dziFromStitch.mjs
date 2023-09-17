@@ -49,19 +49,12 @@ class DZIFromStitch extends DZI {
         .tile({
             size:this.TileSize
         }).toFile(this.outputFolder);
-
-        // TODO delete temp files (from DZI)
         
         return dzi;
     }
 
     async uploadToS3() {
         console.log('[START] Beginning DZI upload to S3...')
-
-        // This is currently  needed in order for sharp.toFile to finish resolving. TODO implement "util.promisify" around sharp.toFile and remove this 5-second delay.
-        await new Promise((resolve) => {
-            setTimeout(resolve,5000)
-        })
 
         const localPath = this.outputFolder+'_files';
         const S3_FOLDER = `layouts/${this.name}/`;
