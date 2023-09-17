@@ -1,24 +1,23 @@
 import express from "express";
-import db from "../db/conn.mjs";
-import { ObjectId } from "mongodb";
+import { getAllDzis, getDziById } from "../db/crud-dzis.mjs";
 
 const router = express.Router();
 
-// Get a list of all notes
+// Get a list of all DZIs
 router.get("/", async (req, res) => {
-    let collection = await db.collection('dzis');
-    let results = await collection.find({}).toArray();
-    res.send(results).status(200);
+
+  const results = await getAllDzis();
+
+  res.send(results).status(200);
 });
 
 // Get a DZI by ID
 router.get("/id/:id", async (req, res) => {
-    let collection = await db.collection('dzis');
-    let query = {_id: new ObjectId(req.params.id)};
-    let result = await collection.findOne(query);
   
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-  });
+  const result = await getDziById(req.params.id);
+
+  if (!result) res.send("Not found").status(404);
+  else res.send(result).status(200);
+});
 
 export default router;

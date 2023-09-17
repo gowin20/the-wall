@@ -1,8 +1,6 @@
 # local files (testing only)
 public/notes
-server/layout-generator/temp
-server/temp
-server/note/temp
+server/wall/temp
 .env
 server/.env
 client/.env

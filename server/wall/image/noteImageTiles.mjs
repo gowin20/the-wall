@@ -2,8 +2,8 @@ import fetch from 'node-fetch';
 import imageSize from 'image-size';
 import fs from 'fs';
 import sharp from 'sharp';
-import { uploadDziFolder } from "../s3/s3.mjs";
-import { insertOrUpdateDzi } from '../db/crud-dzis.mjs';
+import { uploadDziFolder } from "../../s3/s3.mjs";
+import { insertOrUpdateDzi } from '../../db/crud-dzis.mjs';
 
 const TEMP_NOTE_DIR = './note/temp/';
 

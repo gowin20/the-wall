@@ -48,3 +48,16 @@ export const getDziIdByName = async (dziName) => {
     if (!result) throw new Error('Invalid DZI name.');
     return result._id;
 }
+
+export const getDziById = async (dziId) => {
+    let collection = await db.collection('dzis');
+    let query = {_id: new ObjectId(dziId)};
+    let result = await collection.findOne(query);
+    return result;
+}
+
+export const getAllDzis = async () => {
+    let collection = await db.collection('dzis');
+    let results = await collection.find({}).toArray();
+    return results;
+}
