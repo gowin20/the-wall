@@ -39,8 +39,9 @@ if (process.argv[2] === 'default') {
     const defaultOptions = {
         saveFiles:true,
         insert:true,
-        setDefault:true,
+        setDefault:false,
         name:process.argv[3],
+        noteImageSize:16
     };
 
     await defaultLayout().init(defaultOptions, ()=>{});
