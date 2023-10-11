@@ -86,6 +86,7 @@ export default function Canvas({ sourceId }) {
             row:clickedRow,
             col:clickedCol
         }));
+        // TODO update route here
     }
 
     function disableKeyboardControls(e) {

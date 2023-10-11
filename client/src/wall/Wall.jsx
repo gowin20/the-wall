@@ -1,6 +1,4 @@
-import React from 'react'
-import { useEffect, useState } from 'react';
-
+import React, { useEffect } from 'react';
 import FocusMode from './focus-mode/FocusMode';
 import Canvas from './Canvas';
 import { useSelector, useDispatch } from 'react-redux';

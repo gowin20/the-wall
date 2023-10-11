@@ -29,36 +29,30 @@ export default function Controls(props) {
             window.removeEventListener('keydown',keyboardEvent);
         }
     })
-
+    const setFocus = (row,col) => {
+        dispatch(setFocusByPosition({
+            row:row,
+            col:col
+        }));
+        // TODO update route here
+    }
     function moveFocus(direction) {
         switch(direction) {
             case 'up':
             case 'ArrowUp':
-                dispatch(setFocusByPosition({
-                    row:position.row-1,
-                    col:position.col
-                }));
+                setFocus(position.row-1,position.col)
                 break;
             case 'down':
             case 'ArrowDown':
-                dispatch(setFocusByPosition({
-                    row:position.row+1,
-                    col:position.col
-                }));
+                setFocus(position.row+1,position.col)
                 break;
             case 'left':
             case 'ArrowLeft':
-                dispatch(setFocusByPosition({
-                    row:position.row,
-                    col:position.col-1
-                }));
+                setFocus(position.row,position.col-1)
                 break;
             case 'right':
             case 'ArrowRight':
-                dispatch(setFocusByPosition({
-                    row:position.row,
-                    col:position.col+1
-                }));
+                setFocus(position.row,position.col+1)
                 break;
             case 'Escape':
                 dispatch(clearFocus());

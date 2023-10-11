@@ -6,7 +6,6 @@ import NoteView from "./NoteView";
 import { getNote } from "../../api/wall";
 import './focusMode.css';
 
-
 export default function FocusMode() {
 
     const noteID = useSelector((state)=>state.wall.focus.note);
