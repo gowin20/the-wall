@@ -49,18 +49,18 @@ router.post('/login', async (req,res) => {
   const loginAttempt = req.body;
 
   const dbUser = await getUserByUsername(loginAttempt.username);
-  if (!dbUser) return res.status(401).json({msg:'Invalid username or password'});
+  if (!dbUser) return res.status(401).json({message:'Invalid username or password'});
 
   bcrypt.compare(loginAttempt.password, dbUser.password, (err,data)=>{
     if (err) throw err;
     if (!data) {
-      return res.status(401).json({msg:'Invalid username or password'});
+      return res.status(401).json({message:'Invalid username or password'});
     }
     console.log('Password match');
     // Username and password combo is valid, time to sign in
     const payload = {
       id: dbUser._id,
-      username: dbUser.username
+      username: dbUser.username,
     }
     jwt.sign(
       payload,
@@ -68,14 +68,14 @@ router.post('/login', async (req,res) => {
       {expiresIn:86400},
       (err, token) => {
         if (err) throw err;
-        return res.status(200).json({msg:'Successfully signed in', token:`Bearer ${token}`})
+        return res.status(200).json({message:'Successfully signed in', token:`Bearer ${token}`, userInfo:payload})
       }
     )
   });
 })
 
 router.get('/verifyLogin',verifyJWT,(req,res)=>{
-  res.json({isLoggedIn:true, username:req.user.username})
+  res.json({isLoggedIn:true, userInfo:req.userInfo})
 })
 
 export default router;

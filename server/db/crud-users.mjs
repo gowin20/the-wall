@@ -78,6 +78,11 @@ export const insertFakeUser = async (name) => {
     return result.upsertedId;
 }
 
+export const checkAdmin = async (userId) => {
+    const user = await getUserByID(userId);
+    return user.isAdmin
+}
+
 /*
 
 Authentication methods
