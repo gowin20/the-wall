@@ -5,11 +5,13 @@ import Controls from "./Controls";
 import NoteView from "./NoteView";
 import { getNote } from "../../api/wall";
 import './focusMode.css';
+import EditDetails from "./EditDetails";
 
 export default function FocusMode() {
 
     const noteID = useSelector((state)=>state.wall.focus.note);
-
+    const editMode = useSelector((state)=>state.auth.editMode);
+    if (noteID) console.log(`Note ID: ${noteID}`)
     const [note,setNote] = useState(null);
     // TODO request note object in this component and pass details/url to the child components. avoid re-requests
     useEffect(()=>{
@@ -24,6 +26,11 @@ export default function FocusMode() {
             setNote(null);
         }
     },[noteID])
+    let noteDetails;
+    if (editMode) noteDetails = <EditDetails note={note}/>
+    else noteDetails = <Details note={note}/>
+
+
     if (note) return (
         <div className='overlay'>
             <div className='overlayContents'>
@@ -31,7 +38,7 @@ export default function FocusMode() {
                 <NoteView tilesId={note.tiles}/>
             </div>            
             <div className='rightSide'>
-                <Details note={note}/>
+                {noteDetails}
                 <Controls hidden={true} />     
             </div>
             </div>

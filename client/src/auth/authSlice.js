@@ -1,8 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { logIn } from "./authActions";
 const userToken = localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null;
-const editMode = (localStorage.getItem('editMode') === 'enabled') ? true : false;
+let editMode = (localStorage.getItem('editMode') === 'enabled') ? true : false;
 
+if (editMode && !userToken) {
+    localStorage.removeItem('editMode');
+    editMode = false;
+}
+
+console.log('edit mode is',editMode);
 const identitySlice = createSlice({
     name: 'identity',
     initialState: {
@@ -26,10 +32,13 @@ const identitySlice = createSlice({
             state.userInfo = action.payload;
         },
         logOut: (state) => {
-            state.userInfo = {}
+            state.userInfo = {};
+            state.userToken = null;
 
             localStorage.removeItem('editMode');
             localStorage.removeItem('userToken');
+
+            console.log('loggingout',localStorage.getItem('userToken'));
         }
     },
     extraReducers: {
@@ -53,5 +62,5 @@ const identitySlice = createSlice({
     }
 })
 
-export const {setEditMode,setCredentials} = identitySlice.actions;
+export const {setEditMode,setCredentials,logOut} = identitySlice.actions;
 export default identitySlice.reducer

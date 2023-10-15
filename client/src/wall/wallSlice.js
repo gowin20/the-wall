@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { patchNote } from "./wallActions";
+
 // handle the properties of current active layout
 //(be it for the primary wall, user profile wall, or other custom wall)
 
@@ -14,7 +16,8 @@ export const wallSlice = createSlice({
                 row:null,
                 col:null
             } // {row:Int, col:Int}
-        }
+        },
+        userList: null
     },
     reducers: {
         setLayout: (state,action) => {
@@ -42,6 +45,17 @@ export const wallSlice = createSlice({
                 col:null
             };
             state.focus.note = null;
+        }
+    },
+    extraReducers: {
+        [patchNote.pending]: (state) => {
+            console.log('Edit pending');
+        },
+        [patchNote.fulfilled]: (state, {payload}) => {
+            console.log(`Edit note succeeded: ${payload}`);
+        },
+        [patchNote.rejected]: (state, {payload}) => {
+            console.error(`Edit note failed: ${payload}`);
         }
     }
 })

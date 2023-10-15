@@ -30,7 +30,7 @@ const Login = () => {
     useEffect(()=>{
         if (userInfo.isAdmin) navigate('/admin');
         else if (userInfo.username) navigate('/');
-    },[userInfo])
+    },[userInfo.username])
 
     return (
         <form onSubmit={handleLogin}>

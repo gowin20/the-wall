@@ -3,7 +3,7 @@ import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
 
 export default function NoteView({tilesId}) {
-    console.log(tilesId)
+    //console.log(`Note DZI: ${tilesId}`)
     if (!tilesId) {
         //throw new Error('No tiles available for selected note.')
         return <></>
@@ -15,7 +15,6 @@ export default function NoteView({tilesId}) {
 
         async function setupNoteView() {
             const tileSource = await getZoomableImage(tilesId);
-            console.log(tileSource);
             initViewer(tileSource);
         }
 
@@ -54,7 +53,7 @@ export default function NoteView({tilesId}) {
         })
 
     }
-    console.log('loaded? '+loaded);
+    
     let loadingHTML;
     if (!loaded) {
         loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='loading.gif' alt='High-resolution image loading...'/></div>
