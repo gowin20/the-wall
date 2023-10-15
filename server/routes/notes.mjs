@@ -1,6 +1,7 @@
 import express from "express";
-import { getAllNotes,getNoteById } from "../db/crud-notes.mjs";
+import { getAllNotes,getNoteById, updateNote } from "../db/crud-notes.mjs";
 import { ObjectId } from "mongodb";
+import { verifyJWT } from "../auth/verify.mjs";
 
 const router = express.Router();
 
@@ -19,7 +20,6 @@ router.get("/id/:id", async (req, res) => {
 
 // Create a new note
 router.post('/',async (req,res)=>{
-
   try {
     console.log(req);
     // note().fromPacket(req.body)
@@ -28,15 +28,15 @@ router.post('/',async (req,res)=>{
   catch (e) {
     res.send(e).status(400);
   }
-
-
 })
 
 // TODO edit a note
-router.patch('/:id', async(req,res) => {
+router.patch('/id/:id', verifyJWT, async(req,res) => {
+  const noteInfo = req.body;
+  const results = await updateNote(req.params.id,noteInfo);
 
-
-  // note().fromId(req.params.id)
+  if (results) return res.status(200).json({message:'Successfully updated note'});
+  else return res.status(400).json({message:'Error updating note'});
 })
 
 // TODO delete a note (only valid if user is authorized and logged in! pass a valid token :))

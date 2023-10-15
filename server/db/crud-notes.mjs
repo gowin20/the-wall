@@ -47,19 +47,21 @@ export const getRandomNotes = async (count) => {
     return notes;
 }
 
-export const updateNote = async (noteObj) => {
+export const updateNote = async (noteId, noteInfo) => {
     const collection = db.collection('notes');
 
-    if (!noteObj._id) throw new Error('Cannot update DB note without a valid ObjectID');
+    if (!noteId) throw new Error('Cannot update DB note without a valid ObjectID');
 
-    const {_id, ...noteInfo} = noteObj;
-    const result = await collection.updateOne({_id:new ObjectId(_id)}, {
+    if (Object.keys(noteInfo).includes('_id')) delete noteInfo._id;
+    console.log(noteId,noteInfo);
+
+    const result = await collection.updateOne({_id:new ObjectId(noteId)}, {
         $set: {
             ...noteInfo
         }
     })
-
-    console.log(`Updated Atlas note: ${result}`);
+    console.log(`Updated Atlas note: ${result.matchedCount} matched, ${result.modifiedCount} updated.`);
+    return result;
 }
 
 export const insertNewNote = async (noteObj) => {

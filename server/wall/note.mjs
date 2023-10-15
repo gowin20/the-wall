@@ -121,7 +121,7 @@ class Note {
         // Update if note ID does exist
 
         if (this._id) {
-          await updateNote(this.toJson());
+          await updateNote(this._id,this.toJson());
         }
         else {
           this._id = await insertNewNote(this.toJson());
