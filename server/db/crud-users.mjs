@@ -9,8 +9,14 @@ const Users = db.collection('users');
 Getters and setters
 
 */
-export const getAllUsers = async () => {
+export const getAllUsers = async ({alphabetical}) => {
     let results = await Users.find({}).toArray();
+    if (alphabetical) {
+        results = results.sort((a,b)=>{
+            if (a.name < b.name) return -1 
+            else return 1
+        });
+    }
     return results;
 }
 

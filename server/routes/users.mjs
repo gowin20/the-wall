@@ -9,7 +9,7 @@ const router = express.Router();
 
 // Get a list of all users
 router.get("/", async (req, res) => {
-    const results = await getAllUsers();
+    const results = await getAllUsers({alphabetical:true});
     res.send(results).status(200);
 });
 

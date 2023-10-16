@@ -6,6 +6,7 @@ export default function Controls(props) {
 
     // current position on wall
     const position = useSelector((state) => state.wall.focus.position);
+    const enabled = useSelector(state=>state.wall.focus.controls.enabled);
     const layoutSize = useSelector((state) => ({rows:state.wall.layout.numRows,cols:state.wall.layout.numCols}))
     const dispatch = useDispatch();
     
@@ -22,7 +23,7 @@ export default function Controls(props) {
 
     useEffect(() => {
         function keyboardEvent(e) {
-            moveFocus(e.code);
+            if (enabled) moveFocus(e.code);
         }
         window.addEventListener('keydown', keyboardEvent);
         return () => {

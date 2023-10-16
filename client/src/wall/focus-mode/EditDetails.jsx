@@ -1,37 +1,31 @@
 import React, {useState,useEffect} from "react";
-import { getUserById } from "../../api/user";
 import CreatorSelector from "../../creators/CreatorSelector";
 import { patchNote } from "../wallActions";
 import { useDispatch } from "react-redux";
-
+import { disableControls,enableControls } from "../wallSlice";
 
 const EditDetails = ({ note }) => {
     if (!note) return <></>;
 
-    const [details,setDetails] = useState(null);
+    useEffect(() =>{
+        setDetails({
+            creatorId:note.creator? note.creator : '',
+            title: note.title ? note.title : '',
+            date: note.date ? note.date : '',
+            location: note.location ? note.location : '',
+            description:note.details ? note.details : ''
+        })
+    },[note])
+
+    const [details,setDetails] = useState({
+        creatorId:note.creator? note.creator : '',
+        title: note.title ? note.title : '',
+        date: note.date ? note.date : '',
+        location: note.location ? note.location : '',
+        description:note.details ? note.details : ''
+    });
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        async function initDetails() {
-            let user;
-            if (note.creator) {
-                // fetch user
-                user = await getUserById(note.creator);
-                
-            }
-            setDetails({
-                creatorId:user ? user._id : '',
-                title: note.title ? note.title : '',
-                date: note.date ? note.date : '',
-                location: note.location ? note.location : '',
-                description:note.details ? note.details : ''
-            })
-        }
-
-        if (note) {
-            initDetails();
-        }
-    },[note])
 
     if (!details) return <></>;
     const noteId = note._id;
@@ -47,14 +41,17 @@ const EditDetails = ({ note }) => {
         if (details.description !== "") noteInfo.details = details.description;
         console.log(noteId,noteInfo);
         dispatch(patchNote({id:noteId, info:noteInfo}))
-        
+        setDetails({
+            ...details,
+            creatorId:creatorId
+        })
     }
 
     return (
         <div className="details">
             <div className="detailsContent">
-                <form onSubmit={postEdits}>
-                    <CreatorSelector value={details.creatorId}/>;
+                <form onSubmit={postEdits} onFocus={e=>dispatch(disableControls())} onBlur={e=>dispatch(enableControls())}>
+                    <CreatorSelector value={details.creatorId}/>
                     <input className='title' type='text' value={details.title} onChange={e=>setDetails({...details, title:e.target.value})} placeholder="Title"/>
                     <input className="placeTime" type='text' value={details.location} onChange={e=>setDetails({...details, location:e.target.value})} placeholder="Location"/>
                     <input className="placeTime" type='text' value={details.date} onChange={e=>setDetails({...details, date:e.target.value})} placeholder="Date"/>

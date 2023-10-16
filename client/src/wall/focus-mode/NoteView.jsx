@@ -1,6 +1,8 @@
 import React, { useEffect,useState } from 'react';
 import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
+import { imageLoaded } from '../wallSlice';
+import { useDispatch } from 'react-redux';
 
 export default function NoteView({tilesId}) {
     //console.log(`Note DZI: ${tilesId}`)
@@ -10,6 +12,7 @@ export default function NoteView({tilesId}) {
     };
     const [viewer, setViewer] = useState(null);
     const [loaded,setLoaded] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
@@ -45,10 +48,14 @@ export default function NoteView({tilesId}) {
             const image = thisViewer.world.getItemAt(0);
             if (image.getFullyLoaded()) {
                 setLoaded(true);
+                dispatch(imageLoaded());
             }
             else {
                 // TODO disable keyboard arrow keys until image is fully loaded
-                image.addOnceHandler('fully-loaded-change',() => setLoaded(true))
+                image.addOnceHandler('fully-loaded-change',() => {
+                    setLoaded(true);
+                    dispatch(imageLoaded());
+                })
             }
         })
 

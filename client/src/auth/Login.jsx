@@ -28,8 +28,7 @@ const Login = () => {
     }, [data])
 
     useEffect(()=>{
-        if (userInfo.isAdmin) navigate('/admin');
-        else if (userInfo.username) navigate('/');
+        if (userInfo.username) navigate('/');
     },[userInfo.username])
 
     return (

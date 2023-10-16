@@ -60,7 +60,7 @@ if (process.argv[2] === 'user') {
 
     const userOptions = {
         userId:people[process.argv[3]],
-        saveFiles:false,
+        saveFiles:true,
         insert:true
         //noteImageSize:5
     }

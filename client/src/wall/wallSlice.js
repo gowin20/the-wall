@@ -12,12 +12,15 @@ export const wallSlice = createSlice({
         },
         focus: {
             note:null, // note ID
+            loading:false,
             position:{
                 row:null,
                 col:null
-            } // {row:Int, col:Int}
-        },
-        userList: null
+            },
+            controls: {
+                enabled:true
+            }
+        }
     },
     reducers: {
         setLayout: (state,action) => {
@@ -26,18 +29,23 @@ export const wallSlice = createSlice({
         },
         setFocusByNote: (state, action) => {
             state.focus.note = action.payload;
-
-            // TODO derive current position in layout from note
+            // this function is not currently necessary but will be used if we ever implement a "view on wall" button
         },
         setFocusByPosition: (state,action) => {
-
+            // TODO disable this function while "loading"
+            if (state.focus.loading) return;
             if (action.payload.row >= state.layout.numRows || action.payload.row < 0) return;
             if (action.payload.col >= state.layout.numCols || action.payload.col < 0) return;
 
+            state.focus.loading = true;
+            state.focus.controls.enabled = false;
             state.focus.position = action.payload;
-
             // Derive current note from layout position
             state.focus.note = state.layout.array[state.focus.position.row][state.focus.position.col];
+        },
+        imageLoaded: (state) => {
+            state.focus.loading = false;
+            state.focus.controls.enabled = true;
         },
         clearFocus: (state) => {
             state.focus.position = {
@@ -45,6 +53,12 @@ export const wallSlice = createSlice({
                 col:null
             };
             state.focus.note = null;
+        },
+        disableControls: (state) => {
+            state.focus.controls.enabled = false;
+        },
+        enableControls: (state) => {
+            state.focus.controls.enabled = true;
         }
     },
     extraReducers: {
@@ -60,6 +74,6 @@ export const wallSlice = createSlice({
     }
 })
 
-export const {setLayout,setFocusByPosition,setFocusByNote, clearFocus} = wallSlice.actions;
+export const {setLayout,setFocusByPosition,setFocusByNote,clearFocus,disableControls,enableControls,imageLoaded} = wallSlice.actions;
 
 export default wallSlice.reducer;

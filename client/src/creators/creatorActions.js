@@ -16,3 +16,10 @@ export const listCreators = createAsyncThunk(
         }
     }
 )
+
+export const addCreator = createAsyncThunk(
+    'addCreator',
+    async ({creatorName}, {rejectWithValue}) => {
+        // TODO POST to server to create new "user"
+    }
+)

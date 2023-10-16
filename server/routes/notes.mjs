@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Get a list of all notes
 router.get("/", async (req, res) => {
-  const results = await getAllNotes();
+  const results = await getAllNotes(); // get in alphabetical order
   res.send(results).status(200);
 });
 
