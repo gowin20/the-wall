@@ -9,6 +9,7 @@ import Login from './auth/Login';
 import AdminPanel from './admin/AdminPanel';
 import RequireAdmin from './auth/RequireAdmin';
 import LayoutGenerator from './admin/LayoutGenerator';
+import FocusMode, {loader as noteLoader} from './wall/focus-mode/FocusMode';
 
 const router = createBrowserRouter([
     {
@@ -17,7 +18,9 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         children: [
             {
-                path: 'notes/:id'
+                path: 'note/:noteId',
+                element:<FocusMode />,
+                loader:noteLoader
             },
             {
                 path: '@:id',

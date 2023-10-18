@@ -17,9 +17,7 @@ export const wallSlice = createSlice({
                 row:null,
                 col:null
             },
-            controls: {
-                enabled:true
-            }
+            controlsEnabled:true
         }
     },
     reducers: {
@@ -32,20 +30,21 @@ export const wallSlice = createSlice({
             // this function is not currently necessary but will be used if we ever implement a "view on wall" button
         },
         setFocusByPosition: (state,action) => {
-            // TODO disable this function while "loading"
-            if (state.focus.loading) return;
-            if (action.payload.row >= state.layout.numRows || action.payload.row < 0) return;
+            if (state.focus.loading) return; // Can't move focus while a note is still loading
+            if (action.payload.row >= state.layout.numRows || action.payload.row < 0) return; // Can't move out of bounds
             if (action.payload.col >= state.layout.numCols || action.payload.col < 0) return;
 
             state.focus.loading = true;
-            state.focus.controls.enabled = false;
+            state.focus.controlsEnabled = false;
             state.focus.position = action.payload;
             // Derive current note from layout position
             state.focus.note = state.layout.array[state.focus.position.row][state.focus.position.col];
+            
+            // Once state.focus.note updates, the <Wall/> component opens focus mode.
         },
         imageLoaded: (state) => {
             state.focus.loading = false;
-            state.focus.controls.enabled = true;
+            state.focus.controlsEnabled = true;
         },
         clearFocus: (state) => {
             state.focus.position = {
@@ -55,10 +54,10 @@ export const wallSlice = createSlice({
             state.focus.note = null;
         },
         disableControls: (state) => {
-            state.focus.controls.enabled = false;
+            state.focus.controlsEnabled = false;
         },
         enableControls: (state) => {
-            state.focus.controls.enabled = true;
+            state.focus.controlsEnabled = true;
         }
     },
     extraReducers: {

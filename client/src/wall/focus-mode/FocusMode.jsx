@@ -6,36 +6,35 @@ import NoteView from "./NoteView";
 import { getNote } from "../../api/wall";
 import './focusMode.css';
 import EditDetails from "./EditDetails";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
-export default function FocusMode() {
+export async function loader({params}) {
+    const noteObj = await getNote(params.noteId);
+    return {noteObj};
+}
 
-    const noteID = useSelector((state)=>state.wall.focus.note);
+export default function FocusMode({noteId}) {
+
+    const navigate = useNavigate();
+    console.log('HELLOOOOO')
+
     const editMode = useSelector((state)=>state.auth.editMode);
-    if (noteID) console.log(`Note ID: ${noteID}`)
+    //if (noteId) console.log(`Note ID: ${noteId}`)
     const [note,setNote] = useState(null);
     // TODO request note object in this component and pass details/url to the child components. avoid re-requests
-    useEffect(()=>{
-        async function getNoteObject() {
-            const noteObj = await getNote(noteID);
-            setNote(noteObj);
-        }
-        if (noteID) {
-            getNoteObject();
-        }
-        else {
-            setNote(null);
-        }
-    },[noteID])
+    
+    const {noteObj} = useLoaderData();
+    console.log(noteObj)
     let noteDetails;
-    if (editMode) noteDetails = <EditDetails note={note}/>
-    else noteDetails = <Details note={note}/>
+    if (editMode) noteDetails = <EditDetails note={noteObj}/>
+    else noteDetails = <Details note={noteObj}/>
 
 
-    if (note) return (
+    if (noteObj) return (
         <div className='overlay'>
             <div className='overlayContents'>
             <div className='leftSide'>
-                <NoteView tilesId={note.tiles}/>
+                <NoteView tilesId={noteObj.tiles}/>
             </div>            
             <div className='rightSide'>
                 {noteDetails}

@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setFocusByPosition, clearFocus } from '../wallSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function Controls(props) {
 
     // current position on wall
     const position = useSelector((state) => state.wall.focus.position);
-    const enabled = useSelector(state=>state.wall.focus.controls.enabled);
+    const enabled = useSelector(state=>state.wall.focus.controlsEnabled);
     const layoutSize = useSelector((state) => ({rows:state.wall.layout.numRows,cols:state.wall.layout.numCols}))
     const dispatch = useDispatch();
-    
+    const navigate = useNavigate();
     // Determine what buttons are disabled based on current position/layout
     const buttons = {
         up:(position.row > 0),
@@ -30,13 +31,18 @@ export default function Controls(props) {
             window.removeEventListener('keydown',keyboardEvent);
         }
     })
+
     const setFocus = (row,col) => {
         dispatch(setFocusByPosition({
             row:row,
             col:col
         }));
-        // TODO update route here
     }
+    const closeFocusMode = () => {
+        dispatch(clearFocus());
+        navigate('/');
+    }
+
     function moveFocus(direction) {
         switch(direction) {
             case 'up':
@@ -56,15 +62,16 @@ export default function Controls(props) {
                 setFocus(position.row,position.col+1)
                 break;
             case 'Escape':
-                dispatch(clearFocus());
+                closeFocusMode();
+                break;
             default:
                 break;
         }
-   }
+    }
 
-   if (props.hidden) {
-    return <></>
-   }
+    if (props.hidden) {
+        return <></>
+    }
     
     const arrowIcons = {
         'up':{
@@ -96,7 +103,7 @@ export default function Controls(props) {
     })
     return (
         <div className='controls'>
-            <div className='close control' onClick={()=>dispatch(clearFocus())}>
+            <div className='close control' onClick={()=>closeFocusMode()}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" stroke="#C5C5C5" viewBox="0 0 14 16">
                     <path d="M1 2L13 14" strokeWidth="2" strokeLinecap="round"/>
                     <path d="M1 14L13 2" strokeWidth="2" strokeLinecap="round"/>

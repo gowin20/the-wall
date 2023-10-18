@@ -63,7 +63,7 @@ export default function NoteView({tilesId}) {
     
     let loadingHTML;
     if (!loaded) {
-        loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='loading.gif' alt='High-resolution image loading...'/></div>
+        loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='/loading.gif' alt='High-resolution image loading...'/></div>
     }
 
     return (
