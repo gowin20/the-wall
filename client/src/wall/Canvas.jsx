@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { setFocusByPosition } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
+import NoteHighlight from './NoteHighlight';
 
 export default function Canvas({ sourceId }) {
 
-    const [viewer, setViewer] = useState(null);
     const currentFocus = useSelector((state) => state.wall.focus);
     const noteImageSize = useSelector((state) => state.wall.layout.noteImageSize);
+    const [dragging,setDragging] = useState(null);
+    const [viewer,setViewer] = useState(null)
     const dispatch = useDispatch();
 
     let dX = 0;
@@ -53,14 +55,19 @@ export default function Canvas({ sourceId }) {
             press = e.position;
             dX = 0;
             dY = 0;
+            // add class to canvas div
+            
         }
         function onCanvasRelease(e) {
+            // remove class from canvas div
+            setDragging(null);
             if (Math.abs(dX) < 2 && Math.abs(dY) < 2) {
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
                 canvasClicked(e,imageCoords);
             }
         }
         function onMouseMove(e) {
+            setDragging('canvasDrag');
             dX = e.position.x - press.x;
             dY = e.position.y - press.y;
         }
@@ -112,8 +119,7 @@ export default function Canvas({ sourceId }) {
         }
     }
 
-
     return (
-        <div id='wallCanvas'></div>
+        <div id='wallCanvas' className={dragging}><NoteHighlight viewer={viewer}/></div>
     )
 }

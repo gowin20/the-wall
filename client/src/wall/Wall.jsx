@@ -4,6 +4,7 @@ import Canvas from './Canvas';
 import { useSelector, useDispatch } from 'react-redux';
 import { setLayout } from './wallSlice';
 import { getDefaultLayout } from '../api/wall';
+import NoteHighlight from './NoteHighlight';
 
 
 export default function Wall() {
@@ -27,6 +28,7 @@ export default function Wall() {
     return (
         <div id="wall" className="with-header-height">
             <FocusMode />
+            <NoteHighlight />
             <Canvas sourceId={layout.image} />
         </div>
     )
