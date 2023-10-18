@@ -73,34 +73,37 @@ export default function Controls(props) {
         return <></>
     }
     
-    const arrowIcons = {
-        'up':{
-            viewBox:'0 0 14 11',
-            path:<><path d="M1 9L7 2" strokeWidth="2" strokeLinecap="round"/><path d="M13 9L7 2" strokeWidth="2" strokeLinecap="round"/></>
-        },
-        'down':{
-            viewBox:'0 0 14 11',
-            path:<><path d="M13 2L7 9" strokeWidth="2" strokeLinecap="round"/><path d="M1 2L7 9" strokeWidth="2" strokeLinecap="round"/></>
-        },
-        'left':{
-            viewBox:'0 0 11 14',
-            path:<><path d="M9 13L2 7" strokeWidth="2" strokeLinecap="round"/><path d="M9 1L2 7" strokeWidth="2" strokeLinecap="round"/></>
-        },
-        'right':{
-            viewBox:'0 0 11 14',
-            path:<><path d="M2 1L9 7" strokeWidth="2" strokeLinecap="round"/><path d="M2 13L9 7" strokeWidth="2" strokeLinecap="round"/></>
+    let arrowButtons;
+    if (props.mode === 'arrows') {
+        const arrowIcons = {
+            'up':{
+                viewBox:'0 0 14 11',
+                path:<><path d="M1 9L7 2" strokeWidth="2" strokeLinecap="round"/><path d="M13 9L7 2" strokeWidth="2" strokeLinecap="round"/></>
+            },
+            'down':{
+                viewBox:'0 0 14 11',
+                path:<><path d="M13 2L7 9" strokeWidth="2" strokeLinecap="round"/><path d="M1 2L7 9" strokeWidth="2" strokeLinecap="round"/></>
+            },
+            'left':{
+                viewBox:'0 0 11 14',
+                path:<><path d="M9 13L2 7" strokeWidth="2" strokeLinecap="round"/><path d="M9 1L2 7" strokeWidth="2" strokeLinecap="round"/></>
+            },
+            'right':{
+                viewBox:'0 0 11 14',
+                path:<><path d="M2 1L9 7" strokeWidth="2" strokeLinecap="round"/><path d="M2 13L9 7" strokeWidth="2" strokeLinecap="round"/></>
+            }
         }
+        arrowButtons = Object.keys(arrowIcons).map((direction) => {
+            return (
+                <div key={direction} className={direction + ' control'} onClick={()=> buttons[direction] ? moveFocus(direction) : ''}>
+                    <svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' stroke={buttons[direction] ? '#C5C5C5' : '#666'} viewBox={arrowIcons[direction].viewBox}>
+                        {arrowIcons[direction].path}
+                    </svg>
+                </div>
+            )
+        })
     }
-
-    const arrowButtons = Object.keys(arrowIcons).map((direction) => {
-        return (
-            <div key={direction} className={direction + ' control'} onClick={()=> buttons[direction] ? moveFocus(direction) : ''}>
-                <svg xmlns='http://www.w3.org/2000/svg' width='22' height='22' stroke={buttons[direction] ? '#C5C5C5' : '#666'} viewBox={arrowIcons[direction].viewBox}>
-                    {arrowIcons[direction].path}
-                </svg>
-            </div>
-        )
-    })
+    
     return (
         <div className='controls'>
             <div className='close control' onClick={()=>closeFocusMode()}>

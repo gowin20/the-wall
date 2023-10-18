@@ -38,7 +38,7 @@ export default function FocusMode({noteId}) {
             </div>            
             <div className='rightSide'>
                 {noteDetails}
-                <Controls hidden={true} />     
+                <Controls />     
             </div>
             </div>
         </div>
