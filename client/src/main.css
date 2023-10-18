@@ -54,10 +54,7 @@
 }
 
 #noteHighlight {
-
     box-shadow: 0px 0px 5px 2px #303030;
-    position:absolute;
-    z-index:2;
 }
 
 .canvasDrag {
