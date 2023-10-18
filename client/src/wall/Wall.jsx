@@ -5,6 +5,7 @@ import { setLayout } from './wallSlice';
 import { getDefaultLayout } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
 import { Outlet, useNavigate } from 'react-router-dom';
+import './wall.css';
 
 
 export default function Wall() {

@@ -10,6 +10,7 @@ export const wallSlice = createSlice({
         layout: { // full mongo layout object
             image:null
         },
+        zoom: null,
         focus: {
             note:null, // note ID
             loading:false,
@@ -58,6 +59,9 @@ export const wallSlice = createSlice({
         },
         enableControls: (state) => {
             state.focus.controlsEnabled = true;
+        },
+        updateZoom: (state, {payload}) => {
+            state.zoom = payload;
         }
     },
     extraReducers: {
@@ -73,6 +77,6 @@ export const wallSlice = createSlice({
     }
 })
 
-export const {setLayout,setFocusByPosition,setFocusByNote,clearFocus,disableControls,enableControls,imageLoaded} = wallSlice.actions;
+export const {setLayout,setFocusByPosition,setFocusByNote,clearFocus,disableControls,enableControls,updateZoom,imageLoaded} = wallSlice.actions;
 
 export default wallSlice.reducer;

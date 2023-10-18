@@ -1,7 +1,7 @@
 import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { setFocusByPosition } from './wallSlice';
+import { setFocusByPosition, updateZoom } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
 
@@ -51,6 +51,8 @@ export default function Canvas({ sourceId }) {
         })
         setViewer(thisViewer);
 
+        // TODO dispatch set zoom level to whatever i decide on
+
         function onCanvasPress(e) {
             press = e.position;
             dX = 0;
@@ -58,6 +60,8 @@ export default function Canvas({ sourceId }) {
             // add class to canvas div
             
         }
+        thisViewer.addHandler('canvas-press', onCanvasPress);
+
         function onCanvasRelease(e) {
             // remove class from canvas div
             setDragging(null);
@@ -66,18 +70,26 @@ export default function Canvas({ sourceId }) {
                 canvasClicked(e,imageCoords);
             }
         }
+        thisViewer.addHandler('canvas-release', onCanvasRelease);
+
         function onMouseMove(e) {
             setDragging('canvasDrag');
             dX = e.position.x - press.x;
             dY = e.position.y - press.y;
         }
+        thisViewer.addHandler('canvas-drag',onMouseMove);
+
         function onCanvasClick(e) {
             e.preventDefaultAction = true;
         }
-        thisViewer.addHandler('canvas-press', onCanvasPress);
-        thisViewer.addHandler('canvas-release', onCanvasRelease);
-        thisViewer.addHandler('canvas-drag',onMouseMove);
         thisViewer.addHandler('canvas-click',onCanvasClick);
+
+        function onZoom(e) {
+            const zoomLevel = thisViewer.viewport.getZoom();
+            if (zoomLevel > thisViewer.maxZoomLevel || zoomLevel < thisViewer.minZoomLevel) return;
+            dispatch(updateZoom(thisViewer.viewport.getZoom()));
+        }
+        thisViewer.addHandler('zoom',onZoom);
         
     }
 
