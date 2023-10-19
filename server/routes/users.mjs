@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllUsers, getUserByID, getUserByUsername, registerUser } from "../db/crud-users.mjs";
+import { getAllUsers, getUserByID, getUserByUsername, insertFakeUser, registerUser } from "../db/crud-users.mjs";
 import { getNotesByUser } from "../db/crud-notes.mjs";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
@@ -28,6 +28,14 @@ router.get('/id/:id/notes', async (req,res) => {
   else res.send(result).status(200);
 })
 
+router.post('/create', verifyJWT, async (req,res) => {
+
+  // 'Create' takes a name only
+  const creatorInfo = req.body;
+  const result = await insertFakeUser(creatorInfo.name);
+  if (result) res.status(200).json({message:'Successfully added new creator.'});
+  else res.status(500).json({message:'Unable to add creator.'})
+})
 
 /*
 Auth code
