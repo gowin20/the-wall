@@ -9,17 +9,17 @@ const NoteHighlight = ({viewer}) => {
 
     const noteImageSize = useSelector((state) => state.wall.layout.noteImageSize);
     const zoomLevel = useSelector((state)=>state.wall.zoom);
-    const [gridPos, setGridPos] = useState({row:0,col:0})
+    const focusModeOn = useSelector((state)=>state.wall.focus.note);
+    const [gridPos, setGridPos] = useState({row:0,col:0});
 
     useEffect(()=>{
-        window.addEventListener('mousemove',(e=>{
-            //TODO check that we're inside of the viewer
+        document.getElementById('wall').addEventListener('mousemove',(e=>{
             const imageCoords = viewer.viewport.windowToImageCoordinates(new OpenSeadragon.Point(e.x,e.y));
-            //console.log(imageCoords,noteImageSize);
             const currentRow = Math.floor(imageCoords.y / noteImageSize);
             const currentCol = Math.floor(imageCoords.x / noteImageSize);
 
             if (gridPos.col !== currentCol || gridPos.row != currentRow) {
+                // Need to set these before calling setGridPos because of some weird reason I don't understand
                 gridPos.col = currentCol;
                 gridPos.row = currentRow;
                 setGridPos({col:gridPos.col,row:gridPos.row});
@@ -27,17 +27,17 @@ const NoteHighlight = ({viewer}) => {
         }))
     },[gridPos])
 
+    //TODO disable when mouse is outside of the viewer div
+    if (focusModeOn) return <div id="noteHighlight"/>;
     if (!document.getElementById('noteHighlight')) return <div id="noteHighlight"/>;
 
-    // when row and col changes
-    // TODO find the top left corner instead
+    // Position highlight box evenly with note grid
     const topEdge = gridPos.row * noteImageSize;
     const leftEdge = gridPos.col * noteImageSize;
 
-    // TODO subscribe to zoom level and change these values dynamically
-    const adjustment = 10 - zoomLevel;
-    console.log(adjustment);
-    const overlayRect = viewer.viewport.imageToViewportRectangle(leftEdge+adjustment,topEdge,noteImageSize-adjustment,noteImageSize);
+    const leftAdjustment = 8 - zoomLevel;
+    const topAdjustment = 8 - zoomLevel;
+    const overlayRect = viewer.viewport.imageToViewportRectangle(leftEdge+leftAdjustment,topEdge+topAdjustment,noteImageSize-leftAdjustment,noteImageSize-topAdjustment);
 
     viewer.clearOverlays();
     viewer.addOverlay({

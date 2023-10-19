@@ -13,22 +13,14 @@ export async function loader({params}) {
     return {noteObj};
 }
 
-export default function FocusMode({noteId}) {
-
-    const navigate = useNavigate();
-    console.log('HELLOOOOO')
+export default function FocusMode() {
 
     const editMode = useSelector((state)=>state.auth.editMode);
-    //if (noteId) console.log(`Note ID: ${noteId}`)
-    const [note,setNote] = useState(null);
-    // TODO request note object in this component and pass details/url to the child components. avoid re-requests
-    
     const {noteObj} = useLoaderData();
-    console.log(noteObj)
+
     let noteDetails;
     if (editMode) noteDetails = <EditDetails note={noteObj}/>
     else noteDetails = <Details note={noteObj}/>
-
 
     if (noteObj) return (
         <div className='overlay'>

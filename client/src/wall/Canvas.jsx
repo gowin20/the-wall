@@ -37,6 +37,7 @@ export default function Canvas({ sourceId }) {
         const thisViewer = OpenSeadragon({
             id: 'wallCanvas',
             prefixUrl: "/openseadragon-buttons/",
+            showFullPageControl:false,
             tileSources: tileSource,
             animationTime: 0.5,
             blendTime: 0.1,
@@ -45,13 +46,14 @@ export default function Canvas({ sourceId }) {
             maxZoomPixelRatio: 2,
             minZoomLevel: 1,
             maxZoomLevel:7,
+            defaultZoomLevel:2.5,
             visibilityRatio: 1,
             constrainDuringPan: true,
             zoomPerScroll: 2
         })
         setViewer(thisViewer);
 
-        // TODO dispatch set zoom level to whatever i decide on
+        dispatch(updateZoom(thisViewer.viewport.getZoom()));
 
         function onCanvasPress(e) {
             press = e.position;
@@ -105,7 +107,6 @@ export default function Canvas({ sourceId }) {
             row:clickedRow,
             col:clickedCol
         }));
-        // TODO update route here
     }
 
     function disableKeyboardControls(e) {

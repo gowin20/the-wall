@@ -30,7 +30,7 @@ export default function Wall() {
         if (focusedNote) {
             navigate(`/note/${focusedNote}`)
         }
-    },focusedNote);
+    },[focusedNote]);
     return (
         <div id="wall" className="with-header-height">
             <Outlet />

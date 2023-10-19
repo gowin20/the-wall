@@ -2,7 +2,7 @@ import React, { useEffect,useState } from 'react';
 import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
 import { imageLoaded } from '../wallSlice';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function NoteView({tilesId}) {
     //console.log(`Note DZI: ${tilesId}`)
@@ -11,7 +11,7 @@ export default function NoteView({tilesId}) {
         return <></>
     };
     const [viewer, setViewer] = useState(null);
-    const [loaded,setLoaded] = useState(false);
+    const loading = useSelector(state=>state.wall.focus.loading);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -32,7 +32,6 @@ export default function NoteView({tilesId}) {
 
     const initViewer = (tileSource) => {
         viewer && viewer.destroy();
-        setLoaded(false);
         const thisViewer = OpenSeadragon({
             id:'noteViewer',
             prefixUrl: "/openseadragon-buttons/",
@@ -47,13 +46,10 @@ export default function NoteView({tilesId}) {
         thisViewer.addHandler('open', () => {
             const image = thisViewer.world.getItemAt(0);
             if (image.getFullyLoaded()) {
-                setLoaded(true);
                 dispatch(imageLoaded());
             }
             else {
-                // TODO disable keyboard arrow keys until image is fully loaded
                 image.addOnceHandler('fully-loaded-change',() => {
-                    setLoaded(true);
                     dispatch(imageLoaded());
                 })
             }
@@ -62,7 +58,7 @@ export default function NoteView({tilesId}) {
     }
     
     let loadingHTML;
-    if (!loaded) {
+    if (loading) {
         loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='/loading.gif' alt='High-resolution image loading...'/></div>
     }
 

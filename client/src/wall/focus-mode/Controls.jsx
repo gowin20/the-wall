@@ -19,8 +19,7 @@ export default function Controls(props) {
         right:(position.col < layoutSize.cols-1)
     }
     
-    // TODO disble button icons on mobile, otherwise always included 
-    // always enable keyboard and swipe event listeners
+    // TODO fix the CSS of this class along with the rest of focus mode
 
     useEffect(() => {
         function keyboardEvent(e) {
