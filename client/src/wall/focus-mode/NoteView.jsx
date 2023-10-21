@@ -3,12 +3,14 @@ import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
 import { imageLoaded } from '../wallSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import './focusMode.css';
 
 export default function NoteView({tilesId}) {
+    let loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='/loading.gif' alt='High-resolution image loading...'/></div>;
+    const html = <div id='noteViewer' className='noteImage'>{loadingHTML}</div>;
     //console.log(`Note DZI: ${tilesId}`)
     if (!tilesId) {
-        //throw new Error('No tiles available for selected note.')
-        return <></>
+        return html
     };
     const [viewer, setViewer] = useState(null);
     const loading = useSelector(state=>state.wall.focus.loading);
@@ -25,9 +27,6 @@ export default function NoteView({tilesId}) {
             setupNoteView();
         }
 
-        return () => {
-            viewer && viewer.destroy();
-        }
     },[tilesId])
 
     const initViewer = (tileSource) => {
@@ -57,12 +56,11 @@ export default function NoteView({tilesId}) {
 
     }
     
-    let loadingHTML;
-    if (loading) {
-        loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='/loading.gif' alt='High-resolution image loading...'/></div>
+    if (!loading) {
+        loadingHTML = null;
     }
 
     return (
-        <div id='noteViewer' className='noteImage'>{loadingHTML}</div>
+        html
     )
 }

@@ -15,7 +15,7 @@ export const wallSlice = createSlice({
             note:null, // note ID
             loading:false,
             position:{
-                row:null,
+                row:null, // TODO initialize these values based on the current ROUTE
                 col:null
             },
             controlsEnabled:true
@@ -31,6 +31,7 @@ export const wallSlice = createSlice({
             // this function is not currently necessary but will be used if we ever implement a "view on wall" button
         },
         setFocusByPosition: (state,action) => {
+
             if (state.focus.loading) return; // Can't move focus while a note is still loading
             if (action.payload.row >= state.layout.numRows || action.payload.row < 0) return; // Can't move out of bounds
             if (action.payload.col >= state.layout.numCols || action.payload.col < 0) return;

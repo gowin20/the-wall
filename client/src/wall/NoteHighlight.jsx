@@ -5,8 +5,6 @@ import OpenSeadragon from "openseadragon";
 
 const NoteHighlight = ({viewer}) => {
 
-    if (!viewer) return;
-
     const noteImageSize = useSelector((state) => state.wall.layout.noteImageSize);
     const zoomLevel = useSelector((state)=>state.wall.zoom);
     const focusModeOn = useSelector((state)=>state.wall.focus.note);
@@ -14,6 +12,7 @@ const NoteHighlight = ({viewer}) => {
 
     useEffect(()=>{
         document.getElementById('wall').addEventListener('mousemove',(e=>{
+            if (!viewer) return;
             const imageCoords = viewer.viewport.windowToImageCoordinates(new OpenSeadragon.Point(e.x,e.y));
             const currentRow = Math.floor(imageCoords.y / noteImageSize);
             const currentCol = Math.floor(imageCoords.x / noteImageSize);
@@ -25,9 +24,9 @@ const NoteHighlight = ({viewer}) => {
                 setGridPos({col:gridPos.col,row:gridPos.row});
             }
         }))
-    },[gridPos])
+    },[gridPos, viewer])
 
-    //TODO disable when mouse is outside of the viewer div
+    if (!viewer) return;
     if (focusModeOn) return <div id="noteHighlight"/>;
     if (!document.getElementById('noteHighlight')) return <div id="noteHighlight"/>;
 

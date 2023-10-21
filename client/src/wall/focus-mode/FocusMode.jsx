@@ -27,7 +27,7 @@ export default function FocusMode() {
             <div className='overlayContents'>
             <div className='leftSide'>
                 <NoteView tilesId={noteObj.tiles}/>
-            </div>            
+            </div>    
             <div className='rightSide'>
                 {noteDetails}
                 <Controls />     
