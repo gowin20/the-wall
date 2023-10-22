@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setEditMode, logOut } from "../auth/authSlice";
 import './admin.css';
 import { useNavigate } from "react-router-dom";

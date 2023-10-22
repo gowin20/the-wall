@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { listCreators } from "./creatorActions";
+import { listCreators, addCreator } from "./creatorActions";
 // Slice used for the following:
 // listing all note creators
 // Tracking information related to a selected profile page
@@ -25,6 +25,16 @@ const creatorsSlice = createSlice({
         },
         [listCreators.rejected]: (state, response) => {
             console.error(response)
+        },
+        [addCreator.pending]: (state) => {
+            console.log('Adding creator...')
+        },
+        [addCreator.fulfilled]: (state, {payload}) => {
+            console.log('Creator added.')
+            state.creatorList.items = [...state.creatorList, payload];
+        },
+        [addCreator.rejected]: (state, response) => {
+            console.error(response);
         }
     }
 })

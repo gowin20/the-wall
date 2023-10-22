@@ -7,6 +7,7 @@ import { patchNote } from "./wallActions";
 export const wallSlice = createSlice({
     name:'wall',
     initialState: {
+        layoutLoaded:false,
         layout: { // full mongo layout object
             image:null
         },
@@ -14,6 +15,7 @@ export const wallSlice = createSlice({
         focus: {
             note:null, // note ID
             loading:false,
+            initialized:false,
             position:{
                 row:null, // TODO initialize these values based on the current ROUTE
                 col:null
@@ -25,23 +27,48 @@ export const wallSlice = createSlice({
         setLayout: (state,action) => {
             //Input: Atlas layout object
             state.layout = action.payload;
+            state.layoutLoaded = true;
         },
+        // Set the focus by searching for a note ID in the layout's 2d array - O(mn)
         setFocusByNote: (state, action) => {
-            state.focus.note = action.payload;
-            // this function is not currently necessary but will be used if we ever implement a "view on wall" button
-        },
-        setFocusByPosition: (state,action) => {
+            // This function only executes when a note is loaded from a router URL. Return if things have already been initialized.
+            if (state.focus.initialized || !state.layoutLoaded) return;
 
-            if (state.focus.loading) return; // Can't move focus while a note is still loading
+            state.focus.loading = true;
+            state.focus.controlsEnabled = false;
+
+            // Set focused note
+            state.focus.note = action.payload;
+
+            // Find row and column based on note ID
+            for (let i=0;i<state.layout.array.length;i++){
+                for (let j=0;j<state.layout.array[i].length;j++) {
+                    if (state.layout.array[i][j] === action.payload) {
+                        state.focus.position = {
+                            row:i,
+                            col:j
+                        }
+                    }
+                }
+            }
+            state.focus.initialized = true;
+        },
+
+        // Set the focus by accessing a row and column in the layout's 2d array - O(1)
+        setFocusByPosition: (state,action) => {
+            if (state.focus.loading || !state.layoutLoaded) return; // Can't change focus while things are loading
             if (action.payload.row >= state.layout.numRows || action.payload.row < 0) return; // Can't move out of bounds
             if (action.payload.col >= state.layout.numCols || action.payload.col < 0) return;
 
             state.focus.loading = true;
             state.focus.controlsEnabled = false;
+
+            // Set row and column
             state.focus.position = action.payload;
-            // Derive current note from layout position
+            // Set note ID by accessing layout
             state.focus.note = state.layout.array[state.focus.position.row][state.focus.position.col];
-            
+
+            state.focus.initialized = true;
             // Once state.focus.note updates, the <Wall/> component opens focus mode.
         },
         imageLoaded: (state) => {

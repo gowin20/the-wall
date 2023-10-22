@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { useDispatch,useSelector } from 'react-redux';
 import { useVerifyLoginQuery } from './auth/authApi';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,7 +7,6 @@ export default function Header() {
     const [userInfo,setUserInfo] = useState(null);
     const navigate = useNavigate();
     useEffect(()=>{
-        console.log(data)
         if (data && data.isLoggedIn) setUserInfo(data.userInfo);
     }, [data])
 

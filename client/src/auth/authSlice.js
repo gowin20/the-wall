@@ -8,7 +8,6 @@ if (editMode && !userToken) {
     editMode = false;
 }
 
-console.log('edit mode is',editMode);
 const identitySlice = createSlice({
     name: 'identity',
     initialState: {
@@ -55,7 +54,7 @@ const identitySlice = createSlice({
             state.success = true;
         },
         [logIn.rejected]: (state, {payload}) => {
-            console.log(payload)
+            //console.log(payload)
             state.loading = false;
             state.error = payload;
         }

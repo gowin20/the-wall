@@ -6,7 +6,7 @@ import { useVerifyLoginQuery } from './authApi';
 import { setCredentials } from './authSlice';
 
 const Login = () => {
-    const {loading, userInfo, error, success} = useSelector((state)=>state.auth);
+    const userInfo = useSelector((state)=>state.auth.userInfo);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

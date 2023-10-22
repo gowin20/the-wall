@@ -31,6 +31,7 @@ const EditDetails = ({ note }) => {
     const noteId = note._id;
     const postEdits = (e) => {
         e.preventDefault();
+        console.log('ACTUALLY POSTING EDITS')
         const creatorId = e.target[0].value;
         const noteInfo = {}
 
@@ -39,7 +40,7 @@ const EditDetails = ({ note }) => {
         if (details.location !== "") noteInfo.location = details.location;
         if (details.date !== "") noteInfo.date = details.date;
         if (details.description !== "") noteInfo.details = details.description;
-        console.log(noteId,noteInfo);
+        //console.log(noteId,noteInfo);
         dispatch(patchNote({id:noteId, info:noteInfo}))
         setDetails({
             ...details,
