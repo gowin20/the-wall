@@ -64,5 +64,10 @@ input:checked + .slider:before {
 .adminLink {
   text-decoration: underline;
   color:blue;
-  cursor:pointer
+  cursor:pointer;
+  margin: 5px 0px;
+}
+
+.layoutGenerator {
+
 }
