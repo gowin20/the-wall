@@ -1,7 +1,7 @@
-import {SERVER_DOMAIN} from './api.js';
+import {SERVER_URL} from './api.js';
 
 export const getDefaultLayout = async () => {
-    const response = await fetch(SERVER_DOMAIN+'/layouts/default');
+    const response = await fetch(SERVER_URL+'/layouts/default');
     const layout = await response.json();
     return layout;
 }
@@ -9,7 +9,7 @@ export const getDefaultLayout = async () => {
 export const getZoomableImage = async (id) => {
 
     // 1. search DZI collection
-    const response = await fetch(SERVER_DOMAIN+'/dzis/id/'+id);
+    const response = await fetch(SERVER_URL+'/dzis/id/'+id);
     if (response.status == 200) {
         const dzi = await response.json();
         return dzi;
@@ -20,7 +20,7 @@ export const getZoomableImage = async (id) => {
 
 export const getNote = async (id) => {
 
-    const response = await fetch(SERVER_DOMAIN+'/notes/id/'+id);
+    const response = await fetch(SERVER_URL+'/notes/id/'+id);
     if (response.status == 200) {
         const noteObj = await response.json();
         return noteObj;

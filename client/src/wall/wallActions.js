@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import store from "../store";
-const backendURL = 'http://localhost:5050/';
+import { SERVER_URL } from "../api/api";
 
 export const patchNote = createAsyncThunk(
     'patchNote',
@@ -15,7 +15,7 @@ export const patchNote = createAsyncThunk(
             do NOT accept thumbnails, tiles, orig, or _id as params
             */
             console.log('Token:',token)
-            const response = await fetch(`${backendURL}notes/id/${id}`, {
+            const response = await fetch(`${SERVER_URL}notes/id/${id}`, {
                 method:'PATCH',
                 body: JSON.stringify(info),
                 headers:{

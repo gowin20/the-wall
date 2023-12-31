@@ -1,11 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-const backendURL = 'http://localhost:5050/';
+import { SERVER_URL } from "../api/api";
 
 export const logIn = createAsyncThunk(
     'users/loginStatus',
     async ({username, password}, { rejectWithValue }) => {
         try {
-            const response = await fetch(`${backendURL}users/login`, {
+            const response = await fetch(`${SERVER_URL}users/login`, {
                 method:'POST',
                 body: JSON.stringify({
                     username:username,

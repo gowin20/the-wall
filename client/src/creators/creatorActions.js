@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import store from "../store";
-const backendURL = 'http://localhost:5050/';
+import { SERVER_URL } from "../api/api";
 
 export const listCreators = createAsyncThunk(
     'listCreators',
     async (_,{rejectWithValue}) => {
         try {
-            const response = await fetch(`${backendURL}users/`, {
+            const response = await fetch(`${SERVER_URL}users/`, {
                 method:'GET'
             });
             const data = await response.json();
@@ -25,7 +25,7 @@ export const addCreator = createAsyncThunk(
         console.log('Adding creator',name);
         try {
             const token = store.getState().auth.userToken;
-            const response = await fetch(`${backendURL}users/create`,{
+            const response = await fetch(`${SERVER_URL}users/create`,{
                 method:'POST',
                 body:JSON.stringify({
                     name:name
