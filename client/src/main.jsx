@@ -8,7 +8,6 @@ import ErrorPage from './ErrorPage';
 import Login from './auth/Login';
 import AdminPanel from './admin/AdminPanel';
 import RequireAdmin from './auth/RequireAdmin';
-import LayoutGenerator from './admin/LayoutGenerator';
 import FocusMode, {loader as noteLoader} from './wall/focus-mode/FocusMode';
 
 const router = createBrowserRouter([
@@ -38,13 +37,7 @@ const router = createBrowserRouter([
     },
     {
         path:'admin',
-        element:<RequireAdmin><AdminPanel/></RequireAdmin>,
-        children: [
-            {
-                path:'layout-generator',
-                element:<RequireAdmin><LayoutGenerator/></RequireAdmin>
-            }
-        ]
+        element:<RequireAdmin><AdminPanel/></RequireAdmin>
     }
 ])
 
