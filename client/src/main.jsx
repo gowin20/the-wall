@@ -8,7 +8,7 @@ import ErrorPage from './ErrorPage';
 import Login from './auth/Login';
 import AdminPanel from './admin/AdminPanel';
 import RequireAdmin from './auth/RequireAdmin';
-import LayoutGenerator from './admin/LayoutGenerator';
+import LayoutGenerator from './admin/layout-generator/LayoutGenerator';
 import FocusMode, {loader as noteLoader} from './wall/focus-mode/FocusMode';
 
 const router = createBrowserRouter([

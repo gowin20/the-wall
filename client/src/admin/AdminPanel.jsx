@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { useNavigate } from "react-router-dom";
-import LayoutGenerator from "./LayoutGenerator";
+import LayoutGenerator from "./layout-generator/LayoutGenerator";
 import AdminConfig from "./AdminConfig";
 
 

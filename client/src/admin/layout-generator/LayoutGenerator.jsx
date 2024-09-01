@@ -8,7 +8,7 @@ const LayoutGenerator = () => {
         <div className="layoutGenerator">
             Layout Generator
         </div>
-        <div className="generatorSteps">
+        <div className="">
 
         </div>
         <div className="generatorControls">
