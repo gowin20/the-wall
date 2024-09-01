@@ -1,7 +1,33 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { logIn } from "./authActions";
-const userToken = localStorage.getItem('userToken') ? localStorage.getItem('userToken') : null;
+import { UserObject } from "../creators/creatorTypes";
+import { AuthToken } from "./authTypes";
+import { authApi } from "./authApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
+
+console.log();
+
+export interface AuthState {
+    userInfo: UserObject | null;
+    userToken: AuthToken;
+    editMode: boolean;
+    loading: boolean;
+    success: boolean;
+    error: string | null | undefined | FetchBaseQueryError;
+}
+
+// Load properties from local storage
+const userToken = localStorage.getItem('userToken') ? localStorage.getItem('userToken') : undefined;
 let editMode = (localStorage.getItem('editMode') === 'enabled') ? true : false;
+
+const initialState : AuthState = {
+    userInfo: null,
+    userToken,
+    editMode,
+    loading: false,
+    error: null,
+    success: false
+}
 
 if (editMode && !userToken) {
     localStorage.removeItem('editMode');
@@ -10,14 +36,7 @@ if (editMode && !userToken) {
 
 const identitySlice = createSlice({
     name: 'identity',
-    initialState: {
-        userInfo: {},
-        userToken,
-        editMode,
-        loading: false,
-        error: null,
-        success: false
-    },
+    initialState,
     reducers: {
         setEditMode: (state, action) => {
             //if (!state.userInfo) throw new Error('you shouldn\'t be here');
@@ -28,11 +47,12 @@ const identitySlice = createSlice({
             else localStorage.setItem('editMode','disabled');
         },
         setCredentials: (state, action) => {
+            console.log('setCredentials called',action.payload)
             state.userInfo = action.payload;
         },
         logOut: (state) => {
-            state.userInfo = {};
-            state.userToken = null;
+            state.userInfo = null;
+            state.userToken = undefined;
 
             localStorage.removeItem('editMode');
             localStorage.removeItem('userToken');
@@ -40,24 +60,28 @@ const identitySlice = createSlice({
             console.log('loggingout',localStorage.getItem('userToken'));
         }
     },
-    extraReducers: {
-        [logIn.pending]: (state) => {
+    extraReducers: (builder) => {
+
+        builder.addMatcher(authApi.endpoints.login.matchPending, (state) => {
             console.log('spinny thing')
             state.loading = true;
             state.error = null;
-        },
-        [logIn.fulfilled]: (state, {payload}) => {
+        });
+
+        builder.addMatcher(authApi.endpoints.login.matchFulfilled, (state, {payload}) => {
             console.log('hurray')
             state.loading = false;
             state.userInfo = payload.userInfo;
             state.userToken = payload.token;
             state.success = true;
-        },
-        [logIn.rejected]: (state, {payload}) => {
-            //console.log(payload)
+        });
+
+        builder.addMatcher(authApi.endpoints.login.matchRejected, (state, action) => {
+            console.log(action.payload)
+
             state.loading = false;
-            state.error = payload;
-        }
+            state.error = action.payload;
+        });
     }
 })
 

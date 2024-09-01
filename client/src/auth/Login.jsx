@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch,useAppSelector } from "../hooks";
 import { logIn } from './authActions';
 import { useNavigate } from 'react-router-dom';
 import { useVerifyLoginQuery } from './authApi';
 import { setCredentials } from './authSlice';
+import { useLazyLoginQuery } from './authApi';
 
 const Login = () => {
-    const userInfo = useSelector((state)=>state.auth.userInfo);
-    const dispatch = useDispatch();
+    const userInfo = useAppSelector((state)=>state.auth.userInfo);
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    const [loginTrigger, result, lastPromiseInfo] = useLazyLoginQuery();
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -16,7 +19,7 @@ const Login = () => {
             username:e.target[0].value,
             password:e.target[1].value
         };
-        dispatch(logIn(userInfo));
+        loginTrigger(userInfo);
     }
 
     const {data, isFetching} = useVerifyLoginQuery('', {pollingInterval:900000});
@@ -28,8 +31,8 @@ const Login = () => {
     }, [data])
 
     useEffect(()=>{
-        if (userInfo.username) navigate('/');
-    },[userInfo.username])
+        if (userInfo && userInfo.username) navigate('/');
+    },[userInfo])
 
     return (
         <form onSubmit={handleLogin}>
