@@ -2,14 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux'
-import store from './store';
-import App from './App.jsx';
-import ErrorPage from './ErrorPage';
-import Login from './auth/Login';
-import AdminPanel from './admin/AdminPanel';
-import RequireAdmin from './auth/RequireAdmin';
-import LayoutGenerator from './admin/layout-generator/LayoutGenerator';
-import FocusMode, {loader as noteLoader} from './wall/focus-mode/FocusMode';
+
+import {store} from './store.js';
+
+import App from './App.tsx';
+import ErrorPage from './ErrorPage.jsx';
+import Login from './auth/Login.jsx';
+import AdminPanel from './admin/AdminPanel.jsx';
+import RequireAdmin from './auth/RequireAdmin.jsx';
+import LayoutGenerator from './admin/layout-generator/LayoutGenerator.jsx';
+import FocusMode, {loader as noteLoader} from './wall/focus-mode/FocusMode.jsx';
+
 
 const router = createBrowserRouter([
     {
@@ -48,8 +51,11 @@ const router = createBrowserRouter([
     }
 ])
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-    <Provider store={store}>
-        <RouterProvider router={router}/>
-    </Provider>
-)
+const root = document.getElementById('root');
+if (root) {
+    ReactDOM.createRoot(root).render(
+        <Provider store={store}>
+            <RouterProvider router={router}/>
+        </Provider>
+    )
+}

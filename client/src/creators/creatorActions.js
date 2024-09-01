@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import store from "../store";
+import {store} from "../store";
 const backendURL = 'http://localhost:5050/';
 
 export const listCreators = createAsyncThunk(
