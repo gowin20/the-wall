@@ -1,17 +1,17 @@
 import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
 
 export default function Canvas({ sourceId }) {
 
-    const currentFocus = useSelector((state) => state.wall.focus);
-    const noteImageSize = useSelector((state) => state.wall.layout.noteImageSize);
+    const currentFocus = useAppSelector((state) => state.wall.focus);
+    const noteImageSize = useAppSelector((state) => state.wall.layout.noteImageSize);
     const [dragging,setDragging] = useState(null);
     const [viewer,setViewer] = useState(null)
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     let dX = 0;
     let dY = 0;

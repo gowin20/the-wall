@@ -1,7 +1,7 @@
 import React, {useState,useEffect} from "react";
 import CreatorSelector from "../../creators/CreatorSelector";
 import { patchNote } from "../wallActions";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../hooks";
 import { disableControls,enableControls } from "../wallSlice";
 
 const EditDetails = ({ note }) => {
@@ -24,7 +24,7 @@ const EditDetails = ({ note }) => {
         location: note.location ? note.location : '',
         description:note.details ? note.details : ''
     });
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
 
     if (!details) return <></>;
@@ -32,6 +32,8 @@ const EditDetails = ({ note }) => {
     const postEdits = (e) => {
         e.preventDefault();
         console.log('ACTUALLY POSTING EDITS')
+        if (details._id || info.orig || info.thumbnails || info.tiles) return console.error('Cannot edit protected value.');
+
         const creatorId = e.target[0].value;
         const noteInfo = {}
 
@@ -40,8 +42,10 @@ const EditDetails = ({ note }) => {
         if (details.location !== "") noteInfo.location = details.location;
         if (details.date !== "") noteInfo.date = details.date;
         if (details.description !== "") noteInfo.details = details.description;
+
+        
         //console.log(noteId,noteInfo);
-        dispatch(patchNote({id:noteId, info:noteInfo}))
+        dispatch(patchNote({_id:noteId, info:noteInfo}))
         setDetails({
             ...details,
             creatorId:creatorId

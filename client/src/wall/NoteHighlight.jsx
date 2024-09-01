@@ -1,13 +1,13 @@
-import { useSelector } from "react-redux";
+import { useAppSelector } from "../hooks";
 import React, { useEffect, useState } from "react";
 import OpenSeadragon from "openseadragon";
 
 
 const NoteHighlight = ({viewer}) => {
 
-    const noteImageSize = useSelector((state) => state.wall.layout.noteImageSize);
-    const zoomLevel = useSelector((state)=>state.wall.zoom);
-    const focusModeOn = useSelector((state)=>state.wall.focus.note);
+    const noteImageSize = useAppSelector((state) => state.wall.layout.noteImageSize);
+    const zoomLevel = useAppSelector((state)=>state.wall.zoom);
+    const focusModeOn = useAppSelector((state)=>state.wall.focus.note);
     const [gridPos, setGridPos] = useState({row:0,col:0});
 
     useEffect(()=>{

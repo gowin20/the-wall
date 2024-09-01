@@ -1,19 +1,18 @@
 import React, { useEffect } from 'react';
 import Canvas from './Canvas';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch,useAppSelector } from "../hooks";
 import { setLayout } from './wallSlice';
 import { getDefaultLayout } from '../api/wall';
-import NoteHighlight from './NoteHighlight';
 import { Outlet, useNavigate } from 'react-router-dom';
 import './wall.css';
 
 
 export default function Wall() {
 
-    const layout = useSelector((state) => state.wall.layout);
-    const focusedNote = useSelector((state)=>state.wall.focus.note);
+    const layout = useAppSelector((state) => state.wall.layout);
+    const focusedNote = useAppSelector((state)=>state.wall.focus.note);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     
     // Fetch layout and image data (TODO create async thunk for this);
     useEffect(() => {
@@ -34,7 +33,6 @@ export default function Wall() {
     return (
         <div id="wall" className="with-header-height">
             <Outlet />
-            <NoteHighlight />
             <Canvas sourceId={layout.image} />
         </div>
     )

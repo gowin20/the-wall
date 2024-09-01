@@ -1,13 +1,20 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import {store} from "../store";
-const backendURL = 'http://localhost:5050/';
+import { SERVER_DOMAIN } from "../config";
+import { NoteId, NoteInfo } from "./wallTypes";
+import { AuthToken } from "../auth/authTypes";
+
+// TODO rebuild as api function
+
+
+interface NoteUpdate {
+    _id: NoteId;
+    info: NoteInfo
+} 
 
 export const patchNote = createAsyncThunk(
     'patchNote',
-    async (note,{rejectWithValue}) => {
-        const id = note.id;
-        const info = note.info;
-        if (info._id || info.orig || info.thumbnails || info.tiles) return rejectWithValue('Cannot edit protected value.');
+    async ({_id, info} : NoteUpdate,{rejectWithValue}) => {
         try {
             const token = store.getState().auth.userToken;
             // noteInfo must contain valid note info params, specifially:
@@ -15,7 +22,7 @@ export const patchNote = createAsyncThunk(
             do NOT accept thumbnails, tiles, orig, or _id as params
             */
             console.log('Token:',token)
-            const response = await fetch(`${backendURL}notes/id/${id}`, {
+            const response = await fetch(`${SERVER_DOMAIN}notes/id/${_id}`, {
                 method:'PATCH',
                 body: JSON.stringify(info),
                 headers:{

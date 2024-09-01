@@ -1,6 +1,6 @@
 import Details from "./Details";
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch,useAppSelector } from "../../hooks";
 import Controls from "./Controls";
 import NoteView from "./NoteView";
 import { getNote } from "../../api/wall";
@@ -15,11 +15,11 @@ export async function loader({params}) {
 }
 
 export default function FocusMode() {
-    const initialized = useSelector(state=>state.wall.focus.initialized);
-    const layoutLoaded = useSelector(state=>state.wall.layoutLoaded);
-    const editModeOn = useSelector((state)=>state.auth.editMode);
+    const initialized = useAppSelector(state=>state.wall.focus.initialized);
+    const layoutLoaded = useAppSelector(state=>state.wall.layoutLoaded);
+    const editModeOn = useAppSelector((state)=>state.auth.editMode);
     const {noteObj} = useLoaderData();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     
     // Initialize focus mode when loading note from a URL
     useEffect(() => {

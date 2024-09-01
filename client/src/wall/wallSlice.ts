@@ -1,36 +1,64 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { patchNote } from "./wallActions";
+import type { LayoutObject,NoteId } from "./wallTypes";
 
-// handle the properties of current active layout
+// Handle the properties of the current active layout
 //(be it for the primary wall, user profile wall, or other custom wall)
+
+export interface FocusModeState {
+    note: NoteId;
+    loading: boolean;
+    initialized: boolean;
+    position: {
+        row: number;
+        col: number;
+    };
+    controlsEnabled: boolean;
+}
+
+export interface WallState {
+    layoutLoaded:boolean,
+    layout: LayoutObject,
+    zoom: number;
+    focus: FocusModeState
+}
+
+const initialState: WallState = {
+    layoutLoaded:false,
+    layout: { // LayoutObject
+        _id: null, // Corresponds to a Layout ID in mongo
+        name: null,
+        array: [],
+        image: null,
+        noteImageSize: 0,
+        numCols: 0,
+        numRows: 0,
+        default: true
+    },
+    zoom:1,
+    focus: { //FocusModeState
+        note: null,
+        loading:false,
+        initialized:false,
+        position: {
+            row:0,
+            col:0
+        },
+        controlsEnabled: true
+    }
+}
 
 export const wallSlice = createSlice({
     name:'wall',
-    initialState: {
-        layoutLoaded:false,
-        layout: { // full mongo layout object
-            image:null
-        },
-        zoom: null,
-        focus: {
-            note:null, // note ID
-            loading:false,
-            initialized:false,
-            position:{
-                row:null, // TODO initialize these values based on the current ROUTE
-                col:null
-            },
-            controlsEnabled:true
-        }
-    },
+    initialState,
     reducers: {
-        setLayout: (state,action) => {
+        setLayout: (state,action : PayloadAction<LayoutObject>) => {
             //Input: Atlas layout object
             state.layout = action.payload;
             state.layoutLoaded = true;
         },
         // Set the focus by searching for a note ID in the layout's 2d array - O(mn)
-        setFocusByNote: (state, action) => {
+        setFocusByNote: (state, action : PayloadAction<NoteId>) => {
             // This function only executes when a note is loaded from a router URL. Return if things have already been initialized.
             if (state.focus.initialized || !state.layoutLoaded) return;
 
@@ -55,7 +83,7 @@ export const wallSlice = createSlice({
         },
 
         // Set the focus by accessing a row and column in the layout's 2d array - O(1)
-        setFocusByPosition: (state,action) => {
+        setFocusByPosition: (state,action:PayloadAction<{row:number;col:number}>) => {
             if (state.focus.loading || !state.layoutLoaded) return; // Can't change focus while things are loading
             if (action.payload.row >= state.layout.numRows || action.payload.row < 0) return; // Can't move out of bounds
             if (action.payload.col >= state.layout.numCols || action.payload.col < 0) return;
@@ -77,8 +105,8 @@ export const wallSlice = createSlice({
         },
         clearFocus: (state) => {
             state.focus.position = {
-                row:null,
-                col:null
+                row:0,
+                col:0
             };
             state.focus.note = null;
         },
@@ -92,16 +120,18 @@ export const wallSlice = createSlice({
             state.zoom = payload;
         }
     },
-    extraReducers: {
-        [patchNote.pending]: (state) => {
+    extraReducers: builder => {
+
+        // Verbose output for editing note details.
+        builder.addCase(patchNote.pending, (state) => {
             console.log('Edit pending');
-        },
-        [patchNote.fulfilled]: (state, {payload}) => {
-            console.log(`Edit note succeeded: ${payload}`);
-        },
-        [patchNote.rejected]: (state, {payload}) => {
-            console.error(`Edit note failed: ${payload}`);
-        }
+        });
+        builder.addCase(patchNote.fulfilled, (state, action) => {
+            console.log(`Edit note succeeded: ${action.payload}`);
+        });
+        builder.addCase(patchNote.rejected, (state, action) => {
+            console.error(`Edit note failed: ${action.payload}`);
+        });
     }
 })
 
