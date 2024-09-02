@@ -3,6 +3,7 @@ import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
 import { imageLoaded } from '../wallSlice';
 import { useAppDispatch,useAppSelector } from "../../hooks";
+import type { Viewer } from '../wallTypes';
 import './focusMode.css';
 
 export default function NoteView({tilesId}) {
@@ -12,7 +13,7 @@ export default function NoteView({tilesId}) {
     if (!tilesId) {
         return html
     };
-    const [viewer, setViewer] = useState(null);
+    const [viewer, setViewer] = useState<Viewer>(null);
     const loading = useAppSelector(state=>state.wall.focus.loading);
     const dispatch = useAppDispatch();
 
@@ -57,7 +58,7 @@ export default function NoteView({tilesId}) {
     }
     
     if (!loading) {
-        loadingHTML = null;
+        loadingHTML = <></>;
     }
 
     return (

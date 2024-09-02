@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/openseadragon": "^3.0.10",
     "concurrently": "^8.0.1",
     "dotenv": "^16.4.5",
     "openseadragon": "^4.0.0",

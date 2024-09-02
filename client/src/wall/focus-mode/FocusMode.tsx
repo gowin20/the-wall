@@ -14,6 +14,7 @@ export async function loader({params}) {
     return {noteObj};
 }
 
+// TODO add props to this, use an outlet on wall to render this.
 export default function FocusMode() {
     const initialized = useAppSelector(state=>state.wall.focus.initialized);
     const layoutLoaded = useAppSelector(state=>state.wall.layoutLoaded);

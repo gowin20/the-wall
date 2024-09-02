@@ -51,3 +51,7 @@ export interface NoteInfo {
     location: string | null; // Location of creation
     date: string | null; // Date of creation
 }
+
+// Helper types for front-end UI
+
+export type Viewer = OpenSeadragon.Viewer | null;

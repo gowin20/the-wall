@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useVerifyLoginQuery } from './auth/authApi';
 import { useNavigate } from 'react-router-dom';
+import { UserObject } from './creators/creatorTypes';
+
+type UserState = UserObject | null;
 
 export default function Header() {
-    const {data, isFetching} = useVerifyLoginQuery();
-    const [userInfo,setUserInfo] = useState(null);
+    const {data, isFetching} = useVerifyLoginQuery(null);
+    const [userInfo,setUserInfo] = useState<UserState>(null);
     const navigate = useNavigate();
     useEffect(()=>{
         if (data && data.isLoggedIn) setUserInfo(data.userInfo);

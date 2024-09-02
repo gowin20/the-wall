@@ -11,7 +11,8 @@ const NoteHighlight = ({viewer}) => {
     const [gridPos, setGridPos] = useState({row:0,col:0});
 
     useEffect(()=>{
-        document.getElementById('wall').addEventListener('mousemove',(e=>{
+        const wall = document.getElementById('wall');
+        if (wall) wall.addEventListener('mousemove',e=>{
             if (!viewer) return;
             const imageCoords = viewer.viewport.windowToImageCoordinates(new OpenSeadragon.Point(e.x,e.y));
             const currentRow = Math.floor(imageCoords.y / noteImageSize);
@@ -23,10 +24,10 @@ const NoteHighlight = ({viewer}) => {
                 gridPos.row = currentRow;
                 setGridPos({col:gridPos.col,row:gridPos.row});
             }
-        }))
+        })
     },[gridPos, viewer])
 
-    if (!viewer) return;
+    if (!viewer) return <></>;
     if (focusModeOn) return <div id="noteHighlight"/>;
     if (!document.getElementById('noteHighlight')) return <div id="noteHighlight"/>;
 
