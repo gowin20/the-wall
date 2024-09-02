@@ -1,16 +1,30 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch,useAppSelector } from "../hooks";
-import { logIn } from './authActions';
 import { useNavigate } from 'react-router-dom';
-import { useVerifyLoginQuery } from './authApi';
+import { useVerifyLoginQuery,useLazyLoginQuery } from './authApi';
 import { setCredentials } from './authSlice';
-import { useLazyLoginQuery } from './authApi';
 
 const Login = () => {
-    const userInfo = useAppSelector((state)=>state.auth.userInfo);
+    const userToken = useAppSelector((state)=>state.auth.userToken);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    // Check if already logged in
+    const {data, isLoading} = useVerifyLoginQuery(null, {pollingInterval:900000})
+    useEffect(()=>{
+        if (data && data.isLoggedIn) {
+            dispatch(setCredentials(data.userInfo));
+            navigate('/')
+        }
+    }, [data])
+
+    useEffect(()=>{
+        if (userToken) {
+            navigate('/')
+        }
+    },[userToken])
+
+    // API hook to handle login on form submit
     const [loginTrigger, result, lastPromiseInfo] = useLazyLoginQuery();
 
     const handleLogin = async (e) => {
@@ -21,18 +35,6 @@ const Login = () => {
         };
         loginTrigger(userInfo);
     }
-
-    const {data, isFetching} = useVerifyLoginQuery('', {pollingInterval:900000});
-    useEffect(()=>{
-        if (data && data.isLoggedIn) {
-            dispatch(setCredentials(data.userInfo));
-            navigate('/admin')
-        }
-    }, [data])
-
-    useEffect(()=>{
-        if (userInfo && userInfo.username) navigate('/');
-    },[userInfo])
 
     return (
         <form onSubmit={handleLogin}>

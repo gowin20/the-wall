@@ -1,11 +1,8 @@
-import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { logIn } from "./authActions";
+import { createSlice } from "@reduxjs/toolkit";
 import { UserObject } from "../creators/creatorTypes";
 import { AuthToken } from "./authTypes";
 import { authApi } from "./authApi";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query/fetchBaseQuery";
-
-console.log();
 
 export interface AuthState {
     userInfo: UserObject | null;
@@ -20,8 +17,11 @@ export interface AuthState {
 const userToken = localStorage.getItem('userToken') ? localStorage.getItem('userToken') : undefined;
 let editMode = (localStorage.getItem('editMode') === 'enabled') ? true : false;
 
+const userInfoPresent = localStorage.getItem('userInfo');
+const userInfo = userInfoPresent ? JSON.parse(userInfoPresent) : null;
+
 const initialState : AuthState = {
-    userInfo: null,
+    userInfo,
     userToken,
     editMode,
     loading: false,
@@ -56,6 +56,7 @@ const identitySlice = createSlice({
 
             localStorage.removeItem('editMode');
             localStorage.removeItem('userToken');
+            localStorage.removeItem('userInfo');
 
             console.log('loggingout',localStorage.getItem('userToken'));
         }
@@ -69,15 +70,19 @@ const identitySlice = createSlice({
         });
 
         builder.addMatcher(authApi.endpoints.login.matchFulfilled, (state, {payload}) => {
-            console.log('hurray')
-            state.loading = false;
-            state.userInfo = payload.userInfo;
-            state.userToken = payload.token;
-            state.success = true;
+            if (payload.token) {
+                console.log('hurray')
+                state.loading = false;
+                state.success = true;
+                state.userInfo = payload.userInfo;
+                state.userToken = payload.token;
+                localStorage.setItem('userToken',payload.token);
+                localStorage.setItem('userInfo',JSON.stringify(payload.userInfo));
+            }
         });
 
         builder.addMatcher(authApi.endpoints.login.matchRejected, (state, action) => {
-            console.log(action.payload)
+            console.log('epic fail',action.payload)
 
             state.loading = false;
             state.error = action.payload;

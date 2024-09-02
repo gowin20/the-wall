@@ -2,10 +2,11 @@ import { setEditMode, logOut } from "../auth/authSlice";
 import { useAppDispatch } from "../hooks";
 import React from "react";
 import './admin.css';
+import { useNavigate } from "react-router-dom";
 
 const AdminConfig = () => {
     const dispatch = useAppDispatch();
-
+    const navigate = useNavigate();
     // run request to check if user is admin, otherwise redirect
     let editEnabled;
     const editStatus = localStorage.getItem('editMode');

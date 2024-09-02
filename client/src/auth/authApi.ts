@@ -44,15 +44,12 @@ export const authApi = createApi({
         }),
 
         login: builder.query<LoginResponse, LoginParams>({
-            query: (args:LoginParams) => ({
+            query: (credentials) => ({
                 url:'/users/login',
                 method:'POST',
-                body: JSON.stringify({
-                    username:args.username,
-                    password:args.password
-                }),
+                body: credentials
             })
         })
     })
 })
-export const {useVerifyLoginQuery, useLazyLoginQuery} = authApi;
+export const {useVerifyLoginQuery, useLazyVerifyLoginQuery, useLazyLoginQuery} = authApi;

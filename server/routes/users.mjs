@@ -1,5 +1,5 @@
 import express from "express";
-import { getAllUsers, getUserByID, getUserByUsername, insertFakeUser, registerUser } from "../db/crud-users.mjs";
+import { checkAdmin, getAllUsers, getUserByID, getUserByUsername, insertFakeUser, registerUser } from "../db/crud-users.mjs";
 import { getNotesByUser } from "../db/crud-notes.mjs";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
@@ -56,7 +56,10 @@ router.post('/register',async (req,res)=>{
 router.post('/login', async (req,res) => {
   const loginAttempt = req.body;
 
+  if (Object.keys(loginAttempt).length === 0 || !loginAttempt.username || !loginAttempt.password) return res.status(401).json({message:'Invalid login attempt. Please provide a username and password.'})
+
   const dbUser = await getUserByUsername(loginAttempt.username);
+
   if (!dbUser) return res.status(401).json({message:'Invalid username or password'});
 
   bcrypt.compare(loginAttempt.password, dbUser.password, (err,data)=>{
@@ -69,6 +72,7 @@ router.post('/login', async (req,res) => {
     const payload = {
       id: dbUser._id,
       username: dbUser.username,
+      isAdmin: dbUser.isAdmin
     }
     jwt.sign(
       payload,
