@@ -67,8 +67,6 @@ if (process.argv[2] === 'user') {
     }
 
     await userLayout().init(userOptions,()=>{});
-
-    //process.exit(0);
 }
 
 /*

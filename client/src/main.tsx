@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { Provider } from 'react-redux'
 
-import {store} from './store.js';
+import {store} from './store.ts';
 
-import App from './App.tsx';
-import ErrorPage from './ErrorPage.jsx';
-import Login from './auth/Login.jsx';
-import AdminPanel from './admin/AdminPanel.jsx';
-import RequireAdmin from './auth/RequireAdmin.jsx';
+import App from './App';
+import ErrorPage from './ErrorPage';
+import Login from './auth/Login';
+import AdminPanel from './admin/AdminPanel';
+import RequireAdmin from './auth/RequireAdmin';
 import LayoutGenerator from './admin/layout-generator/LayoutGenerator.jsx';
 import FocusMode, {loader as noteLoader} from './wall/focus-mode/FocusMode.jsx';
 
@@ -41,13 +41,7 @@ const router = createBrowserRouter([
     },
     {
         path:'admin',
-        element:<RequireAdmin><AdminPanel/></RequireAdmin>,
-        children: [
-            {
-                path:'layout-generator',
-                element:<RequireAdmin><LayoutGenerator/></RequireAdmin>
-            }
-        ]
+        element:<RequireAdmin><AdminPanel/></RequireAdmin>
     }
 ])
 
