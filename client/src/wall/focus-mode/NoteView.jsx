@@ -2,7 +2,7 @@ import React, { useEffect,useState } from 'react';
 import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
 import { imageLoaded } from '../wallSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch,useAppSelector } from "../../hooks";
 import './focusMode.css';
 
 export default function NoteView({tilesId}) {
@@ -13,8 +13,8 @@ export default function NoteView({tilesId}) {
         return html
     };
     const [viewer, setViewer] = useState(null);
-    const loading = useSelector(state=>state.wall.focus.loading);
-    const dispatch = useDispatch();
+    const loading = useAppSelector(state=>state.wall.focus.loading);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
 

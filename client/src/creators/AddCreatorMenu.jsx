@@ -1,9 +1,9 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../hooks";
 import { addCreator, listCreators } from "./creatorActions";
 
 const AddCreatorMenu = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const handleAddCreator = (e) => {
         const name = document.getElementById('creatorName').value;

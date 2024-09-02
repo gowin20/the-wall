@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useAppDispatch,useAppSelector } from "../../hooks";
 import { setFocusByPosition, clearFocus } from '../wallSlice';
 import { useNavigate } from 'react-router-dom';
 
 export default function Controls(props) {
 
     // current position on wall
-    const position = useSelector((state) => state.wall.focus.position);
-    const enabled = useSelector(state=>state.wall.focus.controlsEnabled);
-    const layoutSize = useSelector((state) => ({rows:state.wall.layout.numRows,cols:state.wall.layout.numCols}))
-    const dispatch = useDispatch();
+    const position = useAppSelector((state) => state.wall.focus.position);
+    const enabled = useAppSelector(state=>state.wall.focus.controlsEnabled);
+    const layoutSize = useAppSelector((state) => ({rows:state.wall.layout.numRows,cols:state.wall.layout.numCols}))
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     // Determine what buttons are disabled based on current position/layout
     const buttons = {

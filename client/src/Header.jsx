@@ -10,8 +10,6 @@ export default function Header() {
         if (data && data.isLoggedIn) setUserInfo(data.userInfo);
     }, [data])
 
-    if (userInfo) console.log('Info',userInfo);
-
     let adminButton = <></>
     if (userInfo && userInfo.isAdmin) {
         adminButton = <div className='adminButton' onClick={e=>navigate('/admin')}>Admin panel</div>

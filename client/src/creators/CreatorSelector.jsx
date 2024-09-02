@@ -1,12 +1,12 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch,useAppSelector } from "../hooks";
 import { listCreators } from "./creatorActions";
 import React, { useEffect, useState } from "react";
 import './creators.css';
 import AddCreatorMenu from "./AddCreatorMenu";
 const CreatorSelector = ({value}) => {
     const [selectedCreator,setCreator] = useState(value !== "" ? value : '64f3db0f831d677c80b1726c');
-    const creatorList = useSelector(state=>state.creators.creatorList);
-    const dispatch = useDispatch();
+    const creatorList = useAppSelector(state=>state.creators.creatorList);
+    const dispatch = useAppDispatch();
     // TODO only use this when expanding the thing
     useEffect(()=>{
         if (!creatorList.loaded) dispatch(listCreators());
