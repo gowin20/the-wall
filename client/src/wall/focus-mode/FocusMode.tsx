@@ -8,10 +8,11 @@ import './focusMode.css';
 import EditDetails from "./EditDetails";
 import { useLoaderData } from "react-router-dom";
 import { setFocusByNote } from "../wallSlice";
+import { NoteObject } from "../wallTypes";
 
 export async function loader({params}) {
     const noteObj = await getNote(params.noteId);
-    return {noteObj};
+    return noteObj;
 }
 
 // TODO add props to this, use an outlet on wall to render this.
@@ -19,7 +20,7 @@ export default function FocusMode() {
     const initialized = useAppSelector(state=>state.wall.focus.initialized);
     const layoutLoaded = useAppSelector(state=>state.wall.layoutLoaded);
     const editModeOn = useAppSelector((state)=>state.auth.editMode);
-    const {noteObj} = useLoaderData();
+    const noteObj = useLoaderData() as NoteObject;
     const dispatch = useAppDispatch();
     
     // Initialize focus mode when loading note from a URL
@@ -39,7 +40,7 @@ export default function FocusMode() {
             </div>    
             <div className='rightSide'>
                 {noteDetails}
-                <Controls />     
+                <Controls hidden={true} mode='swipe' />     
             </div>
             </div>
         </div>

@@ -45,7 +45,7 @@ export interface NoteObject extends NoteInfo {
 }
 
 export interface NoteInfo {
-    creator: CreatorId; // ID of creator
+    creatorId: CreatorId; // ID of creator
     title: string | null; // Title given to note by creator
     details: string | null; // Any details or description provided
     location: string | null; // Location of creation

@@ -1,27 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { getUserById } from '../../api/user';
+import { NoteInfo } from '../wallTypes';
+import { UserObject } from '../../creators/creatorTypes';
+
+type Creator = string;
 
 export default function Details({ note }) {
     
     if (!note) return <></>;
 
-    const [details,setDetails] = useState(null);
+    const initNoteDetails = (note) => {
+        return {
+            creatorId:note.creatorId,
+            title:note.title? note.title : 'Untitled',
+            date:note?.date,
+            location:note?.location,
+            details:note?.details
+        }
+    }
+
+    const [details,setDetails] = useState<NoteInfo>(initNoteDetails(note));
+    const [creator,setCreator] = useState<Creator>('Unknown');
 
     useEffect(() => {
         async function initDetails() {
-            let user;
+            let user:UserObject;
             if (note.creator) {
                 // fetch user
                 user = await getUserById(note.creator);
+                setCreator(user.name);
             }
-
-            setDetails({
-                creator:user ? user.name : 'Unknown',
-                title: note.title ? note.title : 'Untitled',
-                date: note.date ? note.date : null,
-                location: note.location ? note.location : null,
-                description:note.details ? note.details : null
-            })
+            else {
+                setCreator('Unknown');
+            }
         }
 
         if (note) {
@@ -32,7 +43,7 @@ export default function Details({ note }) {
     if (details) {
         let placeTime, description;
 
-        const creator = <span className='title'>{details.creator}</span>;
+        const creatorHtml = <span className='title'>{creator}</span>;
         const title = <span className="artist">{details.title}</span>;
 
 
@@ -53,12 +64,12 @@ export default function Details({ note }) {
             placeTime = <span className="placeTime">{placeTimeText}</span>;
         }
 
-        if (details.description) description = <span className="description">{details.description}</span>;
+        if (details.details) description = <span className="description">{details.details}</span>;
 
         return (
             <div className="details">
                 <div className="detailsContent">
-                    {creator}
+                    {creatorHtml}
                     <br></br>
                     {placeTime}
                     <br></br>

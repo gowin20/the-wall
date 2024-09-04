@@ -4,7 +4,11 @@ import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
-import type { Viewer } from './wallTypes';
+import type { DziId, Viewer } from './wallTypes';
+
+interface CanvasProps {
+    sourceId: DziId;
+}
 
 export default function Canvas({ sourceId }) {
 
@@ -16,7 +20,7 @@ export default function Canvas({ sourceId }) {
 
     let dX = 0;
     let dY = 0;
-    let press;
+    let press : OpenSeadragon.Point;
 
     useEffect(()=>{
 
@@ -95,7 +99,7 @@ export default function Canvas({ sourceId }) {
         
     }
 
-    function noteClicked(imageCoords : OpenSeadragon.Point) {
+    function noteClicked(imageCoords ) {
         
         // determine which note was clicked based on the clicked location
         const clickedRow = Math.floor(imageCoords.y / noteImageSize);
