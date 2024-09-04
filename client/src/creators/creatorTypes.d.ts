@@ -2,6 +2,8 @@ import { LayoutId } from "../wall/wallTypes";
 
 export type CreatorId = string | null;
 
+export type CreatorName = string;
+
 export interface UserObject extends CreatorObject {
     username: string | null,
     password: string | null;
@@ -10,8 +12,12 @@ export interface UserObject extends CreatorObject {
 }
 
 export interface CreatorObject {
-    id: CreatorId;
-    name: string;
+    _id: CreatorId;
+    name: CreatorName;
     registered: boolean;
     layout: LayoutId;
 }
+
+export type Creator = UserObject | CreatorObject;
+
+export type CreatorsList = Array<Creator>;

@@ -64,7 +64,7 @@ export const insertFakeUser = async (name) => {
     if (userExists) {
         // A user by this name already exists. Return their info
         //console.log('Found existing user:',userExists);
-        return userExists._id;
+        return userExists;
     }
 
     const regex = /\ /g;
@@ -81,7 +81,7 @@ export const insertFakeUser = async (name) => {
             ...userObj
         }
     }, {upsert:true});
-    return result.upsertedId;
+    return {...userObj, _id:result.upsertedId};
 }
 
 export const checkAdmin = async (userId) => {

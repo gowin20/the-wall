@@ -1,6 +1,4 @@
-import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
-import type {RootState} from "../store";
-import {SERVER_DOMAIN} from '../config.ts';
+import { siteApi } from '../api';
 import { UserObject } from '../creators/creatorTypes';
 import { AuthToken } from './authTypes';
 
@@ -22,19 +20,7 @@ export interface LoginParams {
     password:string;
 }
 
-export const authApi = createApi({
-    reducerPath:'authApi',
-    baseQuery:fetchBaseQuery({
-        baseUrl:SERVER_DOMAIN,
-        prepareHeaders:(headers, {getState})=>{
-            const state = getState() as RootState;
-            const token = state.auth.userToken;
-            if (token) {
-                headers.set('Authorization',token);
-                return headers;
-            }
-        }
-    }),
+export const authApi = siteApi.injectEndpoints({
     endpoints:(builder)=>({
         verifyLogin: builder.query<VerifyLoginResponse, null>({
             query: ()=> ({
@@ -50,6 +36,7 @@ export const authApi = createApi({
                 body: credentials
             })
         })
-    })
+    }),
+    overrideExisting:false,
 })
 export const {useVerifyLoginQuery, useLazyVerifyLoginQuery, useLazyLoginQuery} = authApi;
