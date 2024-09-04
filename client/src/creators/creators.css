@@ -11,9 +11,18 @@
 .addCreatorMenu {
     z-index: 10;
     position:absolute;
+    padding:12px;
     top:20%;
     left:30%;
-    width:200px;
-    height:100px;
     background-color: #303030;
+    display:flex;
+    flex-direction: row;
+}
+.addCreatorMenu input {
+    height:34px;
+}
+
+.addCreatorMenu button {
+    margin-left:auto;
+    height:39px;
 }

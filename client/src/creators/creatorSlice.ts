@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addCreator } from "./creatorActions";
 import { CreatorsList } from "./creatorTypes";
 import { creatorsApi } from "./creatorsApi";
 // Slice used for the following:

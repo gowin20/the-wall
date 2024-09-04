@@ -9,7 +9,7 @@ export const creatorsApi = siteApi.injectEndpoints({
                 method: 'GET'
             })
         }),
-        addCreatorByName: builder.query<Creator,CreatorName>({
+        addCreatorByName: builder.mutation<Creator,CreatorName>({
             query: (name) => ({
                 url: '/users/addName',
                 method: 'POST',
@@ -19,4 +19,4 @@ export const creatorsApi = siteApi.injectEndpoints({
     })
 })
 
-export const {useListCreatorsQuery, useLazyAddCreatorByNameQuery} = creatorsApi;
+export const {useListCreatorsQuery, useAddCreatorByNameMutation} = creatorsApi;

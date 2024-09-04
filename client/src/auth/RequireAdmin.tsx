@@ -17,6 +17,7 @@ const RequireAdmin = ({children}) => {
 
     // Check if user is admin
     useEffect(()=>{
+        console.log(userInfo,data);
         if (isFetching) return;
         if ((data && !data.isLoggedIn) || !userInfo) {
             // User is not signed in

@@ -1,14 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { useVerifyLoginQuery } from './auth/authApi';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from './hooks';
+import { logOut, setEditMode } from './auth/authSlice';
 
 export default function Header() {
     const {data, isFetching} = useVerifyLoginQuery();
     const [userInfo,setUserInfo] = useState(null);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const userToken = useAppSelector(state=>state.auth.userToken);
+    const editMode = useAppSelector(state=>state.auth.editMode);
     useEffect(()=>{
-        if (data && data.isLoggedIn) setUserInfo(data.userInfo);
+        if (data && data.isLoggedIn) {
+            setUserInfo(data.userInfo);
+        }
+        else if (!userToken) {
+            console.log('Signing you out now okay',userToken)
+            dispatch(logOut())
+        }
     }, [data])
+
+    useEffect(()=>{
+        if (editMode && !userToken) dispatch(setEditMode(false)); 
+    })
 
     let adminButton = <></>
     if (userInfo && userInfo.isAdmin) {

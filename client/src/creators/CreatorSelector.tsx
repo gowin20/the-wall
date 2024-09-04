@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import './creators.css';
 import AddCreatorMenu from "./AddCreatorMenu";
 import { useListCreatorsQuery } from "./creatorsApi";
-import type {Creator} from './creatorTypes';
+import type {Creator,CreatorId} from './creatorTypes';
 
 const CreatorSelector = ({creatorId}) => {
-    const [selectedCreator,setCreator] = useState(creatorId);
+    const [selectedCreator,setSelectedCreator] = useState<CreatorId>(creatorId);
     const [creatorList, setCreatorList] = useState<Creator[]>([]);
     const {data, isFetching, isLoading} = useListCreatorsQuery(null);
 
@@ -22,12 +22,12 @@ const CreatorSelector = ({creatorId}) => {
     const options = [...creators, addCreator];
 
     let creatorMenu = <></>;
-    if (selectedCreator == 'newCreator') creatorMenu = <AddCreatorMenu creatorList={creatorList} updateCreatorList={setCreatorList} />;
+    if (selectedCreator == 'newCreator') creatorMenu = <AddCreatorMenu creatorList={creatorList} updateCreatorList={setCreatorList} setSelectedCreator={setSelectedCreator}/>;
 
     return (
         <>
         {creatorMenu}
-        <select key={selectedCreator} className="creatorSelector" value={selectedCreator} onChange={e=>setCreator(e.target.value)}>
+        <select key={selectedCreator} className="creatorSelector" value={selectedCreator} onChange={e=>setSelectedCreator(e.target.value)}>
             {options}
         </select>
         </>

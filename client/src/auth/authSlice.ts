@@ -57,8 +57,6 @@ const identitySlice = createSlice({
             localStorage.removeItem('editMode');
             localStorage.removeItem('userToken');
             localStorage.removeItem('userInfo');
-
-            console.log('loggingout',localStorage.getItem('userToken'));
         }
     },
     extraReducers: (builder) => {
