@@ -4,6 +4,8 @@ import { patchNote } from "../wallActions";
 import { useAppDispatch } from "../../hooks";
 import { disableControls,enableControls } from "../wallSlice";
 
+const UNKNOWN_CREATOR_ID = '64f3db0f831d677c80b1726c';
+
 const EditDetails = ({ note }) => {
     if (!note) return <></>;
 
@@ -18,7 +20,7 @@ const EditDetails = ({ note }) => {
     },[note])
 
     const [details,setDetails] = useState({
-        creatorId:note.creator? note.creator : '',
+        creatorId:note.creator? note.creator : UNKNOWN_CREATOR_ID, // Default to 'Unknown' if no ID
         title: note.title ? note.title : '',
         date: note.date ? note.date : '',
         location: note.location ? note.location : '',
@@ -56,7 +58,7 @@ const EditDetails = ({ note }) => {
         <div className="details">
             <div className="detailsContent">
                 <form onSubmit={postEdits} onFocus={e=>dispatch(disableControls())} onBlur={e=>dispatch(enableControls())}>
-                    <CreatorSelector value={details.creatorId}/>
+                    <CreatorSelector creatorId={details.creatorId}/>
                     <input className='title' type='text' value={details.title} onChange={e=>setDetails({...details, title:e.target.value})} placeholder="Title"/>
                     <input className="placeTime" type='text' value={details.location} onChange={e=>setDetails({...details, location:e.target.value})} placeholder="Location"/>
                     <input className="placeTime" type='text' value={details.date} onChange={e=>setDetails({...details, date:e.target.value})} placeholder="Date"/>

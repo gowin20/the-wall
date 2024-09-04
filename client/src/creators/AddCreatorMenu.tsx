@@ -1,6 +1,4 @@
-import React from "react";
-import { useAppDispatch } from "../hooks";
-import { addCreator, listCreators } from "./creatorActions";
+import React, { useEffect } from "react";
 import { Creator } from "./creatorTypes";
 import { useLazyAddCreatorByNameQuery } from "./creatorsApi";
 
@@ -10,9 +8,8 @@ interface AddCreatorMenuProps {
 }
 
 const AddCreatorMenu = (props : AddCreatorMenuProps) => {
-    //const dispatch = useAppDispatch();
 
-    const [triggerAddCreator, newCreatorResponse, lastPromiseInfo] = useLazyAddCreatorByNameQuery();
+    const [triggerAddCreator, newCreator] = useLazyAddCreatorByNameQuery();
 
     const handleAddCreator = async () => {
         const nameInput = document.getElementById('creatorName') as HTMLInputElement;
@@ -20,14 +17,13 @@ const AddCreatorMenu = (props : AddCreatorMenuProps) => {
             const name = nameInput.value;
             if (!name || name.length == 0) return;
     
-            //dispatch(addCreator({name}));
-            //dispatch(listCreators());
             await triggerAddCreator(name);
-            console.log(newCreatorResponse)
-            if (newCreatorResponse.meta)
-            props.updateCreatorList([...props.creatorList, newCreatorResponse])
         }
     }
+
+    useEffect(()=>{
+        if (newCreator.data) props.updateCreatorList([...props.creatorList,newCreator.data])
+    },[newCreator])
 
     return (
         <div className="addCreatorMenu">
