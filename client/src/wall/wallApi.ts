@@ -1,9 +1,16 @@
+import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { siteApi } from "../api";
 import { DziId, DziObject, LayoutObject, NoteId, NoteObject,NoteInfo } from "./wallTypes";
 interface NoteUpdate {
     noteId: NoteId;
     info: NoteInfo
-} 
+}
+interface QueryResponse<C> {
+    error:FetchBaseQueryError | null;
+    data:C
+}
+type DziResult = DziObject | null;
+
 export const wallApi = siteApi.injectEndpoints({
     endpoints: (builder) => ({
         getDefaultLayout: builder.query<LayoutObject,null>({
@@ -12,7 +19,7 @@ export const wallApi = siteApi.injectEndpoints({
                 method:'GET'
             })
         }),
-        getZoomableImage: builder.query<DziObject,DziId>({
+        getZoomableImage: builder.query<DziResult,DziId>({
             query: (dziId) => ({
                 url:'/dzis/id/'+dziId,
                 method:'GET'

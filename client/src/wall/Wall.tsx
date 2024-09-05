@@ -28,6 +28,9 @@ export default function Wall() {
             navigate(`/note/${focusedNote}`)
         }
     },[focusedNote]);
+
+    if (!layout.image) return <></>; // prevent loading canvas without an image
+
     return (
         <div id="wall" className="with-header-height">
             <Outlet context={focusedNote} />

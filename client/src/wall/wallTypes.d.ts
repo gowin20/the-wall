@@ -1,4 +1,4 @@
-import type { CreatorId, CreatorName } from "../creators/creatorTypes";
+import type { CreatorId } from "../creators/creatorTypes";
 // DB schema objects
 
 export type DziId = string | null; // Corresponds to a Note _id in mongo

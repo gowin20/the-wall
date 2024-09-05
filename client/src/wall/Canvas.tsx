@@ -2,9 +2,9 @@ import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
 import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
-import NoteHighlight from './NoteHighlight';
 import type { DziId } from './wallTypes';
 import { useGetZoomableImageQuery } from './wallApi';
+import NoteHighlight from './NoteHighlight';
 
 export type Viewer = OpenSeadragon.Viewer | null;
 
@@ -13,8 +13,7 @@ interface CanvasProps {
 }
 
 export default function Canvas({ sourceId } : CanvasProps) {
-
-    if (!sourceId) return <></>;
+    
 
     const dispatch = useAppDispatch();
     const currentFocus = useAppSelector((state) => state.wall.focus);
@@ -22,7 +21,7 @@ export default function Canvas({ sourceId } : CanvasProps) {
     const [dragging,setDragging] = useState<string>('');
     const [viewer,setViewer] = useState<Viewer>(null)
     const {data, isFetching} = useGetZoomableImageQuery(sourceId);
-
+    
     let dX = 0;
     let dY = 0;
     let press = new OpenSeadragon.Point();
@@ -34,6 +33,8 @@ export default function Canvas({ sourceId } : CanvasProps) {
             viewer && viewer.destroy();
         }
     }, [data]);
+
+    
 
     const initViewer = (tileSource) => {
         viewer && viewer.destroy();

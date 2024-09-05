@@ -1,6 +1,6 @@
-import { useAppSelector } from "../hooks";
 import React, { useEffect, useState } from "react";
 import OpenSeadragon from "openseadragon";
+import { useAppSelector } from "../hooks";
 import type { Viewer } from "./Canvas";
 
 interface NoteHighlightProps {
