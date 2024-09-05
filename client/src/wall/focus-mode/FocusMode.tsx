@@ -3,25 +3,32 @@ import React, { useEffect } from 'react';
 import { useAppDispatch,useAppSelector } from "../../hooks";
 import Controls from "./Controls";
 import NoteView from "./NoteView";
-import { getNote } from "../../api/wall";
 import './focusMode.css';
 import EditDetails from "./EditDetails";
 import { useLoaderData } from "react-router-dom";
 import { setFocusByNote } from "../wallSlice";
 import { NoteObject } from "../wallTypes";
+import { useNoteId } from "../Wall";
+import { store } from "../../store";
+import { wallApi } from "../wallApi";
 
 export async function loader({params}) {
-    const noteObj = await getNote(params.noteId);
-    return noteObj;
+    const {data} = await store.dispatch(wallApi.endpoints.getNote.initiate(params.noteId));
+    if (data) {
+        return data;
+    }
 }
 
-// TODO add props to this, use an outlet on wall to render this.
 export default function FocusMode() {
     const initialized = useAppSelector(state=>state.wall.focus.initialized);
     const layoutLoaded = useAppSelector(state=>state.wall.layoutLoaded);
     const editModeOn = useAppSelector((state)=>state.auth.editMode);
     const noteObj = useLoaderData() as NoteObject;
     const dispatch = useAppDispatch();
+
+    const noteId = useNoteId();
+
+    //const {data, isLoading} = useGetNoteQuery(paramsnoteId);
     
     // Initialize focus mode when loading note from a URL
     useEffect(() => {

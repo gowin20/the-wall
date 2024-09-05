@@ -1,10 +1,10 @@
 import React, { useEffect,useState } from 'react';
 import OpenSeadragon from 'openseadragon';
-import { getZoomableImage } from '../../api/wall';
 import { imageLoaded } from '../wallSlice';
 import { useAppDispatch,useAppSelector } from "../../hooks";
 import type { Viewer } from '../Canvas';
 import './focusMode.css';
+import { useGetZoomableImageQuery } from '../wallApi';
 
 export default function NoteView({tilesId}) {
     let loadingHTML = <div className='loadingNote'><img className='loadingNoteAnimation' src='/loading.gif' alt='High-resolution image loading...'/></div>;
@@ -13,22 +13,20 @@ export default function NoteView({tilesId}) {
     if (!tilesId) {
         return html
     };
-    const [viewer, setViewer] = useState<Viewer>(null);
-    const loading = useAppSelector(state=>state.wall.focus.loading);
     const dispatch = useAppDispatch();
+    const loading = useAppSelector(state=>state.wall.focus.loading);
+    const [viewer, setViewer] = useState<Viewer>(null);
+    
+    const {data, isFetching} = useGetZoomableImageQuery(tilesId);
+
 
     useEffect(() => {
-
-        async function setupNoteView() {
-            const tileSource = await getZoomableImage(tilesId);
-            initViewer(tileSource);
+        // Load DZI url from server with query hook
+        if (data) initViewer(data);
+        return () => {
+            viewer && viewer.destroy();
         }
-
-        if (tilesId) {
-            setupNoteView();
-        }
-
-    },[tilesId])
+    },[data])
 
     const initViewer = (tileSource) => {
         viewer && viewer.destroy();

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate, useOutletContext } from 'react-router-dom';
 import { useAppDispatch,useAppSelector } from "../hooks";
 import './wall.css';
 import { setLayout } from './wallSlice';
 import { useGetDefaultLayoutQuery } from './wallApi';
-import { LayoutObject } from './wallTypes';
+import { LayoutObject, NoteId } from './wallTypes';
 import Canvas from './Canvas';
 
 export default function Wall() {
@@ -30,9 +30,12 @@ export default function Wall() {
     },[focusedNote]);
     return (
         <div id="wall" className="with-header-height">
-            <Outlet />
+            <Outlet context={focusedNote} />
             <Canvas sourceId={layout.image} />
         </div>
     )
+}
 
+export const useNoteId = () => {
+    return useOutletContext<NoteId>();
 }

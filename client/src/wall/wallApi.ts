@@ -1,5 +1,5 @@
 import { siteApi } from "../api";
-import { DziId, DziObject, LayoutObject } from "./wallTypes";
+import { DziId, DziObject, LayoutObject, NoteId, NoteObject } from "./wallTypes";
 
 export const wallApi = siteApi.injectEndpoints({
     endpoints: (builder) => ({
@@ -14,8 +14,14 @@ export const wallApi = siteApi.injectEndpoints({
                 url:'/dzis/id/'+dziId,
                 method:'GET'
             })
+        }),
+        getNote: builder.query<NoteObject,NoteId>({
+            query: (noteId) => ({
+                url: '/notes/id/'+noteId,
+                method:'GET'
+            })
         })
     })
 })
 
-export const {useGetDefaultLayoutQuery, useGetZoomableImageQuery} = wallApi;
+export const {useGetDefaultLayoutQuery, useGetZoomableImageQuery, useGetNoteQuery} = wallApi;

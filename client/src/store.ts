@@ -3,6 +3,7 @@ import wallReducer from './wall/wallSlice';
 import identityReducer from './auth/authSlice';
 import creatorsReducer from './creators/creatorSlice';
 import { siteApi } from './api';
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 export const store =  configureStore({
   reducer: {
@@ -14,7 +15,7 @@ export const store =  configureStore({
   middleware:(getDefaultMiddleware) => getDefaultMiddleware().concat(siteApi.middleware)
 })
 
-
+setupListeners(store.dispatch);
 // Type of the entire store
 export type AppStore = typeof store;
 

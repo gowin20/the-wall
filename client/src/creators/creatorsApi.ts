@@ -1,11 +1,17 @@
 import { siteApi } from "../api";
-import { CreatorsList,CreatorName, Creator } from "./creatorTypes";
+import { CreatorsList,CreatorName, Creator, CreatorId } from "./creatorTypes";
 
 export const creatorsApi = siteApi.injectEndpoints({
     endpoints: (builder) =>({
         listCreators: builder.query<CreatorsList, null>({
             query: () => ({
                 url: '/users',
+                method: 'GET'
+            })
+        }),
+        getCreatorById: builder.query<Creator,CreatorId>({
+            query: (creatorId) => ({
+                url:'/users/id/'+creatorId,
                 method: 'GET'
             })
         }),
@@ -19,4 +25,4 @@ export const creatorsApi = siteApi.injectEndpoints({
     })
 })
 
-export const {useListCreatorsQuery, useAddCreatorByNameMutation} = creatorsApi;
+export const {useListCreatorsQuery, useGetCreatorByIdQuery, useAddCreatorByNameMutation} = creatorsApi;

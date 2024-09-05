@@ -2,7 +2,6 @@ import OpenSeadragon from 'openseadragon';
 import React, { useEffect, useState } from "react";
 import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
-import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
 import type { DziId } from './wallTypes';
 import { useGetZoomableImageQuery } from './wallApi';
@@ -13,7 +12,7 @@ interface CanvasProps {
     sourceId: DziId;
 }
 
-export default function Canvas({ sourceId }) {
+export default function Canvas({ sourceId } : CanvasProps) {
 
     if (!sourceId) return <></>;
 
@@ -26,14 +25,11 @@ export default function Canvas({ sourceId }) {
 
     let dX = 0;
     let dY = 0;
-    let press : OpenSeadragon.Point;
+    let press = new OpenSeadragon.Point();
     
     useEffect(()=>{
         // Load DZI url from server with query hook
-        if (data) {
-            initViewer(data);
-        }
-
+        if (data) initViewer(data);
         return () => {
             viewer && viewer.destroy();
         }

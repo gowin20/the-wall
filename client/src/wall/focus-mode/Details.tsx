@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { getUserById } from '../../api/user';
 import { NoteInfo } from '../wallTypes';
 import { CreatorName, UserObject } from '../../creators/creatorTypes';
+import { useGetCreatorByIdQuery } from '../../creators/creatorsApi';
 
 
 
@@ -26,25 +26,12 @@ export default function Details({ note }) {
 
     const [details,setDetails] = useState<NoteInfo>(initDetails(note));
     const [creatorName,setCreatorName] = useState<CreatorName>('Unknown');
+    const creatorId = note.creator ? note.creator : '66d9ede09e78fc6ab76fc927';  //ID for user 'Unknown'
+    const {data,isFetching} = useGetCreatorByIdQuery(creatorId); 
 
-    useEffect(() => {
-        async function fetchCreator() {
-            let user:UserObject;
-            if (note.creator) {
-                // fetch user
-                user = await getUserById(note.creator);
-                setCreatorName(user.name);
-            }
-            else {
-                setCreatorName('Unknown');
-            }
-        }
-
-        if (note) {
-            setDetails(initDetails(note));
-            fetchCreator();
-        }
-    },[note])
+    useEffect(()=>{
+        if (data) setCreatorName(data.name ? data.name : 'Unknown');
+    },[data])
     
     if (!details) return <></>;
 
