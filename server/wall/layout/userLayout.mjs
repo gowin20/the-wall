@@ -22,9 +22,10 @@ class UserLayout extends Layout {
 
         if (!user) throw new Error('Invalid user ID.');
 
-        this.name = user.name.replace(' ', '-')+'--test';
-        this.noteIds = (await getNotesByUser(this.userId)).map(note => note._id);
+        if (!user.username) this.name = user.name.replace(' ', '-')+'--test';
+        else this.name = user.username;
 
+        this.noteIds = (await getNotesByUser(this.userId)).map(note => note._id);
         await this.initializeLayout(options);
         callback.bind(this)();
     }

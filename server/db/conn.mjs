@@ -2,6 +2,7 @@ import { MongoClient } from "mongodb";
 import '../loadEnvironment.mjs'
 
 const connectionString = process.env.ATLAS_URI || "";
+console.log('conn:',connectionString)
 
 const client = new MongoClient(connectionString);
 

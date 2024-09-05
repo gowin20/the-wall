@@ -26,9 +26,9 @@ export const getAllNotes = async () => {
 }
 
 
-export const getNotesByUser = async (userID) => {
+export const getNotesByUser = async (userId) => {
     const noteColl = db.collection('notes');
-    const notes = noteColl.find({creator:userID}).toArray();
+    const notes = await noteColl.find({creator:userId.toString()}).toArray();
     return notes; 
 }
 
