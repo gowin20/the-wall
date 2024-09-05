@@ -49,7 +49,7 @@ export default function FocusMode() {
                 {editModeOn 
                 ? <EditDetails note={noteObj} noteId={noteObj._id}/>
                 : <Details note={noteObj}/>}
-                <Controls hidden={true} mode='swipe' />     
+                <Controls hidden={false} mode='arrows' />     
             </div>
             </div>
         </div>
