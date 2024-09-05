@@ -1,10 +1,10 @@
 import React, {useState,useEffect, SyntheticEvent} from "react";
 import CreatorSelector from "../../creators/CreatorSelector";
-import { patchNote } from "../wallActions";
 import { useAppDispatch } from "../../hooks";
 import { disableControls,enableControls } from "../wallSlice";
 import { NoteId, NoteInfo } from "../wallTypes";
 import { initDetails } from "./Details";
+import { usePatchNoteMutation } from "../wallApi";
 interface DetailsProps {
     note: NoteInfo;
     noteId: NoteId;
@@ -14,7 +14,7 @@ const EditDetails = ({note,noteId} : DetailsProps) => {
     if (!note) return <></>;
 
     const [details,setDetails] = useState<NoteInfo>(initDetails(note));
-
+    const [triggerEdit] = usePatchNoteMutation();
     if (!details) return <></>;
 
     const dispatch = useAppDispatch();
@@ -28,10 +28,9 @@ const EditDetails = ({note,noteId} : DetailsProps) => {
     */
     const postEdits = (e : SyntheticEvent) => {
         e.preventDefault();
-        console.log('ACTUALLY POSTING EDITS')
         //if (details.id || details.orig || details.thumbnails || details.tiles) return console.error('Cannot edit protected value.');
-        console.log(details,noteId);
-        dispatch(patchNote({_id:noteId, info:details}));
+        console.log('Patching note',noteId,':',details);
+        triggerEdit({noteId:noteId, info:details});
     }
 
     return (

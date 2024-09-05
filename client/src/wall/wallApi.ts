@@ -1,6 +1,9 @@
 import { siteApi } from "../api";
-import { DziId, DziObject, LayoutObject, NoteId, NoteObject } from "./wallTypes";
-
+import { DziId, DziObject, LayoutObject, NoteId, NoteObject,NoteInfo } from "./wallTypes";
+interface NoteUpdate {
+    noteId: NoteId;
+    info: NoteInfo
+} 
 export const wallApi = siteApi.injectEndpoints({
     endpoints: (builder) => ({
         getDefaultLayout: builder.query<LayoutObject,null>({
@@ -20,8 +23,15 @@ export const wallApi = siteApi.injectEndpoints({
                 url: '/notes/id/'+noteId,
                 method:'GET'
             })
+        }),
+        patchNote: builder.mutation<null,NoteUpdate>({
+            query: ({noteId,info})=>({
+                url:'/notes/id/'+noteId,
+                method:'PATCH',
+                body:info
+            })
         })
     })
 })
 
-export const {useGetDefaultLayoutQuery, useGetZoomableImageQuery, useGetNoteQuery} = wallApi;
+export const {useGetDefaultLayoutQuery, useGetZoomableImageQuery, useGetNoteQuery,usePatchNoteMutation} = wallApi;

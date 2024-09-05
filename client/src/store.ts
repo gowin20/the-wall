@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import wallReducer from './wall/wallSlice';
 import identityReducer from './auth/authSlice';
-import creatorsReducer from './creators/creatorSlice';
 import { siteApi } from './api';
 import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
@@ -9,7 +8,6 @@ export const store =  configureStore({
   reducer: {
     wall: wallReducer,
     auth: identityReducer,
-    creators: creatorsReducer,
     [siteApi.reducerPath]:siteApi.reducer
   },
   middleware:(getDefaultMiddleware) => getDefaultMiddleware().concat(siteApi.middleware)

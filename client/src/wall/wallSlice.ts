@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { patchNote } from "./wallActions";
 import type { LayoutObject,NoteId } from "./wallTypes";
+import { wallApi } from "./wallApi";
+import { creatorsApi } from "../creators/creatorsApi";
 
 // Handle the properties of the current active layout
 //(be it for the primary wall, user profile wall, or other custom wall)
@@ -121,17 +122,23 @@ export const wallSlice = createSlice({
         }
     },
     extraReducers: builder => {
-
-        // Verbose output for editing note details.
-        builder.addCase(patchNote.pending, (state) => {
-            console.log('Edit pending');
-        });
-        builder.addCase(patchNote.fulfilled, (state, action) => {
+        // Wall API
+        builder.addMatcher(wallApi.endpoints.patchNote.matchFulfilled,(state,action)=>{
             console.log(`Edit note succeeded: ${action.payload}`);
         });
-        builder.addCase(patchNote.rejected, (state, action) => {
+        builder.addMatcher(wallApi.endpoints.patchNote.matchRejected,(state,action)=>{
             console.error(`Edit note failed: ${action.payload}`);
-        });
+        }),
+        // Creators API
+        builder.addMatcher(creatorsApi.endpoints.listCreators.matchRejected, (state, action) => {
+            console.error("Error listing creator: ",action);
+        })
+        builder.addMatcher(creatorsApi.endpoints.addCreatorByName.matchFulfilled, (state,action) => {
+            console.log('New creator added to db:',action);
+        })
+        builder.addMatcher(creatorsApi.endpoints.addCreatorByName.matchRejected, (state,action) => {
+            console.error('Error adding creator to db:',action);
+        })
     }
 })
 

@@ -1,17 +1,18 @@
 import { siteApi } from "../api";
 import { CreatorsList,CreatorName, Creator, CreatorId } from "./creatorTypes";
 
+// extraReducers for these functions are in wallSlice.ts
 export const creatorsApi = siteApi.injectEndpoints({
     endpoints: (builder) =>({
-        listCreators: builder.query<CreatorsList, null>({
-            query: () => ({
-                url: '/users',
-                method: 'GET'
-            })
-        }),
         getCreatorById: builder.query<Creator,CreatorId>({
             query: (creatorId) => ({
                 url:'/users/id/'+creatorId,
+                method: 'GET'
+            })
+        }),
+        listCreators: builder.query<CreatorsList, null>({
+            query: () => ({
+                url: '/users',
                 method: 'GET'
             })
         }),

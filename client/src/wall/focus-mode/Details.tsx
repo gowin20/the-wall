@@ -31,7 +31,11 @@ export default function Details({ note }) {
 
     useEffect(()=>{
         if (data) setCreatorName(data.name ? data.name : 'Unknown');
-    },[data])
+    },[data]);
+
+    useEffect(()=>{
+        setDetails(initDetails(note));
+    },[note])
     
     if (!details) return <></>;
 
