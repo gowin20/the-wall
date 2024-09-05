@@ -3,28 +3,35 @@ import CreatorSelector from "../../creators/CreatorSelector";
 import { patchNote } from "../wallActions";
 import { useAppDispatch } from "../../hooks";
 import { disableControls,enableControls } from "../wallSlice";
+import { NoteInfo } from "../wallTypes";
 
 const UNKNOWN_CREATOR_ID = '64f3db0f831d677c80b1726c';
+
+interface NoteDetails {
+    creatorId:string;
+}
 
 const EditDetails = ({ note }) => {
     if (!note) return <></>;
 
     useEffect(() =>{
         setDetails({
+            creatorName:null,
             creatorId:note.creator? note.creator : '',
             title: note.title ? note.title : '',
             date: note.date ? note.date : '',
             location: note.location ? note.location : '',
-            description:note.details ? note.details : ''
+            details:note.details ? note.details : ''
         })
     },[note])
 
-    const [details,setDetails] = useState({
+    const [details,setDetails] = useState<NoteInfo>({
+        creatorName:null,
         creatorId:note.creator? note.creator : UNKNOWN_CREATOR_ID, // Default to 'Unknown' if no ID
         title: note.title ? note.title : '',
         date: note.date ? note.date : '',
         location: note.location ? note.location : '',
-        description:note.details ? note.details : ''
+        details:note.details ? note.details : ''
     });
     const dispatch = useAppDispatch();
 
@@ -34,20 +41,21 @@ const EditDetails = ({ note }) => {
     const postEdits = (e) => {
         e.preventDefault();
         console.log('ACTUALLY POSTING EDITS')
-        if (details._id || info.orig || info.thumbnails || info.tiles) return console.error('Cannot edit protected value.');
+        //if (details.id || details.orig || details.thumbnails || details.tiles) return console.error('Cannot edit protected value.');
 
         const creatorId = e.target[0].value;
-        const noteInfo = {}
-
-        noteInfo.creator = creatorId;
-        if (details.title !== "") noteInfo.title = details.title;
-        if (details.location !== "") noteInfo.location = details.location;
-        if (details.date !== "") noteInfo.date = details.date;
-        if (details.description !== "") noteInfo.details = details.description;
+        let newNoteInfo : NoteInfo = {
+            creatorName:null,
+            creatorId,
+            title: details?.title,
+            date:details?.date,
+            location:details?.location,
+            details:details?.details
+        };
 
         
         //console.log(noteId,noteInfo);
-        dispatch(patchNote({_id:noteId, info:noteInfo}))
+        dispatch(patchNote({_id:noteId, info:newNoteInfo}))
         setDetails({
             ...details,
             creatorId:creatorId

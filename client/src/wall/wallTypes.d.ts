@@ -1,5 +1,4 @@
-import type { CreatorId } from "../creators/creatorTypes";
-
+import type { CreatorId, CreatorName } from "../creators/creatorTypes";
 // DB schema objects
 
 export type DziId = string | null; // Corresponds to a Note _id in mongo
@@ -45,9 +44,14 @@ export interface NoteObject extends NoteInfo {
 }
 
 export interface NoteInfo {
-    creator: CreatorId; // ID of creator
+    creatorName: CreatorName | null;
+    creatorId: CreatorId; // ID of creator
     title: string | null; // Title given to note by creator
     details: string | null; // Any details or description provided
     location: string | null; // Location of creation
     date: string | null; // Date of creation
 }
+
+// Helper types for front-end UI
+
+export type Viewer = OpenSeadragon.Viewer | null;

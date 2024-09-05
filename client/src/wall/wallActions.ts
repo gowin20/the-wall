@@ -22,7 +22,7 @@ export const patchNote = createAsyncThunk(
             do NOT accept thumbnails, tiles, orig, or _id as params
             */
             console.log('Token:',token)
-            const response = await fetch(`${SERVER_DOMAIN}notes/id/${_id}`, {
+            const response = await fetch(`${SERVER_DOMAIN}/notes/id/${_id}`, {
                 method:'PATCH',
                 body: JSON.stringify(info),
                 headers:{

@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CreatorsList } from "./creatorTypes";
 import { creatorsApi } from "./creatorsApi";
 // Slice used for the following:
 // listing all note creators
@@ -23,24 +22,15 @@ const creatorsSlice = createSlice({
             console.log(`Creators retrieved.`);
         });
         builder.addMatcher(creatorsApi.endpoints.listCreators.matchRejected, (state, action) => {
-            console.error(action);
+            console.error("Error listing creator: ",action);
         })
 
         builder.addMatcher(creatorsApi.endpoints.addCreatorByName.matchFulfilled, (state,action) => {
             console.log('Creator added',action);
         })
-        /*
-        [addCreator.pending]: (state) => {
-            console.log('Adding creator...')
-        },
-        [addCreator.fulfilled]: (state, {payload}) => {
-            console.log('Creator added.')
-            state.creatorList.items = [...state.creatorList, payload];
-        },
-        [addCreator.rejected]: (state, response) => {
-            console.error(response);
-        }
-            */
+        builder.addMatcher(creatorsApi.endpoints.addCreatorByName.matchRejected, (state,action) => {
+            console.error('Error adding creator: ',action);
+        })
     }
 })
 

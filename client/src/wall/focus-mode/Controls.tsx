@@ -3,7 +3,12 @@ import { useAppDispatch,useAppSelector } from "../../hooks";
 import { setFocusByPosition, clearFocus } from '../wallSlice';
 import { useNavigate } from 'react-router-dom';
 
-export default function Controls(props) {
+interface ControlProps {
+    hidden: boolean;
+    mode: 'arrows' | 'swipe'   
+}
+
+export default function Controls(props : ControlProps) {
 
     // current position on wall
     const position = useAppSelector((state) => state.wall.focus.position);

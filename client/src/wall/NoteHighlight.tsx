@@ -1,9 +1,13 @@
 import { useAppSelector } from "../hooks";
 import React, { useEffect, useState } from "react";
 import OpenSeadragon from "openseadragon";
+import type { Viewer } from "./wallTypes";
 
+interface NoteHighlightProps {
+    viewer: Viewer;
+}
 
-const NoteHighlight = ({viewer}) => {
+const NoteHighlight = ({viewer} : NoteHighlightProps) => {
 
     const noteImageSize = useAppSelector((state) => state.wall.layout.noteImageSize);
     const zoomLevel = useAppSelector((state)=>state.wall.zoom);
@@ -11,7 +15,8 @@ const NoteHighlight = ({viewer}) => {
     const [gridPos, setGridPos] = useState({row:0,col:0});
 
     useEffect(()=>{
-        document.getElementById('wall').addEventListener('mousemove',(e=>{
+        const wall = document.getElementById('wall');
+        if (wall) wall.addEventListener('mousemove',e=>{
             if (!viewer) return;
             const imageCoords = viewer.viewport.windowToImageCoordinates(new OpenSeadragon.Point(e.x,e.y));
             const currentRow = Math.floor(imageCoords.y / noteImageSize);
@@ -23,12 +28,14 @@ const NoteHighlight = ({viewer}) => {
                 gridPos.row = currentRow;
                 setGridPos({col:gridPos.col,row:gridPos.row});
             }
-        }))
+        })
     },[gridPos, viewer])
 
-    if (!viewer) return;
+    if (!viewer) return <></>;
     if (focusModeOn) return <div id="noteHighlight"/>;
-    if (!document.getElementById('noteHighlight')) return <div id="noteHighlight"/>;
+
+    const highlightDiv = document.getElementById('noteHighlight');
+    if (!highlightDiv) return <div id="noteHighlight"/>;
 
     // Position highlight box evenly with note grid
     const topEdge = gridPos.row * noteImageSize;
@@ -40,7 +47,7 @@ const NoteHighlight = ({viewer}) => {
 
     viewer.clearOverlays();
     viewer.addOverlay({
-        element:"noteHighlight",
+        element:highlightDiv,
         location:overlayRect
     })
 

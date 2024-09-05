@@ -3,10 +3,13 @@ import { useVerifyLoginQuery } from './auth/authApi';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './hooks';
 import { logOut, setEditMode } from './auth/authSlice';
+import { UserObject } from './creators/creatorTypes';
+
+type UserState = UserObject | null;
 
 export default function Header() {
-    const {data, isFetching} = useVerifyLoginQuery();
-    const [userInfo,setUserInfo] = useState(null);
+    const {data, isFetching} = useVerifyLoginQuery(null);
+    const [userInfo,setUserInfo] = useState<UserState>(null);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const userToken = useAppSelector(state=>state.auth.userToken);

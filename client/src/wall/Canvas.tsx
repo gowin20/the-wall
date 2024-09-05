@@ -4,18 +4,23 @@ import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
+import type { DziId, Viewer } from './wallTypes';
+
+interface CanvasProps {
+    sourceId: DziId;
+}
 
 export default function Canvas({ sourceId }) {
 
     const currentFocus = useAppSelector((state) => state.wall.focus);
     const noteImageSize = useAppSelector((state) => state.wall.layout.noteImageSize);
-    const [dragging,setDragging] = useState(null);
-    const [viewer,setViewer] = useState(null)
+    const [dragging,setDragging] = useState<string>('');
+    const [viewer,setViewer] = useState<Viewer>(null)
     const dispatch = useAppDispatch();
 
     let dX = 0;
     let dY = 0;
-    let press;
+    let press : OpenSeadragon.Point;
 
     useEffect(()=>{
 
@@ -55,48 +60,46 @@ export default function Canvas({ sourceId }) {
 
         dispatch(updateZoom(thisViewer.viewport.getZoom()));
 
-        function onCanvasPress(e) {
+
+        // Event handlers for canvas
+
+        thisViewer.addHandler('canvas-press', (e: OpenSeadragon.CanvasPressEvent) => {
             press = e.position;
             dX = 0;
             dY = 0;
-            // add class to canvas div
-            
-        }
-        thisViewer.addHandler('canvas-press', onCanvasPress);
 
-        function onCanvasRelease(e) {
-            // remove class from canvas div
-            setDragging(null);
+        });
+
+        thisViewer.addHandler('canvas-release', (e: OpenSeadragon.CanvasReleaseEvent) => {
+            // Remove class from canvas div to reset cursor
+            setDragging('');
             if (Math.abs(dX) < 2 && Math.abs(dY) < 2) {
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
-                canvasClicked(e,imageCoords);
+                
+                noteClicked(imageCoords);
             }
-        }
-        thisViewer.addHandler('canvas-release', onCanvasRelease);
+        });
 
-        function onMouseMove(e) {
+        thisViewer.addHandler('canvas-drag',(e: OpenSeadragon.CanvasDragEvent) => {
+            // Add class to canvas div to update cursor 
             setDragging('canvasDrag');
             dX = e.position.x - press.x;
             dY = e.position.y - press.y;
-        }
-        thisViewer.addHandler('canvas-drag',onMouseMove);
+        });
 
-        function onCanvasClick(e) {
+        thisViewer.addHandler('canvas-click',(e: OpenSeadragon.CanvasClickEvent) => {
             e.preventDefaultAction = true;
-        }
-        thisViewer.addHandler('canvas-click',onCanvasClick);
+        });
 
-        function onZoom(e) {
+        thisViewer.addHandler('zoom',() => {
             const zoomLevel = thisViewer.viewport.getZoom();
-            if (zoomLevel > thisViewer.maxZoomLevel || zoomLevel < thisViewer.minZoomLevel) return;
+            if (zoomLevel > thisViewer.viewport.getMaxZoom() || zoomLevel < thisViewer.viewport.getMinZoom()) return;
             dispatch(updateZoom(thisViewer.viewport.getZoom()));
-        }
-        thisViewer.addHandler('zoom',onZoom);
+        });
         
     }
 
-    function canvasClicked(e,imageCoords) {
-        e.preventDefaultAction = true;
+    function noteClicked(imageCoords ) {
         
         // determine which note was clicked based on the clicked location
         const clickedRow = Math.floor(imageCoords.y / noteImageSize);
@@ -109,10 +112,11 @@ export default function Canvas({ sourceId }) {
         }));
     }
 
-    function disableKeyboardControls(e) {
+    const disableKeyboardControls = (e:OpenSeadragon.CanvasKeyEvent) => {
         e.preventVerticalPan = true;
         e.preventHorizontalPan = true;
     }
+
     if (viewer) {
         if (currentFocus.note == null) { // Focus mode is off
             // enable keyboard navigation of canvas
