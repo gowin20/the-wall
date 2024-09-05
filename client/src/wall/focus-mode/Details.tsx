@@ -10,7 +10,6 @@ import { CreatorName, UserObject } from '../../creators/creatorTypes';
 const UNKNOWN_CREATOR_ID = '64f3db0f831d677c80b1726c';
 
 export const initDetails = (note : NoteInfo) => {
-    console.log('Initializing details:',note)
     return {
         creator:note.creator? note.creator : UNKNOWN_CREATOR_ID, // Default to 'Unknown' if no ID
         title: note.title ? note.title : 'Untitled',

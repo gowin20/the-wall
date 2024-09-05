@@ -5,6 +5,7 @@ import { setFocusByPosition, updateZoom } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
 import type { DziId } from './wallTypes';
+import { useGetZoomableImageQuery } from './wallApi';
 
 export type Viewer = OpenSeadragon.Viewer | null;
 
@@ -14,30 +15,29 @@ interface CanvasProps {
 
 export default function Canvas({ sourceId }) {
 
+    if (!sourceId) return <></>;
+
+    const dispatch = useAppDispatch();
     const currentFocus = useAppSelector((state) => state.wall.focus);
     const noteImageSize = useAppSelector((state) => state.wall.layout.noteImageSize);
     const [dragging,setDragging] = useState<string>('');
     const [viewer,setViewer] = useState<Viewer>(null)
-    const dispatch = useAppDispatch();
+    const {data, isFetching} = useGetZoomableImageQuery(sourceId);
 
     let dX = 0;
     let dY = 0;
     let press : OpenSeadragon.Point;
-
+    
     useEffect(()=>{
-
-        async function setupCanvas() {
-            const tileSource = await getZoomableImage(sourceId);
-            initViewer(tileSource);
+        // Load DZI url from server with query hook
+        if (data) {
+            initViewer(data);
         }
 
-        if (sourceId) {
-            setupCanvas();
-        }
         return () => {
             viewer && viewer.destroy();
         }
-    }, [sourceId]);
+    }, [data]);
 
     const initViewer = (tileSource) => {
         viewer && viewer.destroy();
@@ -75,10 +75,20 @@ export default function Canvas({ sourceId }) {
         thisViewer.addHandler('canvas-release', (e: OpenSeadragon.CanvasReleaseEvent) => {
             // Remove class from canvas div to reset cursor
             setDragging('');
+
+            // Check if note clicked
             if (Math.abs(dX) < 2 && Math.abs(dY) < 2) {
                 const imageCoords = thisViewer.viewport.viewerElementToImageCoordinates(e.position);
                 
-                noteClicked(imageCoords);
+                // Determine which note was clicked based on the clicked location
+                const clickedRow = Math.floor(imageCoords.y / noteImageSize);
+                const clickedCol = Math.floor(imageCoords.x / noteImageSize);
+
+                // Set focus mode when clicked
+                dispatch(setFocusByPosition({
+                    row:clickedRow,
+                    col:clickedCol
+                }));
             }
         });
 
@@ -99,19 +109,6 @@ export default function Canvas({ sourceId }) {
             dispatch(updateZoom(thisViewer.viewport.getZoom()));
         });
         
-    }
-
-    function noteClicked(imageCoords ) {
-        
-        // determine which note was clicked based on the clicked location
-        const clickedRow = Math.floor(imageCoords.y / noteImageSize);
-        const clickedCol = Math.floor(imageCoords.x / noteImageSize);
-
-        // Set focus mode when clicked
-        dispatch(setFocusByPosition({
-            row:clickedRow,
-            col:clickedCol
-        }));
     }
 
     const disableKeyboardControls = (e:OpenSeadragon.CanvasKeyEvent) => {
