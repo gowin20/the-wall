@@ -4,6 +4,8 @@ export type CreatorId = string | null;
 
 export type CreatorName = string;
 
+export type Username = string;
+
 export interface UserObject extends CreatorObject {
     username: string | null,
     password: string | null;
@@ -21,3 +23,4 @@ export interface CreatorObject {
 export type Creator = UserObject | CreatorObject;
 
 export type CreatorsList = Array<Creator>;
+

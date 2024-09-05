@@ -1,6 +1,6 @@
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
 import { siteApi } from "../api";
-import { DziId, DziObject, LayoutObject, NoteId, NoteObject,NoteInfo } from "./wallTypes";
+import { DziId, DziObject, LayoutObject, NoteId, NoteObject,NoteInfo, LayoutId } from "./wallTypes";
 interface NoteUpdate {
     noteId: NoteId;
     info: NoteInfo
@@ -16,6 +16,12 @@ export const wallApi = siteApi.injectEndpoints({
         getDefaultLayout: builder.query<LayoutObject,null>({
             query: () => ({
                 url:'/layouts/default',
+                method:'GET'
+            })
+        }),
+        getLayout: builder.query<LayoutObject, LayoutId>({
+            query: (layoutId) => ({
+                url:'/layouts/id/'+layoutId,
                 method:'GET'
             })
         }),
@@ -41,4 +47,4 @@ export const wallApi = siteApi.injectEndpoints({
     })
 })
 
-export const {useGetDefaultLayoutQuery, useGetZoomableImageQuery, useGetNoteQuery,usePatchNoteMutation} = wallApi;
+export const {useGetDefaultLayoutQuery, useGetLayoutQuery, useGetZoomableImageQuery, usePatchNoteMutation} = wallApi;

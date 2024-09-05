@@ -1,17 +1,21 @@
-import Details from "./Details";
 import React, { useEffect } from 'react';
-import { useAppDispatch,useAppSelector } from "../../hooks";
-import Controls from "./Controls";
-import NoteView from "./NoteView";
-import './focusMode.css';
-import EditDetails from "./EditDetails";
 import { useLoaderData } from "react-router-dom";
+import { useAppDispatch,useAppSelector } from "../../hooks";
+import { store } from "../../store";
 import { setFocusByNote } from "../wallSlice";
 import { NoteObject } from "../wallTypes";
-import { useNoteId } from "../Wall";
-import { store } from "../../store";
 import { wallApi } from "../wallApi";
+import Controls from "./Controls";
+import NoteView from "./NoteView";
+import EditDetails from "./EditDetails";
+import Details from "./Details";
+import './focusMode.css';
 
+/**
+ * Loader function fetches information about the current note ID.
+ * @param params.noteId - the NoteId of the currently focused note. Should never be null. 
+ * @returns NoteObject containing info about the current note.
+ */
 export async function loader({params}) {
     const {data} = await store.dispatch(wallApi.endpoints.getNote.initiate(params.noteId));
     if (data) {
@@ -19,25 +23,21 @@ export async function loader({params}) {
     }
 }
 
+/**
+ * Focus mode: The wall overlay that appears when a note is selected.
+ * @returns The DOM element for focus mode
+ */
 export default function FocusMode() {
     const initialized = useAppSelector(state=>state.wall.focus.initialized);
     const layoutLoaded = useAppSelector(state=>state.wall.layoutLoaded);
     const editModeOn = useAppSelector((state)=>state.auth.editMode);
     const noteObj = useLoaderData() as NoteObject;
     const dispatch = useAppDispatch();
-
-    const noteId = useNoteId();
-
-    //const {data, isLoading} = useGetNoteQuery(paramsnoteId);
     
     // Initialize focus mode when loading note from a URL
     useEffect(() => {
         if (layoutLoaded && !initialized) dispatch(setFocusByNote(noteObj._id));
     }, [layoutLoaded,initialized,noteObj]);
-
-    let noteDetails;
-    if (editModeOn) noteDetails = <EditDetails note={noteObj} noteId={noteObj._id}/>
-    else noteDetails = <Details note={noteObj}/>
 
     if (noteObj) return (
         <div className='overlay'>
@@ -46,7 +46,9 @@ export default function FocusMode() {
                 <NoteView tilesId={noteObj.tiles}/>
             </div>    
             <div className='rightSide'>
-                {noteDetails}
+                {editModeOn 
+                ? <EditDetails note={noteObj} noteId={noteObj._id}/>
+                : <Details note={noteObj}/>}
                 <Controls hidden={true} mode='swipe' />     
             </div>
             </div>

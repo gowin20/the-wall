@@ -9,16 +9,23 @@ const router = express.Router();
 
 // Get a list of all users
 router.get("/", async (req, res) => {
-    const results = await getAllUsers({alphabetical:true});
-    res.send(results).status(200);
+  const results = await getAllUsers({alphabetical:true});
+  res.send(results).status(200);
 });
 
 // Get a single user by ID
 router.get("/id/:id", async (req, res) => {
-    const result = await getUserByID(req.params.id);
-    if (!result) res.send("Not found").status(404);
-    else res.send(result).status(200);
-  });
+  const result = await getUserByID(req.params.id);
+  if (!result) res.send("Not found").status(404);
+  else res.send(result).status(200);
+});
+
+// Get a single user by username
+router.get('/username/:username', async (req, res) => {
+  const result = await getUserByUsername(req.params.username);
+  if (!result) res.send("Not found").status(404);
+  else res.send(result).status(200);
+})
 
 // Get all notes created by a user (ID)
 router.get('/id/:id/notes', async (req,res) => {

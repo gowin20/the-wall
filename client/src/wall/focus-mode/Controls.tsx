@@ -44,7 +44,7 @@ export default function Controls(props : ControlProps) {
     }
     const closeFocusMode = () => {
         dispatch(clearFocus());
-        navigate('/');
+        navigate('..'); // Up one level in the router heirarchy (e.g. back to the current wall view)
     }
 
     function moveFocus(direction) {

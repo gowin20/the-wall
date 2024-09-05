@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 
 import {store} from './store.ts';
 
-import App from './App';
+import App, { getLayoutId } from './App';
 import ErrorPage from './ErrorPage';
 import Login from './auth/Login';
 import AdminPanel from './admin/AdminPanel';
@@ -19,19 +19,25 @@ const router = createBrowserRouter([
         path: '/',
         element: <App />,
         errorElement: <ErrorPage />,
+        loader:getLayoutId,
         children: [
             {
                 path: 'note/:noteId',
                 element:<FocusMode />,
                 loader:noteLoader
-            },
+            }
+        ]
+    },
+    {
+        path: 'user/:username',
+        element: <App />,
+        errorElement: <ErrorPage />,
+        loader:getLayoutId,
+        children: [
             {
-                path: '@:id',
-                children: [
-                    {
-                        path: 'notes/:id'
-                    }
-                ]
+                path: 'note/:noteId',
+                element:<FocusMode />,
+                loader:noteLoader
             }
         ]
     },
@@ -42,7 +48,7 @@ const router = createBrowserRouter([
     {
         path:'admin',
         element:<RequireAdmin><AdminPanel/></RequireAdmin>
-    }
+    },
 ])
 
 const root = document.getElementById('root');

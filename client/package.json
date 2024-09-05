@@ -12,6 +12,7 @@
     "client:preview": "vite preview"
   },
   "dependencies": {
+    "@microsoft/tsdoc": "^0.15.0",
     "@reduxjs/toolkit": "^1.9.5",
     "@types/openseadragon": "^3.0.10",
     "concurrently": "^8.0.1",
