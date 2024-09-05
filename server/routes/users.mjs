@@ -28,12 +28,12 @@ router.get('/id/:id/notes', async (req,res) => {
   else res.send(result).status(200);
 })
 
-router.post('/create', verifyJWT, async (req,res) => {
+router.post('/addName', verifyJWT, async (req,res) => {
 
-  // 'Create' takes a name only
+  // 'addName' takes a name only and returns a new creator object.
   const creatorInfo = req.body;
   const result = await insertFakeUser(creatorInfo.name);
-  if (result) res.status(200).json({message:'Successfully added new creator.'});
+  if (result) res.status(200).json(result);
   else res.status(500).json({message:'Unable to add creator.'})
 })
 

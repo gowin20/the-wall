@@ -1,58 +1,35 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { listCreators, addCreator } from "./creatorActions";
-import { CreatorObject, UserObject } from "./creatorTypes";
+import { creatorsApi } from "./creatorsApi";
 // Slice used for the following:
 // listing all note creators
 // Tracking information related to a selected profile page
 
-type Creator = UserObject | CreatorObject;
-
-interface CreatorState {
-    creatorList: {
-        loaded:Boolean;
-        items: Array<Creator>
-    }
+interface CreatorsState {
 }
 
-const initialState : CreatorState = {
-    creatorList: {
-        loaded:false,
-        items:[]
-    }
+const initialState : CreatorsState = {
 }
 
 const creatorsSlice = createSlice({
     name:'profiles',
     initialState,
     reducers: {},
-    extraReducers: builder => {
-
-        // List creators API call
-        builder.addCase(listCreators.pending, state => {
-            console.log('Loading creators...')
-        })
-        builder.addCase(listCreators.fulfilled, (state, action) => {
-            console.log(`Creators retrieved.`)
-
-            state.creatorList = {
-                loaded:true,
-                items:action.payload
-            }
-        })
-        builder.addCase(listCreators.rejected, (state, response) => {
-            console.error(response)
-        })
-
-        // Add creator API call
-        builder.addCase(addCreator.pending, (state) => {
-            console.log('Adding creator...')
-        })
-        builder.addCase(addCreator.fulfilled, (state, {payload}) => {
-            console.log('Creator added.')
-            state.creatorList.items = [...state.creatorList.items, payload];
+    extraReducers: (builder) => {
+        builder.addMatcher(creatorsApi.endpoints.listCreators.matchPending, (state) => {
+            console.log('Loading creators...');
         });
-        builder.addCase(addCreator.rejected, (state, response) => {
-            console.error(response);
+        builder.addMatcher(creatorsApi.endpoints.listCreators.matchFulfilled, (state, action) => {
+            console.log(`Creators retrieved.`);
+        });
+        builder.addMatcher(creatorsApi.endpoints.listCreators.matchRejected, (state, action) => {
+            console.error("Error listing creator: ",action);
+        })
+
+        builder.addMatcher(creatorsApi.endpoints.addCreatorByName.matchFulfilled, (state,action) => {
+            console.log('Creator added',action);
+        })
+        builder.addMatcher(creatorsApi.endpoints.addCreatorByName.matchRejected, (state,action) => {
+            console.error('Error adding creator: ',action);
         })
     }
 })

@@ -2,16 +2,16 @@ import { configureStore } from '@reduxjs/toolkit';
 import wallReducer from './wall/wallSlice';
 import identityReducer from './auth/authSlice';
 import creatorsReducer from './creators/creatorSlice';
-import { authApi } from './auth/authApi';
+import { siteApi } from './api';
 
 export const store =  configureStore({
   reducer: {
     wall: wallReducer,
     auth: identityReducer,
     creators: creatorsReducer,
-    [authApi.reducerPath]:authApi.reducer
+    [siteApi.reducerPath]:siteApi.reducer
   },
-  middleware:(getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware)
+  middleware:(getDefaultMiddleware) => getDefaultMiddleware().concat(siteApi.middleware)
 })
 
 
