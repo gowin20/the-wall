@@ -3,11 +3,24 @@ import './creators.css';
 import AddCreatorMenu from "./AddCreatorMenu";
 import { useListCreatorsQuery } from "./creatorsApi";
 import type {Creator,CreatorId} from './creatorTypes';
+import { NoteInfo } from "../wall/wallTypes";
 
-const CreatorSelector = ({creatorId}) => {
+interface CreatorSelectorProps {
+    creatorId: CreatorId;
+    currentDetails: NoteInfo;
+    updateDetails: React.Dispatch<React.SetStateAction<NoteInfo>>
+}
+
+const CreatorSelector = ({creatorId,currentDetails,updateDetails} : CreatorSelectorProps) => {
     const [selectedCreator,setSelectedCreator] = useState<CreatorId>(creatorId);
     const [creatorList, setCreatorList] = useState<Creator[]>([]);
     const {data, isFetching, isLoading} = useListCreatorsQuery(null);
+
+    useEffect(()=>{
+        updateDetails({...currentDetails, creator:selectedCreator})
+    },[selectedCreator])
+
+    
 
     useEffect(()=>{
         if (data) setCreatorList([...data]);

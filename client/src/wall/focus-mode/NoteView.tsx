@@ -3,7 +3,7 @@ import OpenSeadragon from 'openseadragon';
 import { getZoomableImage } from '../../api/wall';
 import { imageLoaded } from '../wallSlice';
 import { useAppDispatch,useAppSelector } from "../../hooks";
-import type { Viewer } from '../wallTypes';
+import type { Viewer } from '../Canvas';
 import './focusMode.css';
 
 export default function NoteView({tilesId}) {

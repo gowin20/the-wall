@@ -29,7 +29,7 @@ export default function FocusMode() {
     }, [layoutLoaded,initialized,noteObj]);
 
     let noteDetails;
-    if (editModeOn) noteDetails = <EditDetails note={noteObj}/>
+    if (editModeOn) noteDetails = <EditDetails note={noteObj} noteId={noteObj._id}/>
     else noteDetails = <Details note={noteObj}/>
 
     if (noteObj) return (

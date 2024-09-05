@@ -1,24 +1,5 @@
 import { siteApi } from '../api';
-import { UserObject } from '../creators/creatorTypes';
-import { AuthToken } from './authTypes';
-
-export interface VerifyLoginResponse {
-    message: string | null;
-    isLoggedIn: boolean;
-    userInfo: UserObject | null;
-}
-
-export interface LoginResponse {
-    message: string | null;
-    isLoggedIn: boolean;
-    userInfo: UserObject | null;
-    token: AuthToken | null;
-}
-
-export interface LoginParams {
-    username:string;
-    password:string;
-}
+import { VerifyLoginResponse,LoginResponse,LoginParams } from './authTypes';
 
 export const authApi = siteApi.injectEndpoints({
     endpoints:(builder)=>({
@@ -29,7 +10,7 @@ export const authApi = siteApi.injectEndpoints({
             })
         }),
 
-        login: builder.query<LoginResponse, LoginParams>({
+        login: builder.mutation<LoginResponse, LoginParams>({
             query: (credentials) => ({
                 url:'/users/login',
                 method:'POST',
@@ -39,4 +20,4 @@ export const authApi = siteApi.injectEndpoints({
     }),
     overrideExisting:false,
 })
-export const {useVerifyLoginQuery, useLazyVerifyLoginQuery, useLazyLoginQuery} = authApi;
+export const {useVerifyLoginQuery, useLazyVerifyLoginQuery, useLoginMutation} = authApi;

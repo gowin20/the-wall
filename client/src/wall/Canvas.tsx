@@ -4,7 +4,9 @@ import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
 import { getZoomableImage } from '../api/wall';
 import NoteHighlight from './NoteHighlight';
-import type { DziId, Viewer } from './wallTypes';
+import type { DziId } from './wallTypes';
+
+export type Viewer = OpenSeadragon.Viewer | null;
 
 interface CanvasProps {
     sourceId: DziId;

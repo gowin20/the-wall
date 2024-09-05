@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useAppDispatch,useAppSelector } from "../hooks";
 import { useNavigate } from 'react-router-dom';
-import { useVerifyLoginQuery,useLazyLoginQuery } from './authApi';
+import { useVerifyLoginQuery,useLoginMutation } from './authApi';
 import { setCredentials } from './authSlice';
 
 const Login = () => {
@@ -26,7 +26,7 @@ const Login = () => {
     },[userToken])
 
     // API hook to handle login on form submit
-    const [loginTrigger, result, lastPromiseInfo] = useLazyLoginQuery();
+    const [loginTrigger, result] = useLoginMutation();
 
     const handleLogin = async (e) => {
         e.preventDefault();
