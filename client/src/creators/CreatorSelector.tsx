@@ -20,6 +20,10 @@ const CreatorSelector = ({creatorId,currentDetails,updateDetails} : CreatorSelec
         updateDetails({...currentDetails, creator:selectedCreator})
     },[selectedCreator])
 
+    useEffect(()=>{
+        setSelectedCreator(creatorId);
+    },[creatorId])
+
     
 
     useEffect(()=>{

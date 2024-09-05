@@ -4,9 +4,7 @@ import { patchNote } from "../wallActions";
 import { useAppDispatch } from "../../hooks";
 import { disableControls,enableControls } from "../wallSlice";
 import { NoteId, NoteInfo } from "../wallTypes";
-
-const UNKNOWN_CREATOR_ID = '64f3db0f831d677c80b1726c';
-
+import { initDetails } from "./Details";
 interface DetailsProps {
     note: NoteInfo;
     noteId: NoteId;
@@ -15,18 +13,14 @@ interface DetailsProps {
 const EditDetails = ({note,noteId} : DetailsProps) => {
     if (!note) return <></>;
 
-    const [details,setDetails] = useState<NoteInfo>({
-        creator:note.creator? note.creator : UNKNOWN_CREATOR_ID, // Default to 'Unknown' if no ID
-        title: note.title ? note.title : '',
-        date: note.date ? note.date : '',
-        location: note.location ? note.location : '',
-        details:note.details ? note.details : ''
-    });
+    const [details,setDetails] = useState<NoteInfo>(initDetails(note));
 
     if (!details) return <></>;
 
     const dispatch = useAppDispatch();
-
+    useEffect(()=>{
+        setDetails(initDetails(note));
+    },[note])
 
     /*
     Post edits: posts edits as a PATCH request to the server

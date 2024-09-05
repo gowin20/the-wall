@@ -6,11 +6,3 @@ export const getUserById = async (id) => {
         return user;
     }
 }
-
-export const getAllUsers = async () => {
-    const response = await fetch(SERVER_DOMAIN+'/users/');
-    if (response.status == 200) {
-        const allUsers = await response.json();
-        return allUsers;
-    }
-}

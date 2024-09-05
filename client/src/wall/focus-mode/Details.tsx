@@ -1,84 +1,78 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import { getUserById } from '../../api/user';
 import { NoteInfo } from '../wallTypes';
-import { UserObject } from '../../creators/creatorTypes';
+import { CreatorName, UserObject } from '../../creators/creatorTypes';
 
-type Creator = string;
+
+
+
+// This method is shared with EditDetails
+const UNKNOWN_CREATOR_ID = '64f3db0f831d677c80b1726c';
+
+export const initDetails = (note : NoteInfo) => {
+    console.log('Initializing details:',note)
+    return {
+        creator:note.creator? note.creator : UNKNOWN_CREATOR_ID, // Default to 'Unknown' if no ID
+        title: note.title ? note.title : 'Untitled',
+        date: note.date ? note.date : '',
+        location: note.location ? note.location : '',
+        details:note.details ? note.details : ''
+    }
+}
+
 
 export default function Details({ note }) {
     
     if (!note) return <></>;
 
-    const initNoteDetails = (note) => {
-        return {
-            creatorId:note.creatorId,
-            title:note.title? note.title : 'Untitled',
-            date:note?.date,
-            location:note?.location,
-            details:note?.details
-        }
-    }
-
-    const [details,setDetails] = useState<NoteInfo>(initNoteDetails(note));
-    const [creator,setCreator] = useState<Creator>('Unknown');
+    const [details,setDetails] = useState<NoteInfo>(initDetails(note));
+    const [creatorName,setCreatorName] = useState<CreatorName>('Unknown');
 
     useEffect(() => {
-        async function initDetails() {
+        async function fetchCreator() {
             let user:UserObject;
             if (note.creator) {
                 // fetch user
                 user = await getUserById(note.creator);
-                setCreator(user.name);
+                setCreatorName(user.name);
             }
             else {
-                setCreator('Unknown');
+                setCreatorName('Unknown');
             }
         }
 
         if (note) {
-            initDetails();
+            setDetails(initDetails(note));
+            fetchCreator();
         }
     },[note])
     
-    if (details) {
-        let placeTime, description;
+    if (!details) return <></>;
 
-        const creatorHtml = <span className='title'>{creator}</span>;
-        const title = <span className="artist">{details.title}</span>;
-
-
-        if (details.date || details.location) {
-            let placeTimeText;
-
-            if (details.date) {
-                if (details.location) {
-                    placeTimeText = <>{details.date}<pre style={{display:'inline'}}> | </pre>{details.location}</>
-                }
-                else {
-                    placeTimeText = <>{details.date}</>;
-                }
-            }
-            else if (details.location) {
-                placeTimeText = <>{details.location}</>;
-            }
-            placeTime = <span className="placeTime">{placeTimeText}</span>;
+    let placeTimeText : ReactElement = <></>;
+    if (details.date) {
+        if (details.location) {
+            placeTimeText = <>{details.date}<pre style={{display:'inline'}}> | </pre>{details.location}</>
         }
-
-        if (details.details) description = <span className="description">{details.details}</span>;
-
-        return (
-            <div className="details">
-                <div className="detailsContent">
-                    {creatorHtml}
-                    <br></br>
-                    {placeTime}
-                    <br></br>
-                    {title}
-                    <br className='detailsBreak'></br>
-                    {description}
-                </div>                
-            </div>
-        )
+        else {
+            placeTimeText = <>{details.date}</>;
+        }
     }
-    else return <></>;
+    else if (details.location) {
+        placeTimeText = <>{details.location}</>;
+    }
+
+    return (
+        <div className="details">
+            <div className="detailsContent">
+            <span className='title'>{creatorName}</span>
+                <br></br>
+                <span className="placeTime">{placeTimeText}</span>
+                <br></br>
+                <span className="artist">{details.title}</span>
+                <br className='detailsBreak'></br>
+                <span className="description">{details?.details}</span>
+            </div>                
+        </div>
+    )
 }
