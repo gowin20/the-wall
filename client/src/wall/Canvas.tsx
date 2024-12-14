@@ -1,4 +1,5 @@
 import OpenSeadragon from 'openseadragon';
+import {useMediaQuery} from 'react-responsive';
 import React, { useEffect, useState } from "react";
 import { useAppDispatch,useAppSelector } from "../hooks";
 import { setFocusByPosition, updateZoom } from './wallSlice';
@@ -20,6 +21,7 @@ export default function Canvas({ sourceId } : CanvasProps) {
     const [dragging,setDragging] = useState<string>('');
     const [viewer,setViewer] = useState<Viewer>(null)
     const {data, isFetching} = useGetZoomableImageQuery(sourceId);
+    const [isMobile, setIsMobile] = useState(false);
     
     let dX = 0;
     let dY = 0;
@@ -33,6 +35,22 @@ export default function Canvas({ sourceId } : CanvasProps) {
         }
     }, [data]);
 
+    const handleResize = () => {
+        if (window.innerWidth < 760) {
+            console.log('MOBILE')
+            setIsMobile(true);
+        }
+        else {
+            console.log('NOT MOBILE')
+            setIsMobile(false);
+        }
+    }
+
+    useEffect(() => {
+        handleResize();
+        window.addEventListener('resize',handleResize)
+    },[])
+
     
 
     const initViewer = (tileSource) => {
@@ -44,7 +62,7 @@ export default function Canvas({ sourceId } : CanvasProps) {
             tileSources: tileSource,
             animationTime: 0.5,
             blendTime: 0.1,
-            showNavigator:  true,
+            showNavigator:  !isMobile,
             navigatorPosition:   "BOTTOM_RIGHT",
             maxZoomPixelRatio: 2,
             minZoomLevel: 1,
