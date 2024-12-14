@@ -13,7 +13,7 @@ Breadth-first ordering of elements
     background-color: #171717ee;
 }
 
-.leftSide {
+.noteView {
     position:absolute;
     top:20%;
     left:20%;
@@ -21,7 +21,7 @@ Breadth-first ordering of elements
     height:500px;
 }
 
-.rightSide {
+.infoPanel {
     position:absolute;
     top:20%;
     right:20%;
@@ -144,4 +144,57 @@ Individual controls
 .right {
     top:calc(50% - 13px);
     right:0px;
+}
+
+/*
+Mobile view
+*/
+
+@media only screen and (max-width:820px) {
+    .overlayContents{
+        height:calc(100% - 50px);
+        width:100%;
+        position:absolute;
+        top:50px;
+        bottom:0;
+    }
+    .noteView {
+        height:96vw;
+        max-height:500px;
+        max-width:500px;
+        top:1%;
+        left:2%;
+        right:2%;
+    }
+    .infoPanel {
+        position:absolute;
+        top:calc(1% + 96vw);
+        left:3%;
+        width:94%;
+        height:330px;
+    }
+    .details {
+        top:0;
+        right:0;
+        width:100%;
+        height:200px;
+    }
+    .detailsContent {
+        margin:20px auto auto auto;
+        
+    }
+    .controls {
+        top:220px;
+        right:0;
+        left:0;
+        width:100%;
+        height:130px;
+    }
+}
+
+@media only screen and (min-width:530px) {
+    .infoPanel {
+        position:absolute;
+        top:calc(1% + 500px);
+    }
 }

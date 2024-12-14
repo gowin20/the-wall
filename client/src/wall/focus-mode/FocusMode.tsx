@@ -42,15 +42,15 @@ export default function FocusMode() {
     if (noteObj) return (
         <div className='overlay'>
             <div className='overlayContents'>
-            <div className='leftSide'>
-                <NoteView tilesId={noteObj.tiles}/>
-            </div>    
-            <div className='rightSide'>
-                {editModeOn 
-                ? <EditDetails note={noteObj} noteId={noteObj._id}/>
-                : <Details note={noteObj}/>}
-                <Controls hidden={false} mode='arrows' />     
-            </div>
+                <div className='noteView'>
+                    <NoteView tilesId={noteObj.tiles}/>
+                </div>    
+                <div className='infoPanel'>
+                    {editModeOn 
+                    ? <EditDetails note={noteObj} noteId={noteObj._id}/>
+                    : <Details note={noteObj}/>}
+                    <Controls hidden={false} mode='arrows' />     
+                </div>
             </div>
         </div>
         )

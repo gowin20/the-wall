@@ -14,7 +14,6 @@ interface CanvasProps {
 
 export default function Canvas({ sourceId } : CanvasProps) {
     
-
     const dispatch = useAppDispatch();
     const currentFocus = useAppSelector((state) => state.wall.focus);
     const noteImageSize = useAppSelector((state) => state.wall.layout.noteImageSize);

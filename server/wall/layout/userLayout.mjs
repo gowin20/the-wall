@@ -25,6 +25,9 @@ class UserLayout extends Layout {
         if (!user.username) this.name = user.name.replace(' ', '-')+'--test';
         else this.name = user.username;
 
+        // User layouts are a square
+        options.ratio = 1;
+
         this.noteIds = (await getNotesByUser(this.userId)).map(note => note._id);
         await this.initializeLayout(options);
         callback.bind(this)();
