@@ -23,7 +23,9 @@ export const getLayoutIdByName = async (layoutName) => {
     return result._id;
 }
 
-export const getDefaultLayout = async () => {
+
+// TODO update to add support for 'vertical' and 'horizontal' aspect ratios
+export const getDefaultLayout = async (aspectRatio) => {
     let collection = await db.collection('layouts');
     let query = {default:true};
     let result = await collection.findOne(query); // There should only ever be ONE layout with default:true

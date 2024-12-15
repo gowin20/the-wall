@@ -35,20 +35,17 @@ export default function Canvas({ sourceId } : CanvasProps) {
         }
     }, [data]);
 
-    const handleResize = () => {
+    const handleScreenSize = () => {
         if (window.innerWidth < 760) {
-            console.log('MOBILE')
             setIsMobile(true);
         }
         else {
-            console.log('NOT MOBILE')
             setIsMobile(false);
         }
     }
 
     useEffect(() => {
-        handleResize();
-        window.addEventListener('resize',handleResize)
+        handleScreenSize();
     },[])
 
     

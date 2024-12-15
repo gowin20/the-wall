@@ -19,7 +19,7 @@ export default function Header() {
             setUserInfo(data.userInfo);
         }
         else if (!userToken) {
-            console.log('Signing you out now okay',userToken)
+            console.log('Signing you out now okay?',userToken)
             dispatch(logOut())
         }
     }, [data])

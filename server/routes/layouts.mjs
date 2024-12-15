@@ -14,7 +14,8 @@ router.get("/", async (req, res) => {
 // Get a single layout by ID
 router.get("/id/:id", async (req, res) => {
     let result;
-    if (req.params.id === 'default') result = await getDefaultLayout();
+    if (req.params.id === 'defaultHorizonal') result = await getDefaultLayout('horizontal');
+    else if (req.params.id === 'defaultVertical') result = await getDefaultLayout('vertical');
     else result = await getLayoutById(req.params.id);
   
     if (!result) res.send("Not found").status(404);

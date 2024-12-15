@@ -13,7 +13,6 @@ const Login = () => {
     const {data, isLoading} = useVerifyLoginQuery(null, {pollingInterval:900000})
     useEffect(()=>{
         if (data && data.isLoggedIn) {
-            console.log('boop',data)
             dispatch(setCredentials(data.userInfo));
             navigate('/')
         }

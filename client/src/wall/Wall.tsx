@@ -13,7 +13,7 @@ import Canvas from './Canvas';
  */
 interface WallProps {
     baseUrl: string;
-    layoutId: 'default' | LayoutId;
+    layoutId: 'defaultVertical' | 'defaultHorizontal' | LayoutId;
 }
 
 /**
@@ -28,7 +28,7 @@ export default function Wall(props : WallProps) {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
   
-    // Fetch default layout
+    // Fetch the layout
     const {data} = useGetLayoutQuery(props.layoutId);
     useEffect(() => {
         if (data) {

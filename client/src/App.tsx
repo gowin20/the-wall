@@ -8,27 +8,36 @@ import { store } from './store';
 import { creatorsApi } from './creators/creatorsApi';
 import { Username } from './creators/creatorTypes';
 
+/* Layout information
+
+*/
+interface AppLoaderData {
+    layoutId: 'defaultVertical' | 'defaultHorizontal' | LayoutId;
+    username: '' | Username;
+}
+
 /**
  * Loader function that fetches the current layout ID
  * @param params.username - the name of the current user page, if any
  */
-interface AppLoaderData {
-    layoutId:LayoutId | 'default';
-    username:Username | ''
-}
 export async function getLayoutId({params}) {
-    if (!params.username) return {
-        layoutId: 'default',
-        username: ''
-    };
+    // Return the default layout
+    if (!params.username) {
+        return {
+            layoutId: window.innerWidth < 760 ? 'defaultVertical' : 'defaultHorizontal',
+            username: ''
+        };
+    }
+    // Return a user layout
     const {data} = await store.dispatch(creatorsApi.endpoints.getCreatorByUsername.initiate(params.username));
     if (data) return {
         layoutId:data.layout,
         username:params.username
     };
+    // Return no layout (will error)
     else return {
-        layoutId:null,
-        username:params.username
+            layoutId:null,
+            username:params.username
     };
 }
 
@@ -39,12 +48,12 @@ export async function getLayoutId({params}) {
  */
 export default function App() {
     const loaderData = useLoaderData() as AppLoaderData;
-    console.log(loaderData)
     if (!loaderData.layoutId) throw new Error(`User ${loaderData.username} not found`)
+    console.log(loaderData);
     return (
         <div className="app">
             <Header />
-            <Wall baseUrl={loaderData.username} layoutId={loaderData.layoutId}/>
+            <Wall baseUrl={loaderData.username} layoutId={loaderData.layoutId} />
         </div>
     );
 }
