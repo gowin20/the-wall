@@ -49,7 +49,6 @@ export async function getLayoutId({params}) {
 export default function App() {
     const loaderData = useLoaderData() as AppLoaderData;
     if (!loaderData.layoutId) throw new Error(`User ${loaderData.username} not found`)
-    console.log(loaderData);
     return (
         <div className="app">
             <Header />
