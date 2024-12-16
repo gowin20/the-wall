@@ -4,7 +4,7 @@ import userLayout from "./layout/userLayout.mjs";
 
 const people = {
     'Armin':'64f3db0f831d677c80b17259',
-    'George':'64f3db0f831d677c80b1725f',
+    'Gwen':'64f3db0f831d677c80b1725f',
     'Oliver':'64f3db0f831d677c80b1726e',
     'Shreya':'64f3db0f831d677c80b1726f',
     'Fionna':'64f3db0f831d677c80b1725e',
@@ -32,16 +32,16 @@ Generates a layout containing every note.
 */
 if (process.argv[2] === 'default') {
 
-    // 1015 notes takes 76 minutes to run
-    // AKA 1.269 hours or 1hr16min
-
-    // SHOULD BE FASTER NOW!
+    const thisRatio = process.argv.length == 5 ? (process.argv[4] === 'vertical' ? 9/19.5 : 19.5/9) : 19.5/9;
+    // 1015 notes used to take 76 minutes, aka 1.27hrs
+    // Now 1430 notes only takes about 5 minutes, including upload to S3/Mongo.
+    // SHOULD BE FASTER NOW! - we've cached versions of individual notes at different sizes in S3.
     const defaultOptions = {
-        saveFiles:true,
+        saveFiles:false,
         insert:true,
-        setDefault:false,
         name:process.argv[3],
-        noteImageSize:16
+        //noteImageSize:16,
+        ratio:thisRatio
     };
 
     await defaultLayout().init(defaultOptions, ()=>{});

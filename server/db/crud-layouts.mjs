@@ -1,12 +1,14 @@
 import db from "./conn.mjs"
 import { ObjectId } from "mongodb";
 
+// Returns an object containing all layouts
 export const getAllLayouts = async () => {
     let collection = await db.collection('layouts');
     let results = await collection.find({}).toArray();
     return results;
 }
 
+// Returns a layout object by searching with an ObjectId
 export const getLayoutById = async (layoutId) => {
     let collection = await db.collection('layouts');
     let query = {_id: new ObjectId(layoutId)};
@@ -15,6 +17,7 @@ export const getLayoutById = async (layoutId) => {
     return result;
 }
 
+// Returns a layout ID by searching with the 'name' property. Assumes layout names are unique.
 export const getLayoutIdByName = async (layoutName) => {
     const collection = await db.collection('layouts');
     const result = await collection.findOne({name:layoutName});
@@ -23,28 +26,7 @@ export const getLayoutIdByName = async (layoutName) => {
     return result._id;
 }
 
-
-// TODO update to add support for 'vertical' and 'horizontal' aspect ratios
-export const getDefaultLayout = async (aspectRatio) => {
-    let collection = await db.collection('layouts');
-    let query = {default:true};
-    let result = await collection.findOne(query); // There should only ever be ONE layout with default:true
-
-    return result;
-}
-
-export const removeDefaultLayout = async () => {
-    const collection = await db.collection('layouts');
-
-    const result = await collection.updateMany({default:true},{
-        $set: {
-            default:false
-        }
-    });
-    console.log(`Removed ${result.modifiedCount} other default layouts.`)
-    return result.modifiedCount;
-}
-
+// Inserts a layout to MongoDB
 export const insertLayout = async (layoutObj) => {
 
     const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');

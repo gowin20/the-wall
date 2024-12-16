@@ -8,7 +8,7 @@ class DefaultLayout extends Layout {
         if (options.setDefault) this.default = true;
 
         this.noteIds = (await getAllNotes()).map(note=>note._id);
-        this.ratio = options.ratio || 320/146;
+        this.ratio = options.ratio || 19.5/9;
 
         await this.initializeLayout(options);
         callback.bind(this)();

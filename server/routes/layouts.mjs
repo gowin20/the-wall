@@ -1,7 +1,6 @@
 import express from "express";
-import db from "../db/conn.mjs";
-import { ObjectId } from "mongodb";
-import { getAllLayouts, getDefaultLayout, getLayoutById } from "../db/crud-layouts.mjs";
+import { getAllLayouts, getLayoutById } from "../db/crud-layouts.mjs";
+import '../loadEnvironment.mjs'
 
 const router = express.Router();
 
@@ -14,8 +13,8 @@ router.get("/", async (req, res) => {
 // Get a single layout by ID
 router.get("/id/:id", async (req, res) => {
     let result;
-    if (req.params.id === 'defaultHorizontal') result = await getDefaultLayout('horizontal');
-    else if (req.params.id === 'defaultVertical') result = await getDefaultLayout('vertical');
+    if (req.params.id === 'defaultVertical') result = await getLayoutById(process.env.DEFAULT_LAYOUT_VERTICAL);
+    else if (req.params.id === 'defaultHorizontal') result = await getLayoutById(process.env.DEFAULT_LAYOUT_HORIZONTAL);
     else result = await getLayoutById(req.params.id);
   
     if (!result) res.send("Not found").status(404);
