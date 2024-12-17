@@ -17,6 +17,22 @@ const client = new S3Client({
 const BUCKET = 'the-wall-source';
 const S3_ADDRESS = 'https://the-wall-source.s3.us-west-1.amazonaws.com/';
 
+
+export const listNewOrigNotes = async (lastModifiedDate) => {
+  const prefix = 'notes/orig/';
+  const allNotes = await listFolder(prefix);
+
+  const newNotes = [];
+
+  for (const note of allNotes) {
+    if (note.LastModified > new Date(lastModifiedDate)) {
+      newNotes.push(note.Key);
+    }
+  }
+
+  return newNotes;
+}
+
 export const listFolder = async (folder) => {
 
   const command = new ListObjectsV2Command({
@@ -32,8 +48,8 @@ export const listFolder = async (folder) => {
     while (isTruncated) {
       const { Contents, IsTruncated, NextContinuationToken } = await client.send(command);
 
-      const contentList = (Contents.map((c)=>c.Key));
-      noteList.notes.push.apply(noteList.notes,contentList);
+      //const contentList = (Contents.map((c)=>c.Key));
+      noteList.notes.push.apply(noteList.notes,Contents);
 
       isTruncated = IsTruncated;
       command.input.ContinuationToken = NextContinuationToken;

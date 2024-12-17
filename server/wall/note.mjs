@@ -62,7 +62,7 @@ class Note {
         orig: this.orig,
         thumbnails: this.thumbnails,
         tiles: this.tiles,
-        creator: this.creator,
+        creatorId: this.creator._id,
         title: this.title,
         details: this.details,
         location: this.location,
@@ -94,10 +94,10 @@ class Note {
       
       // fetch orig
       const origImage = await fetch(this.orig);
-
       const origBuffer = await origImage.buffer();
       const resizeBuffer = await sharp(origBuffer).resize({width:size}).jpeg().toBuffer();
 
+      console.log('Thumbnail created. Uploading thumbnail...')
       //upload to S3
       await createFolderIfNotExist(this.dirName);
 

@@ -1,6 +1,6 @@
 import { Layout } from "./layout.mjs";
 import { getAllNotes } from "../../db/crud-notes.mjs";
-import { insertLayout, removeDefaultLayout } from "../../db/crud-layouts.mjs";
+import { insertLayout } from "../../db/crud-layouts.mjs";
 
 
 class DefaultLayout extends Layout {

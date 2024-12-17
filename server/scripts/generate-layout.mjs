@@ -1,6 +1,6 @@
-import customLayout from "./layout/customLayout.mjs";
-import defaultLayout from "./layout/defaultLayout.mjs";
-import userLayout from "./layout/userLayout.mjs";
+import customLayout from "../wall/layout/customLayout.mjs";
+import defaultLayout from "../wall/layout/defaultLayout.mjs";
+import userLayout from "../wall/layout/userLayout.mjs";
 
 const people = {
     'Armin':'64f3db0f831d677c80b17259',
@@ -33,6 +33,7 @@ Generates a layout containing every note.
 if (process.argv[2] === 'default') {
 
     const thisRatio = process.argv.length == 5 ? (process.argv[4] === 'vertical' ? 9/19.5 : 19.5/9) : 19.5/9;
+    // Current default layout is 1430 notes, so either 26 x 55 or 55 x 26.
     // 1015 notes used to take 76 minutes, aka 1.27hrs
     // Now 1430 notes only takes about 5 minutes, including upload to S3/Mongo.
     // SHOULD BE FASTER NOW! - we've cached versions of individual notes at different sizes in S3.
@@ -40,7 +41,6 @@ if (process.argv[2] === 'default') {
         saveFiles:false,
         insert:true,
         name:process.argv[3],
-        //noteImageSize:16,
         ratio:thisRatio
     };
 
@@ -62,8 +62,7 @@ if (process.argv[2] === 'user') {
         userId:people[process.argv[3]],
         saveFiles:true,
         insert:false,
-        ratio:3.2/1
-        //noteImageSize:5
+        noteImageSize:16
     }
 
     await userLayout().init(userOptions,()=>{});

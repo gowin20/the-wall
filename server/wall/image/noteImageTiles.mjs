@@ -5,7 +5,7 @@ import sharp from 'sharp';
 import { uploadDziFolder } from "../../s3/s3.mjs";
 import { insertOrUpdateDzi } from '../../db/crud-dzis.mjs';
 
-const TEMP_NOTE_DIR = './note/temp/';
+const TEMP_NOTE_DIR = './wall/temp/notes';
 
 class NoteImageTiles {
     constructor(note) {
