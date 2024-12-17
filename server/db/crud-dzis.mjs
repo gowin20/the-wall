@@ -1,5 +1,5 @@
-import db from "./conn.mjs"
-import { ObjectId } from "mongodb";
+import db from './conn.mjs';
+import { ObjectId } from 'mongodb';
 
 export const insertOrUpdateDzi = async (dziObj) => {
     let collection = db.collection('dzis');
@@ -50,14 +50,14 @@ export const getDziIdByName = async (dziName) => {
 }
 
 export const getDziById = async (dziId) => {
-    let collection = await db.collection('dzis');
+    let collection = db.collection('dzis');
     let query = {_id: new ObjectId(dziId)};
     let result = await collection.findOne(query);
     return result;
 }
 
 export const getAllDzis = async () => {
-    let collection = await db.collection('dzis');
+    let collection = db.collection('dzis');
     let results = await collection.find({}).toArray();
     return results;
 }

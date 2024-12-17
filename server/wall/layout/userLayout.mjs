@@ -1,7 +1,9 @@
-import {getNotesByUser} from "../../db/crud-notes.mjs";
+import { getNotesByUser } from "../../db/crud-notes.mjs";
 import {getUserByID, updateUserLayout} from "../../db/crud-users.mjs";
-import { Layout } from "./layout.mjs";
 import { getLayoutIdByName, insertLayout } from "../../db/crud-layouts.mjs";
+
+import { Layout } from "./layout.mjs";
+
 
 /*
 

@@ -1,5 +1,6 @@
 import * as fs from 'fs';
-import { getLayoutById, insertLayout } from '../../db/crud-layouts.mjs';
+import { getLayoutById } from '../../db/crud-layouts.mjs';
+
 import dzi from '../image/dzi.mjs';
 import stitchedImage from '../image/stitchedImage.mjs';
 import dziFromStitch from '../image/dziFromStitch.mjs';

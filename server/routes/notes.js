@@ -1,24 +1,25 @@
-import express from "express";
-import { getAllNotes,getNoteById, updateNote } from "../db/crud-notes.mjs";
-import { ObjectId } from "mongodb";
-import { verifyJWT } from "../auth/verify.mjs";
+const { verifyJWT } = require("../verify.js");
 
+const express = require('express');
 const router = express.Router();
 
 // Get a list of all notes
 router.get("/", async (req, res) => {
+  const { getAllNotes } = await import("../db/crud-notes.mjs");
   const results = await getAllNotes(); // get in alphabetical order
   res.send(results).status(200);
 });
 
 // Get a single note by ID
 router.get("/id/:id", async (req, res) => {
+  const { getNoteById } = await import("../db/crud-notes.mjs");
   const result = await getNoteById(req.params.id);  
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });
 
-// Create a new note
+/*
+// Create a new note -- TODO
 router.post('/',async (req,res)=>{
   try {
     console.log(req);
@@ -29,9 +30,12 @@ router.post('/',async (req,res)=>{
     res.send(e).status(400);
   }
 })
+*/
 
-// TODO edit a note
-router.patch('/id/:id', verifyJWT, async(req,res) => {
+// Edit a note
+router.patch('/id/:id', verifyJWT, async (req,res) => {
+  const { updateNote } = await import("../db/crud-notes.mjs");
+
   const noteInfo = req.body;
   const results = await updateNote(req.params.id,noteInfo);
 
@@ -41,4 +45,4 @@ router.patch('/id/:id', verifyJWT, async(req,res) => {
 
 // TODO delete a note (only valid if user is authorized and logged in! pass a valid token :))
 
-export default router;
+module.exports = router;

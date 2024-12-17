@@ -1,4 +1,3 @@
-import sharp from "sharp";
 import { LayoutImage } from "./layoutImage.mjs";
 import { getDziIdByName, insertOrUpdateDzi } from "../../db/crud-dzis.mjs";
 
