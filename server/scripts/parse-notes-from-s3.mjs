@@ -1,4 +1,4 @@
-import { listNewOrigNotes } from "../s3/s3.mjs";
+import { listNewOrigNotes } from "../wall/s3.mjs";
 import { insertFakeUser } from "../db/crud-users.mjs";
 import note from "../wall/note.mjs";
 import { getNoteByOrigUrl } from "../db/crud-notes.mjs";

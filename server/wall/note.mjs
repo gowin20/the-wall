@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import sharp from 'sharp';
 import { getNoteById, addThumbnail, updateNote, insertNewNote } from '../db/crud-notes.mjs';
-import { createFolderIfNotExist, uploadImage } from '../s3/s3.mjs';
+import { createFolderIfNotExist, uploadImage } from './s3.mjs';
 import noteImageTiles from './image/noteImageTiles.mjs';
 
 const S3_URL = 'https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/';

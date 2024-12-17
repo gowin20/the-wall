@@ -3,7 +3,7 @@ import sharp from "sharp";
 import stitchedImage from "./stitchedImage.mjs";
 import { TEMP_LAYOUT_DIR } from "../layout/layout.mjs";
 import dir from 'node-dir';
-import { uploadImage, createFolderIfNotExist, uploadDziFolder } from "../../s3/s3.mjs";
+import { uploadImage, createFolderIfNotExist, uploadDziFolder } from "../s3.mjs";
 import fs from 'fs';
 import util from 'util';
 
