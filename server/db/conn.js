@@ -1,8 +1,8 @@
-require('dotenv').config();
 const { MongoClient } = require('mongodb');
+require('dotenv').config();
 
 const connectionString = process.env.ATLAS_URI || "";
-console.log('conn:',connectionString)
+console.log('conn:',connectionString);
 
 const client = new MongoClient(connectionString);
 
@@ -14,8 +14,6 @@ try {
   console.error(e);
 }
 
-let db = conn.db('wall');
+const db = conn.db('wall');
 
-module.exports = {
-    db
-}
+module.exports = {db};
