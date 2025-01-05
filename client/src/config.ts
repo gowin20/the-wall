@@ -1,1 +1,1 @@
-export const SERVER_DOMAIN = 'http://localhost:5050';
+export const SERVER_DOMAIN = 'https://o0ux04h54c.execute-api.us-west-1.amazonaws.com/latest';
