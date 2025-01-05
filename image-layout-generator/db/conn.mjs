@@ -1,8 +1,8 @@
-const { MongoClient } = require('mongodb');
-require('dotenv').config();
+import { MongoClient } from "mongodb";
+import '../loadEnvironment.mjs'
 
 const connectionString = process.env.ATLAS_URI || "";
-console.log('conn:',connectionString);
+console.log('conn:',connectionString)
 
 const client = new MongoClient(connectionString);
 
@@ -14,6 +14,6 @@ try {
   console.error(e);
 }
 
-const db = conn.db('wall');
+let db = conn.db('wall');
 
-module.exports = {db};
+export default db;

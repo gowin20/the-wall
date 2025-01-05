@@ -1,6 +1,6 @@
 # local files (testing only)
 public/notes
-server/wall/temp
+image-layout-generator/wall/temp
 .env
 server/.env
 client/.env
