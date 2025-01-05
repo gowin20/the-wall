@@ -1,6 +1,6 @@
 import db from "./conn.mjs"
 import { ObjectId } from "mongodb";
-import bcrypt from 'bcrypt';
+//import bcrypt from 'bcrypt';
 
 const Users = db.collection('users');
 
@@ -94,6 +94,9 @@ export const checkAdmin = async (userId) => {
 Authentication methods
 
 */
+/*
+TODO move bcrypt out of this file before uncommenting
+
 export const registerUser = async (userInfo) => {
 
     if (!userInfo.username) return "No username provided.";
@@ -134,6 +137,7 @@ export const registerUser = async (userInfo) => {
     }
     return "OK"
 }
+*/
 
 export const changeUsername = async (userID,newUsername) => {
     // TODO -- this option should only be provided to "fake users" who are converting to an actual account

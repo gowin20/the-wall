@@ -1,6 +1,4 @@
-
-
-const bcrypt = require('bcrypt');
+//const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { verifyJWT } = require("../verify.js");
 const express = require('express');
@@ -53,6 +51,9 @@ router.post('/addName', verifyJWT, async (req,res) => {
 /*
 Auth code
 */
+/*
+
+NOT WORKING RIGHT NOW - need to fix a problem with bcrypt for registration to work properly. See below
 
 router.post('/register',async (req,res)=>{
   const { registerUser } = await import("../db/crud-users.mjs");
@@ -65,6 +66,7 @@ router.post('/register',async (req,res)=>{
   if (response === "OK") res.send(response).status(200);
   else (res.send(response).status(400));
 })
+*/
 
 router.post('/login', async (req,res) => {
   const loginAttempt = req.body;
