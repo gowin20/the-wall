@@ -1,22 +1,29 @@
 {
-  "name": "notes-site",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
+  "name": "the-wall-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "install": "concurrently \"cd client && npm i\" \"cd server && npm i\"",
-    "clean-install": "concurrently \"cd client && npm ci\" \"cd server && npm ci\"",
-    "start": "concurrently \"cd client && npm run client:start\" \"cd server && npm run server:start\"",
-    "dev": "concurrently \"cd client && npm run client:dev\" \"cd server && npm run server:dev\"",
-    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    "server:dev": "nodemon server.js",
+    "server:start": "nodemon server.js",
+    "server:lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
+  "keywords": [],
+  "author": "Gwen",
+  "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.0.1"
-  },
-  "devDependencies": {
-    "eslint": "^8.38.0",
-    "eslint-plugin-react": "^7.32.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.3.4"
+    "@aws-sdk/client-s3": "^3.899.0",
+    "aws-serverless-express": "^3.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.18.2",
+    "gallery-image": "^1.0.0-beta-8",
+    "image-size": "^2.0.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.0.0",
+    "node-dir": "^0.1.17",
+    "nodemon": "^3.0.1"
   }
 }

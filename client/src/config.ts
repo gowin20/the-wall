@@ -1,1 +1,0 @@
-export const SERVER_DOMAIN = 'https://o0ux04h54c.execute-api.us-west-1.amazonaws.com/latest';
