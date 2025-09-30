@@ -1,57 +1,37 @@
 import { Layout, Art } from "gallery-image";
-import { addThumbnail, getAllNotes } from '../db/crud-notes.mjs';
+import { addThumbnail, getAllNotes, getNoteById } from '../db/crud-notes.mjs';
 import { insertLayout } from "../db/crud-layouts.mjs";
 import { uploadOrigToS3, uploadThumbnailToS3 } from "../s3/art.js";
 
-
+// generate layout
 
 const allNotes = await getAllNotes();
-const thumbnailSize = 900;
-
-// 900x900px is 300DPI for 3x3in post-it notes
-
-const randNum = Math.floor(Math.random() * allNotes.length)
-const note = allNotes[0];
-
-
-
-const newNote = new Art({
-    source: '../temp/test-note-coral.jpg',
-    metadata: {
-        creator: 'Gwen',
-        title: 'Test note for testing!',
-        details: 'Don\'t insert this into the database please.'
+const artList = allNotes.map(note => {
+    try { return new Art(note) } catch (e) {
+        console.log('BROKEN NOTE');
+        console.log(note);
     }
 });
 
-const url = await uploadOrigToS3(newNote);
-
-console.log(newNote);
-console.log(url);
-
-
-
-
-
-
-
-// generate layout
-/*
 const defaultLayout = new Layout({
-    name: 'default-test-large-9-25-2025',
-    artList: allNotes,
-    noteImageSize: 1024,
+    name: 'default-9-29-2025',
+    artList: artList,
+    noteImageSize: 900,
     ratio: 19.5/9
-})
+});
+//console.log(defaultLayout);
 
 await defaultLayout.generateImage({
     saveFile: true,
     outputDir: '../temp/',
-    outputType: 'tif'
-})
+    outputType: 'tif',
+    sharpOptions: {
+        limitInputPixels: false
+    },
+    logLevel: 'standard'
+});
 
-*/
+console.log('Done.');
+
 // upload to s3
-
-
 // insert layout
