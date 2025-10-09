@@ -1,6 +1,6 @@
 //import {client} from '../lambda.js';
 import { MongoClient } from "mongodb";
-// import '../loadEnvironment.mjs'
+// import '../loadEnvironment.js'
 import dotenv from "dotenv";
 dotenv.config();
 

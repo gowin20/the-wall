@@ -1,10 +1,10 @@
-import customLayout from "../wall/layout/customLayout.mjs";
-import defaultLayout from "../wall/layout/defaultLayout.mjs";
-import userLayout from "../wall/layout/userLayout.mjs";
-import { getAllLayouts } from "../db/crud-layouts.mjs";
-import { getAllDzis } from "../db/crud-dzis.mjs";
-import { getAllNotes } from "../db/crud-notes.mjs";
-import { getAllUsers } from "../db/crud-users.mjs";
+import customLayout from "../wall/layout/customLayout.js";
+import defaultLayout from "../wall/layout/defaultLayout.js";
+import userLayout from "../wall/layout/userLayout.js";
+import { getAllLayouts } from "../db/crud-layouts.js";
+import { getAllDzis } from "../db/crud-dzis.js";
+import { getAllNotes } from "../db/crud-notes.js";
+import { getAllUsers } from "../db/crud-users.js";
 import * as fs from 'fs'
 const getLayout = (layout) => {
     const layoutStructure = {

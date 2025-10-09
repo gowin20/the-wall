@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { getNoteByOrigUrl } from '../crud-notes.mjs';
-import db from '../conn.mjs'
+import { getNoteByOrigUrl } from '../crud-notes.js';
+import db from '../conn.js'
 
 
 const setTileSize = async () => {

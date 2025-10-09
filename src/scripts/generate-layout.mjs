@@ -1,6 +1,6 @@
-import customLayout from "../wall/layout/customLayout.mjs";
-import defaultLayout from "../wall/layout/defaultLayout.mjs";
-import userLayout from "../wall/layout/userLayout.mjs";
+import customLayout from "../wall/layout/customLayout.js";
+import defaultLayout from "../wall/layout/defaultLayout.js";
+import userLayout from "../wall/layout/userLayout.js";
 
 import {Layout} from 'gallery-image';
 
@@ -29,7 +29,7 @@ if (process.argv.length < 4) {
 /*
 
 GENERATE DEFAULT LAYOUT
-'node generate-cli.mjs default <LAYOUT NAME>'
+'node generate-cli.js default <LAYOUT NAME>'
 
 Generates a layout containing every note.
 */
@@ -55,7 +55,7 @@ if (process.argv[2] === 'default') {
 /*
 
 GENERATE USER LAYOUT
-'node generate-cli.mjs default <USER'S NAME>'
+'node generate-cli.js default <USER'S NAME>'
 
 Generates a layout containing all notes by a user.
 */
@@ -74,7 +74,7 @@ if (process.argv[2] === 'user') {
 /*
 
 GENERATE CUSTOM LAYOUT
-'node generate-cli.mjs default <LAYOUT NAME>`
+'node generate-cli.js default <LAYOUT NAME>`
 
 Generates a layout with custom notes, or random notes if none are provided.
 */

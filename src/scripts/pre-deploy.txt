@@ -1,8 +1,8 @@
-import { getAllNotes } from "../crud-notes.mjs";
-import { getAllUsers, getUserByUsername } from "../crud-users.mjs";
-import note from "../../wall/note.mjs";
-import defaultLayout from "../../wall/layout/defaultLayout.mjs";
-import userLayout from "../../wall/layout/userLayout.mjs";
+import { getAllNotes } from "../crud-notes.js";
+import { getAllUsers, getUserByUsername } from "../crud-users.js";
+import note from "../../wall/note.js";
+import defaultLayout from "../../wall/layout/defaultLayout.js";
+import userLayout from "../../wall/layout/userLayout.js";
 
 const validateNotes = async () => {
     const notes = await getAllNotes();

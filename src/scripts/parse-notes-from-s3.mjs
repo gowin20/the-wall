@@ -1,7 +1,7 @@
-import { listNewOrigNotes } from "../wall/s3.mjs";
-import { insertFakeUser } from "../db/crud-users.mjs";
-import note from "../wall/note.mjs";
-import { getNoteByOrigUrl } from "../db/crud-notes.mjs";
+import { listNewOrigNotes } from "../wall/s3.js";
+import { insertFakeUser } from "../db/crud-users.js";
+import note from "../wall/note.js";
+import { getNoteByOrigUrl } from "../db/crud-notes.js";
 import {CREATORS,LOCATIONS,DATES,TAGS} from './my-insanity';
 
 /*

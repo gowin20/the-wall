@@ -57,7 +57,7 @@ Auth code
 NOT WORKING RIGHT NOW - need to fix a problem with bcrypt for registration to work properly. See below
 
 router.post('/register',async (req,res)=>{
-  const { registerUser } = await import("../db/crud-users.mjs");
+  const { registerUser } = await import("../db/crud-users.js");
 
 
   const userInfo = req.body;

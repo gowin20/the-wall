@@ -1,7 +1,7 @@
 import { Art } from 'gallery-image';
-import '../loadEnvironment.mjs';
-import { uploadImage, createFolderIfNotExist } from "./s3.mjs";
-import { S3_ADDRESS, S3_ART_PREFIX } from '../loadEnvironment';
+import '../loadEnvironment.js';
+import { uploadImage, createFolderIfNotExist } from "./s3.js";
+import { S3_ADDRESS, S3_ART_PREFIX } from '../loadEnvironment.js';
 
 export const uploadThumbnailToS3 = async (art, thumbnailSize) => {
     
