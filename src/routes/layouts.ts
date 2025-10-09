@@ -1,10 +1,9 @@
-const express = require('express');
-const router = express.Router();
-require('dotenv').config();
+import { Router } from 'express';
+const router = Router();
 
 // Get a list of all layouts
 router.get("/", async (req, res) => {
-    const { getAllLayouts } = await import("../db/crud-layouts.mjs");
+    const { getAllLayouts } = await import("../db/crud-layouts.js");
     const results = await getAllLayouts();
     res.send(results).status(200);
 });
@@ -12,7 +11,7 @@ router.get("/", async (req, res) => {
 // Get a single layout by ID
 router.get("/id/:id", async (req, res) => {
 
-    const { getLayoutById } = await import("../db/crud-layouts.mjs");
+    const { getLayoutById } = await import("../db/crud-layouts.js");
 
     let result;
     if (req.params.id === 'defaultVertical') result = await getLayoutById(process.env.DEFAULT_LAYOUT_VERTICAL);
@@ -26,7 +25,7 @@ router.get("/id/:id", async (req, res) => {
 
 // Get the default layout
 router.get('/default', async (req, res) => {
-    const { getLayoutById } = await import("../db/crud-layouts.mjs");
+    const { getLayoutById } = await import("../db/crud-layouts.js");
 
     const res1 = await getLayoutById(process.env.DEFAULT_LAYOUT_VERTICAL);
     const res2 = await getLayoutById(process.env.DEFAULT_LAYOUT_HORIZONTAL);
@@ -36,5 +35,4 @@ router.get('/default', async (req, res) => {
 });
 
 // TODO add routes for /generate/default and /generate/custom
-
-module.exports= router;
+export default router;

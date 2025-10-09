@@ -10,15 +10,11 @@ import fs from 'fs';
 import dir from 'node-dir';
 import util from 'util';
 import { imageSizeMetadata } from "./util.js";
+import { S3_BUCKET, S3_ADDRESS, S3_ART_PREFIX } from '../loadEnvironment.js'
 
 const client = new S3Client({
   region:'us-west-1'
 });
-
-const BUCKET = 'the-wall-source';
-const S3_ADDRESS = 'https://the-wall-source.s3.us-west-1.amazonaws.com/';
-export const S3_ART_PREFIX = 'notes/all/'
-
 
 export const listNewOrigNotes = async (lastModifiedDate) => {
   const prefix = 'notes/orig/';
@@ -38,7 +34,7 @@ export const listNewOrigNotes = async (lastModifiedDate) => {
 export const listFolder = async (folder) => {
 
   const command = new ListObjectsV2Command({
-    Bucket: BUCKET,
+    Bucket: S3_BUCKET,
     Prefix: folder,
     // The default and maximum number of keys returned is 1000.
   });
@@ -74,7 +70,7 @@ Folder manupulation
 
 async function createFolder(Key) {
   const command = new PutObjectCommand({
-    Bucket: BUCKET, 
+    Bucket: S3_BUCKET, 
     Key: Key
   });
   const res = await client.send(command);
@@ -84,7 +80,7 @@ async function createFolder(Key) {
 
 async function existsFolder(Key) {
   const command = new HeadObjectCommand({
-    Bucket:BUCKET, 
+    Bucket:S3_BUCKET, 
     Key:Key });
 
   try {
@@ -107,7 +103,7 @@ export async function createFolderIfNotExist(Key) {
 
 export async function deleteFolder(Key) {
   const command = new DeleteObjectCommand({ 
-    Bucket:BUCKET, 
+    Bucket:S3_BUCKET, 
     Key:Key 
   });
   return await client.send(command);
@@ -124,7 +120,7 @@ export async function uploadImage(key,imageData) {
   const metadata = await imageSizeMetadata(imageData);
   
   const command = new PutObjectCommand({
-    Bucket: BUCKET,
+    Bucket: S3_BUCKET,
     Key: key,
     Body: imageData,
     Metadata: metadata,
@@ -140,7 +136,7 @@ export async function uploadImage(key,imageData) {
 
 export async function deleteItem(Key) {
   const command = new DeleteObjectCommand({ 
-    Bucket:BUCKET, 
+    Bucket:S3_BUCKET, 
     Key:Key 
   });
   return await client.send(command);
@@ -154,14 +150,14 @@ export async function emptyDirectory(dir) {
   }
 
   const listedObjects = await s3.listObjectsV2({
-    Bucket: BUCKET,
+    Bucket: S3_BUCKET,
     Prefix: dir
   }).promise();
 
   if (listedObjects.Contents.length === 0) return;
 
   const deleteParams = {
-      Bucket: BUCKET,
+      Bucket: S3_BUCKET,
       Delete: { Objects: [] }
   };
 
@@ -196,6 +192,6 @@ export const uploadDziFolder = async (localPath,s3Path) => {
     }
     console.log('[DONE] Successfully uploaded DZI to S3.')
 
-    const Url = process.env.S3_PREFIX + s3Path;
+    const Url = process.env.S3_ADDRESS + s3Path;
     return Url;
 }

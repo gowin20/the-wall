@@ -1,6 +1,6 @@
-import db from "./conn.mjs"
+import db from "./conn.js"
 import { ObjectId } from "mongodb";
-import { getUserByID } from "./crud-users.mjs";
+import { getUserByID } from "./crud-users.js";
 
 // A collection of functions returning notes
 export const getNoteById = async (noteID) => {
@@ -67,7 +67,7 @@ export const updateNote = async (noteId, noteInfo) => {
 export const insertNewNote = async (noteObj) => {
     const collection = db.collection('notes');
 
-    const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
+    const S3_ADDRESS = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
     const errorHeader = 'INSERT ERROR: ';
     // All notes need a valid creator ID and a valid URL
     if (!noteObj) {
@@ -76,7 +76,7 @@ export const insertNewNote = async (noteObj) => {
     else if (!noteObj.orig) {
         console.error(`${errorHeader}No image URL.`);
     }
-    else if (!S3_URL.test(noteObj.orig)) {
+    else if (!S3_ADDRESS.test(noteObj.orig)) {
         console.error(`${errorHeader}Invalid S3 URL.`);
     }
     else if (!noteObj.creatorId) {
@@ -103,7 +103,7 @@ export const addThumbnail = async (id,thumbnailName,url) => {
         }
     }
     const notes = db.collection('notes');
-    const result = notes.updateOne({_id:new ObjectId(id)}, updateThumbs);
+    const result = await notes.updateOne({_id:new ObjectId(id)}, updateThumbs);
 
     if (result.matchedCount == 0) throw new Error('Invalid note ID.');
 

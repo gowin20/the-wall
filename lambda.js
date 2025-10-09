@@ -1,6 +1,6 @@
 'use strict'
 import awsServerlessExpress from 'aws-serverless-express';
-import app from './server';
+import app from './src/server';
 import {MongoClient} from 'mongodb';
 
 import dotenv from 'dotenv'

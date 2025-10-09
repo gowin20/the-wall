@@ -1,6 +1,6 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const verifyJWT = (req,res,next) => {
+export const verifyJWT = (req,res,next) => {
     const token = req.headers['authorization']?.split(' ')[1];
   
     if (!token) return res.status(401).json({message:'Invalid token.', isLoggedIn:false});
@@ -10,7 +10,7 @@ const verifyJWT = (req,res,next) => {
             message:'Authentication error'
         });
 
-        const { checkAdmin } = await import('./db/crud-users.mjs');
+        const { checkAdmin } = await import('./db/crud-users.js');
         const isAdmin = await checkAdmin(tokenContents.id);
         req.userInfo = {
             id:tokenContents.id,
@@ -19,8 +19,4 @@ const verifyJWT = (req,res,next) => {
         };
         next();
     })
-}
-
-module.exports = {
-    verifyJWT
 }

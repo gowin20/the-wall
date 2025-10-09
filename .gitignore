@@ -5,9 +5,8 @@ temp/
 .env
 
 node_modules
-the-wall-server/node_modules
-the-wall-client/node_modules
 
+dist/
 
 # Logs
 logs

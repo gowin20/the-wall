@@ -1,7 +1,7 @@
 import { Layout, Art } from "gallery-image";
 import { addThumbnail, getAllNotes, getNoteById } from '../db/crud-notes.mjs';
 import { insertLayout } from "../db/crud-layouts.mjs";
-import { uploadOrigToS3, uploadThumbnailToS3 } from "../s3/art.js";
+import { uploadOrigToS3, uploadThumbnailToS3 } from "../../s3/art.js";
 
 
 const DPI_300_SIZE = 900;

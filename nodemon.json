@@ -1,0 +1,7 @@
+{
+    "execMap": {
+        "ts": "tsc && node dist/src/server.js"
+    },
+    "ext": "ts,js,json",
+    "ignore": ["dist/"]
+}

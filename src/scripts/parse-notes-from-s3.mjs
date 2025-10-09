@@ -30,7 +30,7 @@ Workflow:
 */
 
 const prefix = 'notes/orig/';
-const S3_URL = 'https://the-wall-source.s3.us-west-1.amazonaws.com/';
+const S3_ADDRESS = 'https://the-wall-source.s3.us-west-1.amazonaws.com/';
 
 export const createObjectsFromS3 = async (options) => {
 
@@ -71,7 +71,7 @@ const parseNote = async (path) => {
 
     if (path == 'notes/orig/') return;
 
-    const noteUrl = S3_URL + path;
+    const noteUrl = S3_ADDRESS + path;
     const existingNote = await getNoteByOrigUrl(noteUrl);
 
 
@@ -101,7 +101,7 @@ const parseNote = async (path) => {
     const creatorId = await initUserObject(nameAbbr);
 
     const noteObject = {
-        orig:S3_URL + path,
+        orig:S3_ADDRESS + path,
         creator: creatorId,
         title:null,
         details:info,

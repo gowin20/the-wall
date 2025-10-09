@@ -1,4 +1,4 @@
-import db from './conn.mjs';
+import db from './conn.js';
 import { ObjectId } from 'mongodb';
 
 export const insertOrUpdateDzi = async (dziObj) => {

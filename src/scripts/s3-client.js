@@ -1,6 +1,6 @@
 
 // S3 CONNECT
-export const S3_URL = 'https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/';
+export const S3_ADDRESS = 'https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/';
 export const S3_ART_ORIG = `notes\/orig\/`;
 export const S3_ART_IMAGES = `notes\/all\/`;
 export const S3_LAYOUT_IMAGES = `layouts\/`;
@@ -11,7 +11,7 @@ export const getS3ArtDirName = async (art: Art) => {
 
     const orig = art.orig as string;
     // Isolate file name without PNG
-    const fileName = orig.substring((S3_URL+'orig/').length, orig.length-4);
+    const fileName = orig.substring((S3_ADDRESS+'orig/').length, orig.length-4);
 
     const dirName = `${S3_ART_IMAGES}${fileName}/`;
     return dirName;
@@ -62,7 +62,7 @@ export const uploadImageBlob = async (key: string, blob: Buffer) => {
   if (result.$metadata.httpStatusCode !== 200) throw new Error(`Error uploading note: ${result}`);
 
   // return a formatted URL pointing to image;
-  return S3_URL+key;
+  return S3_ADDRESS+key;
 };
 
 // For image folders e.g. DZI, IIIF, etc

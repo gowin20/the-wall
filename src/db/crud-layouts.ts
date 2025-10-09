@@ -1,4 +1,4 @@
-import db from "./conn.mjs"
+import db from "./conn.js"
 import { ObjectId } from "mongodb";
 
 // Returns an object containing all layouts
@@ -29,7 +29,7 @@ export const getLayoutIdByName = async (layoutName) => {
 // Inserts a layout to MongoDB
 export const insertLayout = async (layoutObj) => {
 
-    const S3_URL = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
+    const S3_ADDRESS = new RegExp('https:\/\/the-wall-source.s3.us-west-1.amazonaws.com\/notes\/orig\/');
     const errorHeader = 'INSERT ERROR: ';
     // all layout objects must have:
 

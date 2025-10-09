@@ -27,11 +27,11 @@ const renameTifToPng = async () => {
 
     filenames.forEach(async file => {
 
-        const S3_PREFIX = 'https://the-wall-source.s3.us-west-1.amazonaws.com/notes/orig/';
+        const S3_ADDRESS = 'https://the-wall-source.s3.us-west-1.amazonaws.com/notes/orig/';
 
         const imageName = file.substring(0,file.length-4);
-        const oldUrl = S3_PREFIX+imageName + '.tif';
-        const newUrl = S3_PREFIX+file;
+        const oldUrl = S3_ADDRESS+imageName + '.tif';
+        const newUrl = S3_ADDRESS+file;
 
         const filter = {
             orig: oldUrl

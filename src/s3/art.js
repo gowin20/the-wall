@@ -1,8 +1,7 @@
 import { Art } from 'gallery-image';
 import '../loadEnvironment.mjs';
-import { uploadImage, S3_ART_PREFIX, createFolderIfNotExist } from "./s3.mjs";
-
-const S3_URL = process.env.S3_PREFIX || "";
+import { uploadImage, createFolderIfNotExist } from "./s3.mjs";
+import { S3_ADDRESS, S3_ART_PREFIX } from '../loadEnvironment';
 
 export const uploadThumbnailToS3 = async (art, thumbnailSize) => {
     
@@ -13,7 +12,7 @@ export const uploadThumbnailToS3 = async (art, thumbnailSize) => {
         if (currentThumbnail instanceof Buffer) thumbnail = currentThumbnail;      
         else if (typeof currentThumbnail === 'string') {
             
-            if (currentThumbnail.includes(S3_URL)) {
+            if (currentThumbnail.includes(S3_ADDRESS)) {
                 // file already uploaded
                 console.log('Duplicate file upload')
                 return currentThumbnail;
@@ -43,11 +42,11 @@ export const uploadOrigToS3 = async (art) => {
     let sourceBuffer;
 
     if (art.source instanceof Buffer) sourceBuffer = art.source;
-    else if (typeof art.source === 'string' && art.source.includes(S3_URL)) {
+    else if (typeof art.source === 'string' && art.source.includes(S3_ADDRESS)) {
         console.log('Duplicate orig image upload.');
         return art.source;
     }
-    else if (art.source instanceof URL && art.href.includes(S3_URL)) {
+    else if (art.source instanceof URL && art.href.includes(S3_ADDRESS)) {
         console.log('Duplicate orig image upload.');
         return art.source.href;
     }

@@ -1,10 +1,11 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+
+const router = Router();
 
 // Get a list of all DZIs
 router.get("/", async (req, res) => {
-
-  const {getAllDzis} = await import('../db/crud-dzis.mjs');
+  
+  const {getAllDzis} = await import('../db/crud-dzis.js');
 
   const results = await getAllDzis();
 
@@ -14,7 +15,7 @@ router.get("/", async (req, res) => {
 // Get a DZI by ID
 router.get("/id/:id", async (req, res) => {
 
-  const { getDziById } = await import("../db/crud-dzis.mjs");
+  const { getDziById } = await import("../db/crud-dzis.js");
 
   const result = await getDziById(req.params.id);
 
@@ -22,4 +23,4 @@ router.get("/id/:id", async (req, res) => {
   else res.send(result).status(200);
 });
 
-module.exports = router;
+export default router;
