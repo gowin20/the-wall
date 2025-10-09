@@ -1,4 +1,4 @@
-import { verifyJWT } from "../verify.js";
+import { verifyJWT } from '../verify.js';
 import express from 'express';
 const router = express.Router();
 

@@ -1,7 +1,7 @@
 //const bcrypt = require('bcrypt');
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { verifyJWT } from "../verify.js";
+import { verifyJWT } from '../verify.js';
 import express from 'express';
 const router = express.Router();
 

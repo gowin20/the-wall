@@ -23,14 +23,17 @@ const streamImageFromS3 = async ({ id }: { id: string }): Promise<ReadableStream
 };
 
 const render = async (req: any, res: any) => {
+
   if (req.params && req.params.filename == null) {
     req.params.filename = 'info.json';
   }
 
   const iiifUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+
+  console.log(req.url)
   const iiifProcessor = new Processor(iiifUrl, streamImageFromS3, {
-    pathPrefix: S3_IIIF_PREFIX,
-    debugBorder: !!process.env.DEBUG_IIIF_BORDER
+    pathPrefix: '/iiif/3/',
+    debugBorder: true
   });
   const result = await iiifProcessor.execute();
   return res
