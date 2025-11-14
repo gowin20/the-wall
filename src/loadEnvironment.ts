@@ -10,8 +10,8 @@ const S3_ART_PREFIX = process.env.S3_ART_PREFIX;
 const S3_BUCKET = process.env.BUCKET;
 const S3_REGION = process.env.S3_REGION;
 
-const S3_iiifTemplate = `${S3_ADDRESS}${S3_IIIF_PREFIX}\{id\}`;
-const S3_artTemplate = `${S3_ADDRESS}${S3_ART_PREFIX}\{id\}`;
+const S3_iiifTemplate = `${S3_ADDRESS}${S3_IIIF_PREFIX}\{\{id\}\}`;
+const S3_artTemplate = `${S3_ADDRESS}${S3_ART_PREFIX}\{\{id\}\}`;
 
 export {
     port,

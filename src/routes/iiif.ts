@@ -1,11 +1,10 @@
-import { Processor, IIIFError } from 'iiif-processor';
 
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { S3_BUCKET, S3_IIIF_PREFIX } from '../loadEnvironment.js';
+import { S3_BUCKET, S3_IIIF_PREFIX, S3_ADDRESS } from '../loadEnvironment.js';
 import { Router } from 'express';
 
-const streamImageFromS3 = async ({ id }: { id: string }): Promise<ReadableStream> => {
-
+const streamImageFromS3 = async ({ id, baseUrl }: { id: string, baseUrl: string }): Promise<ReadableStream> => {
+  /*
   const client = new S3Client({
     region:'us-west-1'
   });
@@ -13,10 +12,11 @@ const streamImageFromS3 = async ({ id }: { id: string }): Promise<ReadableStream
     Bucket: S3_BUCKET,
     Key: `${S3_IIIF_PREFIX}${id}`
   });
-
-  const response = await client.send(command);
-  const body = response.Body;
-
+  */
+  const S3_URL = baseUrl+id;
+  console.log('URL:',S3_URL);
+  const response = await fetch(S3_URL);
+  const body = (await response.blob()).stream();
   if (!body) throw new IIIFError(`Unable to stream image from ${id}`, { statusCode: 404 })
 
   return body as ReadableStream;
@@ -28,11 +28,11 @@ const render = async (req: any, res: any) => {
     req.params.filename = 'info.json';
   }
 
-  const iiifUrl = `${req.protocol}://${req.get('host')}${req.path}`;
+  const iiifUrl = `${S3_ADDRESS}${S3_IIIF_PREFIX}${req.path}`;
 
-  console.log(req.url)
+  console.log(iiifUrl)
   const iiifProcessor = new Processor(iiifUrl, streamImageFromS3, {
-    pathPrefix: '/iiif/3/',
+    //pathPrefix: '/iiif/{{version}}/',
     debugBorder: true
   });
   const result = await iiifProcessor.execute();
