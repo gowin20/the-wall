@@ -13,6 +13,8 @@ const S3_REGION = process.env.S3_REGION;
 const S3_iiifTemplate = `${S3_ADDRESS}${S3_IIIF_PREFIX}\{\{id\}\}`;
 const S3_artTemplate = `${S3_ADDRESS}${S3_ART_PREFIX}\{\{id\}\}`;
 
+const DEFAULT_NOTES_MANIFEST_URL = process.env.DEFAULT_NOTES_MANIFEST
+
 export {
     port,
     S3_ADDRESS,
@@ -20,5 +22,6 @@ export {
     S3_REGION,
     S3_IIIF_PREFIX,
     S3_ART_PREFIX, 
-    S3_artTemplate
+    S3_artTemplate,
+    DEFAULT_NOTES_MANIFEST_URL
 };

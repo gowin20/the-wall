@@ -1,6 +1,6 @@
 
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
-import { S3_BUCKET, S3_IIIF_PREFIX, S3_ADDRESS } from '../loadEnvironment.js';
+import { S3_BUCKET, S3_IIIF_PREFIX, S3_ADDRESS, DEFAULT_NOTES_MANIFEST_URL } from '../loadEnvironment.js';
 import { Router } from 'express';
 
 const streamImageFromS3 = async ({ id, baseUrl }: { id: string, baseUrl: string }): Promise<ReadableStream> => {
@@ -17,32 +17,8 @@ const streamImageFromS3 = async ({ id, baseUrl }: { id: string, baseUrl: string 
   console.log('URL:',S3_URL);
   const response = await fetch(S3_URL);
   const body = (await response.blob()).stream();
-  if (!body) throw new IIIFError(`Unable to stream image from ${id}`, { statusCode: 404 })
-
   return body as ReadableStream;
 };
-
-const render = async (req: any, res: any) => {
-
-  if (req.params && req.params.filename == null) {
-    req.params.filename = 'info.json';
-  }
-
-  const iiifUrl = `${S3_ADDRESS}${S3_IIIF_PREFIX}${req.path}`;
-
-  console.log(iiifUrl)
-  const iiifProcessor = new Processor(iiifUrl, streamImageFromS3, {
-    //pathPrefix: '/iiif/{{version}}/',
-    debugBorder: true
-  });
-  const result = await iiifProcessor.execute();
-  return res
-    .set('Content-Type', result.contentType)
-    .set('Link', [`<${(result as any).canonicalLink}>;rel="canonical"`, `<${(result as any).profileLink}>;rel="profile"`])
-    .status(200)
-    .send(result.body);
-};
-
 
 const router = Router();
 
@@ -56,9 +32,28 @@ router.use((_req, res, next) => {
 router.options('*', (_req, res) => {
   res.status(204).send('');
 });
-router.get('/', (_req, res) => res.status(200).send(`IIIF v3.0.0 endpoint OK`));
-router.get('/:id', render);
-router.get('/:id/info.json', render);
-router.get('/:id/:region/:size/:rotation/:filename', render);
+router.get('/', (_req, res) => res.status(200).send(`IIIF endpoint OK`));
+
+router.get('/manifests', (_req, res) => res.status(200).send(`IIIF Manifest endpoint OK -- Presentation API 3.0.0`))
+
+router.get('/2',(_req, res) => res.status(200).send(`IIIF Image service endpoint OK -- Image API 2.0.0`))
+
+router.get('/manifests/:id', (req,res) => {
+  const manifestResult = {
+    manifestUrl: ''
+  }
+  
+  if (req.params.id === 'default') {
+    console.log('Serving default manifest')
+    manifestResult.manifestUrl = DEFAULT_NOTES_MANIFEST_URL
+  }
+  else {
+    console.log('Serving manifest with ID:',req.params.id);
+    manifestResult.manifestUrl = `${S3_ADDRESS}iiif/manifests/${req.params.id}`
+  }
+
+
+  res.status(200).send(manifestResult);
+})
 
 export default router;
