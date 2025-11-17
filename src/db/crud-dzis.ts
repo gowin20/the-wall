@@ -49,7 +49,7 @@ export const getDziIdByName = async (dziName) => {
     return result._id;
 }
 
-export const getDziById = async (dziId) => {
+export const getDziById = async (dziId: string) => {
     let collection = db.collection('dzis');
     let query = {_id: new ObjectId(dziId)};
     let result = await collection.findOne(query);

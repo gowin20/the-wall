@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { DbLayoutObject } from 'gallery-image/dist/src/Layout.js';
 const router = Router();
 
 // Get a list of all layouts

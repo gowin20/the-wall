@@ -15,6 +15,8 @@ const S3_artTemplate = `${S3_ADDRESS}${S3_ART_PREFIX}\{\{id\}\}`;
 
 const DEFAULT_NOTES_MANIFEST_URL = process.env.DEFAULT_NOTES_MANIFEST
 
+const IIIF_IMAGE_PREFIX = 'E:/Projects/programs/iiif/the-wall/' //process.env.S3_IIIF_PREFIX;
+
 export {
     port,
     S3_ADDRESS,
@@ -23,5 +25,6 @@ export {
     S3_IIIF_PREFIX,
     S3_ART_PREFIX, 
     S3_artTemplate,
+    IIIF_IMAGE_PREFIX,
     DEFAULT_NOTES_MANIFEST_URL
 };

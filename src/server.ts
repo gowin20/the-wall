@@ -16,9 +16,9 @@ app.use(express.json());
 
 app.use('/notes', routerNotes);
 app.use('/users', routerUsers);
-app.use('/layouts', routerDzi);
+app.use('/layouts', routerLayouts);
 app.use('/iiif', routerIiif);
-app.use('/dzis', routerLayouts);
+app.use('/dzis', routerDzi);
 
 // Export for serverless lambda deployment
 export default app;
