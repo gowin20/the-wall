@@ -17,6 +17,8 @@ const DEFAULT_NOTES_MANIFEST_URL = process.env.DEFAULT_NOTES_MANIFEST
 
 const IIIF_IMAGE_PREFIX = 'E:/Projects/programs/iiif/the-wall/' //process.env.S3_IIIF_PREFIX;
 
+// old default: 68db782519ece70c4efef0ce
+
 export {
     port,
     S3_ADDRESS,

@@ -1,9 +1,9 @@
 {
-    "name": "default-9-29-2025",
+    "name": "default-test-local-11.16.25",
     "noteImageSize": 900,
     "numRows": 26,
     "numCols": 55,
-    "image": "https://wall.gowen.dev/iiif/2/the-wall-9-29-2025/",
+    "image": "http://localhost:5050/iiif/2/default-test-local+tiles",
     "array": [
         [
             "64f3db0f831d677c80b173c7",
